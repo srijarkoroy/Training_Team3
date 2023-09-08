@@ -3,6 +3,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -105,7 +107,10 @@ export default function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-      
+            <FormControlLabel
+              control={<Checkbox value="remember" color="error" />}
+              label="Remember me"
+            />
             <Button
               type="submit"
               fullWidth
@@ -132,7 +137,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2" color="error">
+                <Link href="/signup" variant="body2" color="error" >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

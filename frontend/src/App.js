@@ -1,7 +1,7 @@
 import './App.css';
 import Login from './components/Login'
-import SignUp from './components/SignUp'
 import Navbar from './components/Navbar'
+import SignUp from './components/SignUp'
 import {Route, Routes} from 'react-router-dom'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div >
       <Navbar />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<div><Login /> <Navbar /> </div>} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
 
