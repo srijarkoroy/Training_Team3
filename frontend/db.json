@@ -1,0 +1,65 @@
+{
+  "openacc": [
+    {
+      "email": "asdfadf.cadf",
+      "firstname": "at",
+      "lastname": "asdf",
+      "aadhaar": "123456789012",
+      "branch": "wersdfa",
+      "ifsc": "S348765437",
+      "address": "asdfac,.",
+      "accounttype": "asdfawe",
+      "id": 9
+    },
+    {
+      "email": "asdf@adf.cadf",
+      "firstname": "at",
+      "lastname": "asdf",
+      "aadhaar": "123456789012",
+      "branch": "wersdfa",
+      "ifsc": "S348765437",
+      "address": "asdfac",
+      "accounttype": "asdfawe",
+      "id": 10
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 11
+    },
+    {
+      "email": "sdfgfg",
+      "firstname": "sdffd",
+      "lastname": "sdfgsr",
+      "aadhaar": "sfdgs",
+      "branch": "sfvsdfg",
+      "ifsc": "grse",
+      "address": "fdggregdfv",
+      "accounttype": "vsdf",
+      "id": 15
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
