@@ -23,7 +23,7 @@ export default function OpenAccount() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const url = "http://localhost:8090/openacc";
-    const header = { 'Content-Type': 'application/json' };
+    const header = { "Content-Type": "application/json" };
     const sendData = {
       email: data.get("email"),
       firstname: data.get("firstname"),
@@ -35,11 +35,14 @@ export default function OpenAccount() {
       accounttype: data.get("accounttype"),
     };
     console.log(sendData);
-    await axios.post(url, (sendData)).then((response)=>{
-          console.log('finish api call - response:::',response);
-        }).catch((error)=>{
-            console.log('something wrong:::',error);
-        });   
+    await axios
+      .post(url, sendData)
+      .then((response) => {
+        console.log("finish api call - response:::", response);
+      })
+      .catch((error) => {
+        console.log("something wrong:::", error);
+      });
   };
 
   const [email, setEmail] = useState("");
@@ -82,35 +85,32 @@ export default function OpenAccount() {
 
   const handleAccountTypeChange = (e) => {
     setAccountType(e.target.value);
-  }
+  };
 
   const handleOpenAccount = () => {
     const namePattern = /^[A-Za-z]/;
     const aadhaarPattern = /^[0-9]{12,}/;
     const ifscPattern = /^[A-Z0-9]{10,}/;
-    const addressPattern = /^[A-Za-z0-9,.]/
+    const addressPattern = /^[A-Za-z0-9,.]/;
     const passwordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     const emailPattern = /^([A-Za-z0-9])+@+([A-Za-z])+.+([a-z])/;
     if (!firstname.match(namePattern)) {
       setError("First name can only contain alphabets");
-    } else if (!lastname.match(namePattern)){
-        setError("Last name can only contain alphabets");
-    } else if (!aadhaar.match(aadhaarPattern)){
-        setError("Aadhaar can only contain numbers");
-    } else if (!branch.match(namePattern)){
-        setError("Branch name can only contain alphabets");
-    } else if (!ifsc.match(ifscPattern)){
-        setError("Incorrect IFSC, should be 10 characters");
-    } else if (!address.match(addressPattern)){
-        setError("Address should not contain special characters");
-    } else if (!accounttype.match(namePattern)){
-        setError("Account Type can only contain alphabets");
-    } 
-    else if (!email.match(emailPattern)) {
-      setError(
-        "Email must containt @ and ."
-      );
+    } else if (!lastname.match(namePattern)) {
+      setError("Last name can only contain alphabets");
+    } else if (!aadhaar.match(aadhaarPattern)) {
+      setError("Aadhaar can only contain numbers");
+    } else if (!branch.match(namePattern)) {
+      setError("Branch name can only contain alphabets");
+    } else if (!ifsc.match(ifscPattern)) {
+      setError("Incorrect IFSC, should be 10 characters");
+    } else if (!address.match(addressPattern)) {
+      setError("Address should not contain special characters");
+    } else if (!accounttype.match(namePattern)) {
+      setError("Account Type can only contain alphabets");
+    } else if (!email.match(emailPattern)) {
+      setError("Email must containt @ and .");
     } else {
       setFirstname("");
       setLastname("");

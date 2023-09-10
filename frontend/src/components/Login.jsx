@@ -137,12 +137,12 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/openaccount" variant="body2" color="error" >
+                <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2" color="error" >
+                <Link href="/signup" variant="body2" color="error">
                   {"Don't have netbanking? Register here"}
                 </Link>
               </Grid>
