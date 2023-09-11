@@ -35,7 +35,7 @@ public class LoginController {
 	public ResponseEntity<String> saveUserDetails(@RequestBody User user){
 		return new ResponseEntity<>(loginService.saveNewUser(user),HttpStatus.OK);
 	}
-
+  
 	@PostMapping("/accountDetails/createAccount")
 	public ResponseEntity<String> saveAccountDetails(@RequestBody Account account){
 		return new ResponseEntity<>(loginService.saveNewAccount(account), HttpStatus.OK);

@@ -54,6 +54,117 @@
       "address": "sdcdf",
       "accounttype": "weffsda",
       "id": 16
+
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 17
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 18
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 19
+    },
+    {
+      "id": 20
+    },
+    {
+      "id": 21
+    },
+    {
+      "id": 22
+    },
+    {
+      "id": 23
+    },
+    {
+      "id": 24
+    },
+    {
+      "id": 25
+    },
+    {
+      "id": 26
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Bengaluru",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "asdf",
+      "id": 27
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "asdf",
+      "id": 28
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 29
+    },
+    {
+      "email": "abc@abc.cim",
+      "firstname": "Ritik",
+      "lastname": "Naik",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 30
+    },
+    {
+      "email": "abc@abc.cim",
+      "firstname": "Ritik",
+      "lastname": "Naik",
+      "aadhaar": "123456789012",
+      "branch": "Hyderabad",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 31
+
     }
   ],
   "posts": [
