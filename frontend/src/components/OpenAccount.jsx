@@ -28,17 +28,17 @@ export default function OpenAccount() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const url = "http://localhost:8090/openacc";
+    const url = "http://localhost:8090/user/accountDetails/createAccount";
     const header = { "Content-Type": "application/json" };
     const sendData = {
-      email: data.get("email"),
-      firstname: data.get("firstname"),
-      lastname: data.get("lastname"),
-      aadhaar: data.get("aadhaar"),
+      // email: data.get("email"),
+      // firstname: data.get("firstname"),
+      // lastname: data.get("lastname"),
+      aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
       ifsc: data.get("ifsc"),
       address: data.get("address"),
-      accounttype: data.get("accounttype"),
+      accType: data.get("accounttype"),
     };
     console.log(sendData);
 
