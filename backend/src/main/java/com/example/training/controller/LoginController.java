@@ -1,6 +1,7 @@
 package com.example.training.controller;
 
 import com.example.training.entity.Account;
+import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
 import com.example.training.service.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,26 @@ public class LoginController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@GetMapping("transactionDetails/{transact}")
+	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact){
+		Object response = loginService.findTransaction(transact);
+		if (response.equals("transaction not found"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 	@PostMapping("/userDetails/createUser")
 	public ResponseEntity<String> saveUserDetails(@RequestBody User user){
-		return new ResponseEntity<>(loginService.saveNewUser(user),HttpStatus.OK);
+		return new ResponseEntity<>(loginService.saveNewUser(user), HttpStatus.OK);
 	}
   
 	@PostMapping("/accountDetails/createAccount")
 	public ResponseEntity<String> saveAccountDetails(@RequestBody Account account){
 		return new ResponseEntity<>(loginService.saveNewAccount(account), HttpStatus.OK);
+	}
+
+	@PostMapping("/transactionDetails/createTransaction")
+	public ResponseEntity<String> saveTransactionDetails(@RequestBody Transaction transaction){
+		return new ResponseEntity<>(loginService.saveNewTransaction(transaction), HttpStatus.OK);
 	}
 }
