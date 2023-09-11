@@ -1,8 +1,10 @@
 package com.example.training.service;
 
 import com.example.training.entity.Account;
+import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
 import com.example.training.repository.AccountRepository;
+import com.example.training.repository.TransactionRepository;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class LoginService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     public Object findUser(Long id){
         Optional<User> user = userRepository.findByUserId(id);
@@ -30,6 +33,14 @@ public class LoginService {
         return acc;
     }
 
+    public Object findTransaction(Long transact){
+        Optional<Transaction> transaction = transactionRepository.findByTransactionId(transact);
+        if (transaction.isEmpty()){
+            return "transaction not found";
+        }
+        return transact;
+    }
+
     public String saveNewUser(User user){
         userRepository.save(user);
         return "Successfully Created New User";
@@ -38,5 +49,10 @@ public class LoginService {
     public String saveNewAccount(Account account){
         accountRepository.save(account);
         return "Successfully Created New Account";
+    }
+
+    public String saveNewTransaction(Transaction transaction){
+        transactionRepository.save(transaction);
+        return "Transaction Successful";
     }
 }
