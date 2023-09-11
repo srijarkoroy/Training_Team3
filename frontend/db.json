@@ -1,0 +1,185 @@
+{
+  "openacc": [
+    {
+      "email": "asdfadf.cadf",
+      "firstname": "at",
+      "lastname": "asdf",
+      "aadhaar": "123456789012",
+      "branch": "wersdfa",
+      "ifsc": "S348765437",
+      "address": "asdfac,.",
+      "accounttype": "asdfawe",
+      "id": 9
+    },
+    {
+      "email": "asdf@adf.cadf",
+      "firstname": "at",
+      "lastname": "asdf",
+      "aadhaar": "123456789012",
+      "branch": "wersdfa",
+      "ifsc": "S348765437",
+      "address": "asdfac",
+      "accounttype": "asdfawe",
+      "id": 10
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 11
+    },
+    {
+      "email": "sdfgfg",
+      "firstname": "sdffd",
+      "lastname": "sdfgsr",
+      "aadhaar": "sfdgs",
+      "branch": "sfvsdfg",
+      "ifsc": "grse",
+      "address": "fdggregdfv",
+      "accounttype": "vsdf",
+      "id": 15
+    },
+    {
+      "email": "dsaf",
+      "firstname": "adjfhk",
+      "lastname": "adsf",
+      "aadhaar": "ewe",
+      "branch": "asdfe",
+      "ifsc": "asdfdsf",
+      "address": "sdcdf",
+      "accounttype": "weffsda",
+      "id": 16
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 17
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 18
+    },
+    {
+      "email": "",
+      "firstname": "",
+      "lastname": "",
+      "aadhaar": "",
+      "branch": "",
+      "ifsc": "",
+      "address": "",
+      "accounttype": "",
+      "id": 19
+    },
+    {
+      "id": 20
+    },
+    {
+      "id": 21
+    },
+    {
+      "id": 22
+    },
+    {
+      "id": 23
+    },
+    {
+      "id": 24
+    },
+    {
+      "id": 25
+    },
+    {
+      "id": 26
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Bengaluru",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "asdf",
+      "id": 27
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "asdf",
+      "id": 28
+    },
+    {
+      "email": "asdf@d.ckn",
+      "firstname": "adsf",
+      "lastname": "sadf",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 29
+    },
+    {
+      "email": "abc@abc.cim",
+      "firstname": "Ritik",
+      "lastname": "Naik",
+      "aadhaar": "123456789012",
+      "branch": "Mumbai",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 30
+    },
+    {
+      "email": "abc@abc.cim",
+      "firstname": "Ritik",
+      "lastname": "Naik",
+      "aadhaar": "123456789012",
+      "branch": "Hyderabad",
+      "ifsc": "1234567890",
+      "address": "asdf",
+      "accounttype": "Savings",
+      "id": 31
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
