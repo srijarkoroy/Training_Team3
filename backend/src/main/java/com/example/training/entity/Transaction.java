@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
@@ -29,12 +32,18 @@ public class Transaction {
     @Column(name="transactionId")
     private Long transactionId;
 
+    @NotNull
+    @Size(min=11,max=11)
     @Column(name="senderAccNo")
     private String senderAccNo;
 
+    @NotNull
+    @Size(min=11,max=11)
     @Column(name="recipientAccNo")
     private String recipientAccNo;
 
+    @NotNull
+    @Min(value=1)
     @Column(name="amount")
     private Float amount;
 
@@ -52,6 +61,7 @@ public class Transaction {
     @Size(min=4,max=15)
     private String password;
 
+    @Size(min=10,max=10)
     @Column(name="phone")
     private Long phone;
 

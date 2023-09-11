@@ -8,6 +8,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -27,15 +28,21 @@ public class User {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
+
     @Column(name="userId")
     private Long userId;
 
+    @NotNull
+    @Size(min=1)
     @Column(name="firstName")
     private String firstName;
 
+    @NotNull
+    @Size(min=1)
     @Column(name="lastName")
     private String lastName;
 
+    @NotNull
     @Column(name="password")
     private String password;
 
