@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequestMapping("/user")
 @RestController
 @CrossOrigin
@@ -41,17 +43,17 @@ public class LoginController {
 	}
 
 	@PostMapping("/userDetails/createUser")
-	public ResponseEntity<String> saveUserDetails(@RequestBody User user){
+	public ResponseEntity<String> saveUserDetails(@Valid @RequestBody User user){
 		return new ResponseEntity<>(loginService.saveNewUser(user), HttpStatus.OK);
 	}
   
 	@PostMapping("/accountDetails/createAccount")
-	public ResponseEntity<String> saveAccountDetails(@RequestBody Account account){
+	public ResponseEntity<String> saveAccountDetails(@Valid @RequestBody Account account){
 		return new ResponseEntity<>(loginService.saveNewAccount(account), HttpStatus.OK);
 	}
 
 	@PostMapping("/transactionDetails/createTransaction")
-	public ResponseEntity<String> saveTransactionDetails(@RequestBody Transaction transaction){
+	public ResponseEntity<String> saveTransactionDetails(@Valid @RequestBody Transaction transaction){
 		return new ResponseEntity<>(loginService.saveNewTransaction(transaction), HttpStatus.OK);
 	}
 }
