@@ -3,18 +3,22 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Checkbox from "@mui/material/Checkbox";
-// import Link from "@mui/material/Link";
-// import Grid from "@mui/material/Grid";
+
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+
 import Select from 'react-dropdown-select';
 import 'react-dropdown/style.css';
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -37,6 +41,7 @@ export default function OpenAccount() {
       accounttype: data.get("accounttype"),
     };
     console.log(sendData);
+
     await fetch(url,{
       method: 'post',
       headers: {'Content-Type':'application/json'}, body: JSON.stringify(sendData)}).then((response)=>{
@@ -44,6 +49,7 @@ export default function OpenAccount() {
         }).catch((error)=>{
             console.log('something wrong:::',error);
         });   
+
   };
 
   const [email, setEmail] = useState("");
@@ -83,29 +89,35 @@ export default function OpenAccount() {
     } else {
       setError("");
     }
+
   };
 
   const handleFirstnameChange = (e) => {
     setFirstname(e.target.value);
+
     const namePattern = /^[A-Za-z ,.'-]+$/i;
     if (!firstname.match(namePattern)) {
       setError("First name can only contain alphabets");
     } else {
       setError("");
     }
+
   };
 
   const handleLastnameChange = (e) => {
     setLastname(e.target.value);
+
     if (!lastname.match(namePattern)){
       setError("Last name can only contain alphabets");
     } else {
       setError("");
     }
+
   };
 
   const handleAadhaarChange = (e) => {
     setAadhaar(e.target.value);
+
     if (!aadhaar.match(aadhaarPattern)){
       setError("Aadhaar can only contain 12 digits");
     } else {
@@ -122,10 +134,13 @@ export default function OpenAccount() {
     } else {
       setError("");
     }
+
   };
+
 
   const handleIfscChange = (e) => {
     setIfsc(e.target.value);
+
     if (!ifsc.match(ifscPattern)){
       setError("Incorrect IFSC, should be 10 characters");
     } else {
@@ -135,6 +150,7 @@ export default function OpenAccount() {
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
+
     if (!address.match(addressPattern)){
       setError("Address should not contain special characters");
     } else {
@@ -207,6 +223,7 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
+
             <TextField
               margin="normal"
               required
@@ -228,6 +245,7 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
+
             <TextField
               margin="normal"
               required
@@ -250,6 +268,7 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
+
             <TextField
               margin="normal"
               required
@@ -271,6 +290,7 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
+
             <TextField
               margin="normal"
               required
@@ -313,6 +333,8 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
+
+            
             <TextField
               margin="normal"
               required
@@ -334,18 +356,7 @@ export default function OpenAccount() {
                 {error}
               </Typography>
             )}
-            {/* <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="accounttype"
-              label="Account Type"
-              name="accounttype"
-              autoComplete="type"
-              color="error"
-              value={accounttype}
-              onChange={handleAccountTypeChange}
-            /> */}
+            
             <Select
               margin = "normal"
               options={accoptions} 
