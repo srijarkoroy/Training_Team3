@@ -23,9 +23,9 @@ public class LoginController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/accountDetails/{acc}")
-	public ResponseEntity<?> getAccountDetails(@PathVariable Long acc){
-		Object response = loginService.findAccount(acc);
+	@GetMapping("/accountDetails/{accNo}")
+	public ResponseEntity<?> getAccountDetails(@PathVariable Long accNo){
+		Object response = loginService.findAccount(accNo);
 		if(response.equals("account not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);

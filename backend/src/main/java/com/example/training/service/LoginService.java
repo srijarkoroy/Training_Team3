@@ -1,6 +1,5 @@
 package com.example.training.service;
 
-import com.example.training.entity.User;
 import com.example.training.entity.Account;
 import com.example.training.entity.User;
 import com.example.training.repository.AccountRepository;
