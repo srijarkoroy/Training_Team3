@@ -9,6 +9,7 @@ import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class LoginService {
     }
 
     public String saveNewAccount(Account account){
+        account.setDateOfCreation(LocalDate.now());
         accountRepository.save(account);
         return "Successfully Created New Account";
     }

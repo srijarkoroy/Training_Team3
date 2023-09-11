@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -39,6 +40,7 @@ public class User {
     private String password;
 
     @Column(name="email")
+    @Email
     private String email;
 
     @Column(name="phone")

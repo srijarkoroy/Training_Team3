@@ -1,11 +1,17 @@
 package com.example.training.entity;
 
+import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
@@ -24,10 +30,10 @@ public class Account {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
-    private long accNo;
+    private Long accNo;
 
     @Column(name="userId")
-    private int userId;
+    private Integer userId;
 
     @Column(name="aadhaarNo")
     private long aadhaarNo;
@@ -42,12 +48,13 @@ public class Account {
     private String accType;
 
     @Column(name="balance")
-    private float balance;
+    private Float balance;
 
     @Column(name="dateOfCreation")
     private LocalDate dateOfCreation;
 
     @Column(name="transactionPassword")
+    @Size(min=4,max=12)
     private String transactionPassword;
 
     @Column(name="address")
