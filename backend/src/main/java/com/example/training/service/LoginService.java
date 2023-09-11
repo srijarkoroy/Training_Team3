@@ -1,6 +1,8 @@
 package com.example.training.service;
 
+import com.example.training.entity.Account;
 import com.example.training.entity.User;
+import com.example.training.repository.AccountRepository;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginService {
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     public Object findUser(Long id){
         Optional<User> user = userRepository.findByUserId(id);
@@ -19,8 +22,21 @@ public class LoginService {
         return user;
     }
 
+    public Object findAccount(Long acc){
+        Optional<Account> account = accountRepository.findByAccNo(acc);
+        if (account.isEmpty()){
+            return "account not found";
+        }
+        return acc;
+    }
+
     public String saveNewUser(User user){
         userRepository.save(user);
         return "Successfully Created New User";
+    }
+
+    public String saveNewAccount(Account account){
+        accountRepository.save(account);
+        return "Successfully Created New Account";
     }
 }
