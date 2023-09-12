@@ -19,7 +19,7 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public Object findUser(Long id){
+    public Object findUser(String id){
         Optional<User> user = userRepository.findByUserId(id);
         if(user.isEmpty()){
             return "user not found";
