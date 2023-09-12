@@ -16,9 +16,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 
-import Select from 'react-dropdown-select';
-import 'react-dropdown/style.css';
-
+import Select from "react-dropdown-select";
+import "react-dropdown/style.css";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -36,20 +35,23 @@ export default function OpenAccount() {
       // lastname: data.get("lastname"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
-      ifsc: data.get("ifsc"),
+      IFSC: data.get("ifsc"),
       address: data.get("address"),
       accType: data.get("accounttype"),
     };
     console.log(sendData);
 
-    await fetch(url,{
-      method: 'post',
-      headers: {'Content-Type':'application/json'}, body: JSON.stringify(sendData)}).then((response)=>{
-          console.log('finish api call - response:::',response);
-        }).catch((error)=>{
-            console.log('something wrong:::',error);
-        });   
-
+    await fetch(url, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sendData),
+    })
+      .then((response) => {
+        console.log("finish api call - response:::", response);
+      })
+      .catch((error) => {
+        console.log("something wrong:::", error);
+      });
   };
 
   const [email, setEmail] = useState("");
@@ -60,122 +62,113 @@ export default function OpenAccount() {
   const [ifsc, setIfsc] = useState("");
   const [address, setAddress] = useState("");
   const [accounttype, setAccountType] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
 
-  const namePattern = /^[A-Za-z]/;
-  const aadhaarPattern = /^[0-9]{12,}/;
+  const namePattern = /^[A-Za-z ,.'-]+$/i;
+  const aadhaarPattern = /^\d{12}$/;
   const ifscPattern = /^[A-Z0-9]{10,}/;
   const addressPattern = /^[A-Za-z0-9,.]/;
   const emailPattern = /^([A-Za-z0-9])+@+([A-Za-z0-9])+.+([a-z])/;
 
   const options = [
-    { value: 'Hyderabad', label: 'Hyderabad' },
-    { value: 'Mumbai', label: 'Mumbai' },
-    { value: 'Delhi', label: 'Delhi' },
-    { value: 'Bengaluru', label: 'Bengaluru' },
+    { value: "Hyderabad", label: "Hyderabad" },
+    { value: "Mumbai", label: "Mumbai" },
+    { value: "Delhi", label: "Delhi" },
+    { value: "Bengaluru", label: "Bengaluru" },
   ];
   const accoptions = [
-    { value: 'Savings', label: 'Savings' },
-    { value: 'Current', label: 'Current' },
-    { value: 'Salary', label: 'Salary' },
-    { value: 'Fixed Deposit', label: 'Fixed Deposit' },
+    { value: "Savings", label: "Savings" },
+    { value: "Current", label: "Current" },
+    { value: "Salary", label: "Salary" },
+    { value: "Fixed Deposit", label: "Fixed Deposit" },
   ];
   const defaultOption = options[0];
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    if (!email.match(emailPattern)) {
-      setError("Incorrect Email format");
-    } else {
-      setError("");
-    }
-
   };
 
   const handleFirstnameChange = (e) => {
     setFirstname(e.target.value);
 
     const namePattern = /^[A-Za-z ,.'-]+$/i;
-    if (!firstname.match(namePattern)) {
-      setError("First name can only contain alphabets");
-    } else {
-      setError("");
-    }
-
   };
 
   const handleLastnameChange = (e) => {
     setLastname(e.target.value);
-
-    if (!lastname.match(namePattern)){
-      setError("Last name can only contain alphabets");
-    } else {
-      setError("");
-    }
-
   };
 
   const handleAadhaarChange = (e) => {
     setAadhaar(e.target.value);
-
-    if (!aadhaar.match(aadhaarPattern)){
-      setError("Aadhaar can only contain 12 digits");
-    } else {
-      setError("");
-    }
   };
 
   const handleBranchChange = (e) => {
     setBranch(e[0].value);
-    console.log("logsss",e[0].value);
-    console.log("branch",branch);
-    if (!branch){
-      setError("Please select Branch");
-    } else {
-      setError("");
-    }
-
+    // console.log("logsss", e[0].value);
+    // console.log("branch", branch);
   };
-
 
   const handleIfscChange = (e) => {
     setIfsc(e.target.value);
-
-    if (!ifsc.match(ifscPattern)){
-      setError("Incorrect IFSC, should be 10 characters");
-    } else {
-      setError("");
-    }
   };
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
+  };
 
-    if (!address.match(addressPattern)){
-      setError("Address should not contain special characters");
-    } else {
-      setError("");
+  const validateForm = () => {
+    const newError = {};
+
+    if (!address.match(addressPattern)) {
+      newError.address = "Invalid";
     }
+
+    if (!ifsc.match(ifscPattern)) {
+      newError.ifsc = "Invalid";
+    }
+
+    if (!branch) {
+      newError.branch = "Invalid";
+    }
+    if (!aadhaar.match(aadhaarPattern)) {
+      newError.aadhaar = "Invalid";
+    }
+
+    if (!lastname.match(namePattern)) {
+      newError.lastName = "Invalid";
+    }
+
+    if (!firstname.match(namePattern)) {
+      newError.firstName = "Invalid";
+    }
+
+    if (!email.match(emailPattern)) {
+      newError.email = "Valid email is required.";
+      // console.log(newError);
+    }
+
+    if (!accounttype) {
+      newError.actype = "Invalid";
+    }
+
+    setError(newError);
+    // console.log(newError);
   };
 
   const handleAccountTypeChange = (e) => {
     setAccountType(e[0].value);
-    console.log("log acc",e[0].value);
-    console.log("type",accounttype);
-    if (!accounttype){
-      setError("Account Type can only contain alphabets");
-    } else {
-      setError("");
-    }  
-  }
-
-  const handleOpenAccount = () => {
-    if (error) {
-      setError("An error occured");
-    } else {
-      setError("");
-    }
+    // console.log("log acc", e[0].value);
+    // console.log("type", accounttype);
   };
+
+  // const handleOpenAccount = () => {
+  //   validateForm();
+  //   if (error) {
+  //     setError("An error occured");
+  //   } else {
+  //     setError({});
+  //   }
+  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -213,8 +206,10 @@ export default function OpenAccount() {
               autoFocus
               value={firstname}
               onChange={handleFirstnameChange}
+              error={!!error.firstName}
+              helperText={error.firstName}
             />
-            {error && error.match("First") && (
+            {/* {error && error.match("First") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -222,7 +217,7 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
+            )} */}
 
             <TextField
               margin="normal"
@@ -235,8 +230,10 @@ export default function OpenAccount() {
               color="error"
               value={lastname}
               onChange={handleLastnameChange}
+              error={!!error.lastName}
+              helperText={error.lastName}
             />
-            {error && error.match("Last") && (
+            {/* {error && error.match("Last") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -244,7 +241,7 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
+            )} */}
 
             <TextField
               margin="normal"
@@ -258,8 +255,10 @@ export default function OpenAccount() {
               color="error"
               value={email}
               onChange={handleEmailChange}
+              error={!!error.email}
+              helperText={error.email}
             />
-            {error && error.match("Email") && (
+            {/* {error && error.match("Email") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -267,7 +266,7 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
+            )} */}
 
             <TextField
               margin="normal"
@@ -280,8 +279,10 @@ export default function OpenAccount() {
               color="error"
               value={aadhaar}
               onChange={handleAadhaarChange}
+              error={!!error.aadhaar}
+              helperText={error.aadhaar}
             />
-            {error && error.match("Aadhaar") && (
+            {/* {error && error.match("Aadhaar") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -289,7 +290,7 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
+            )} */}
 
             <TextField
               margin="normal"
@@ -302,8 +303,10 @@ export default function OpenAccount() {
               color="error"
               value={address}
               onChange={handleAddressChange}
+              error={!!error.address}
+              helperText={error.address}
             />
-            {error && error.match("Address") && (
+            {/* {error && error.match("Address") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -311,30 +314,31 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
-          
-            <Select
-              margin = "normal"
-              options={options} 
-              id = "branch"
-              required
-              name = "branch"
-              label = "Branch"
-              value={branch} 
-              onChange={handleBranchChange} 
-              placeholder="Select Branch" 
-            />
-            {error && error.match("Branch") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )}
+            )} */}
 
-            
+            <Select
+              margin="normal"
+              options={options}
+              id="branch"
+              required
+              name="branch"
+              label="Branch"
+              value={branch}
+              onChange={handleBranchChange}
+              placeholder="Select Branch"
+              error={!!error.branch}
+              helperText={error.branch}
+            />
+            {/* {error && error.match("Branch") && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ fontStyle: "italic", margin: "2% 0" }}
+              >
+                {error}
+              </Typography>
+            )} */}
+
             <TextField
               margin="normal"
               required
@@ -346,8 +350,10 @@ export default function OpenAccount() {
               color="error"
               value={ifsc}
               onChange={handleIfscChange}
+              error={!!error.ifsc}
+              helperText={error.ifsc}
             />
-            {error && error.match("IFSC") && (
+            {/* {error && error.match("IFSC") && (
               <Typography
                 variant="body2"
                 color="error"
@@ -355,18 +361,20 @@ export default function OpenAccount() {
               >
                 {error}
               </Typography>
-            )}
-            
+            )} */}
+
             <Select
-              margin = "normal"
-              options={accoptions} 
-              id = "accounttype"
+              margin="normal"
+              options={accoptions}
+              id="accounttype"
               required
-              name = "accounttype"
-              label = "accounttype"
-              value={accounttype} 
-              onChange={handleAccountTypeChange} 
-              placeholder="Select Account Type" 
+              name="accounttype"
+              label="accounttype"
+              value={accounttype}
+              onChange={handleAccountTypeChange}
+              placeholder="Select Account Type"
+              error={!!error.actype}
+              helperText={error.actype}
             />
             <Button
               type="submit"
@@ -374,19 +382,19 @@ export default function OpenAccount() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               color="error"
-              onClick={handleOpenAccount}
+              onClick={validateForm}
             >
               Submit
             </Button>
 
-            {error && (
+            {/* {error && (
               <Typography
                 variant="body2"
                 sx={{ fontStyle: "italic", margin: "2% 0" }}
               >
                 {error}
               </Typography>
-            )}
+            )} */}
           </Box>
         </Box>
       </Container>

@@ -1,5 +1,6 @@
 package com.example.training.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
 
 @Getter
 @Setter
@@ -45,6 +47,7 @@ public class User {
     @NotNull
     @Size(min=8, message="Password should be at least 8-characters long")
     @Column(name="password")
+    @JsonIgnore
     private String password;
 
     @Column(name="email")
@@ -53,7 +56,6 @@ public class User {
 
     @Column(name="phone")
     @Min(value=1000000000, message="Phone number should be 10-digits long")
-//    @Max(value=9999999999, message="Phone number should be 10-digits long")
     private Long phone;
 
 }

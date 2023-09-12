@@ -28,11 +28,14 @@ export default function SignUp() {
       const url = "http://localhost:8090/signup";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        email: data.get("email"),
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        password: data.get("password"),
-        tpassword: data.get("tpassword"),
+        user:{
+          firstName: data.get("firstName"),
+          lastName: data.get("lastName"),
+          email: data.get("email"),
+          password: data.get("password"),
+        },
+        accNo: data.get("accNo"),
+        transactionPassword: data.get("tpassword")
       };
       console.log(sendData);
       await axios
@@ -53,6 +56,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [tPassword, setTPassword] = useState("");
   const [confirmTPassword, setConfirmTPassword] = useState("");
+  const [accNo, setAccNo] = useState("");
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -78,6 +82,9 @@ export default function SignUp() {
   const handleConfirmTPasswordChange = (e) => {
     setConfirmTPassword(e.target.value);
   };
+  const handleAccNoChange = (e) => {
+    setAccNo(e.target.value);
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -85,7 +92,7 @@ export default function SignUp() {
     // Regular expressions for validation
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const passwordPattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
     if (!firstName) {
       newErrors.firstName = "First name is required.";
@@ -115,6 +122,10 @@ export default function SignUp() {
 
     if (tPassword !== confirmTPassword) {
       newErrors.confirmTPassword = "Transaction passwords do not match.";
+    }
+
+    if (!accNo) {
+      newErrors.accNo = "Account Number is required.";
     }
 
     setErrors(newErrors);
@@ -187,6 +198,20 @@ export default function SignUp() {
                   onChange={handleEmailChange}
                   error={!!errors.email}
                   helperText={errors.email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="accNo"
+                  label="Account Number"
+                  name="accNo"
+                  color="error"
+                  value={accNo}
+                  onChange={handleAccNoChange}
+                  error={!!errors.accNo}
+                  helperText={errors.accNo}
                 />
               </Grid>
               <Grid item xs={12}>
