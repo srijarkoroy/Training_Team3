@@ -35,7 +35,7 @@ export default function OpenAccount() {
       // lastname: data.get("lastname"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
-      ifsc: data.get("ifsc"),
+      IFSC: data.get("ifsc"),
       address: data.get("address"),
       accType: data.get("accounttype"),
     };
@@ -64,7 +64,7 @@ export default function OpenAccount() {
   const [accounttype, setAccountType] = useState("");
   const [error, setError] = useState({});
 
-  const namePattern = /^[A-Za-z]/;
+  const namePattern = /^[A-Za-z ,.'-]+$/i;
   const aadhaarPattern = /^\d{12}$/;
   const ifscPattern = /^[A-Z0-9]{10,}/;
   const addressPattern = /^[A-Za-z0-9,.]/;
