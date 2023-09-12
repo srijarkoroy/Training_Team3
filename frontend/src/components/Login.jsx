@@ -12,24 +12,42 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import bcrypt from "bcryptjs";
+import axios from "axios";
+
+const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (error === "") {
+      const data = new FormData(event.currentTarget);
+      const url = "http://localhost:8090/login";
+      const header = { "Content-Type": "application/json" };
+      const sendData = {
+        username: data.get("username"),
+        password: bcrypt.hashSync(data.get("password"), salt),
+      };
+      console.log(sendData);
+      await axios
+        .post(url, sendData)
+        .then((response) => {
+          console.log("finish api call - response:::", response);
+        })
+        .catch((error) => {
+          console.log("something wrong:::", error);
+        });
+    }
   };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -42,7 +60,7 @@ export default function Login() {
   const handleLogin = () => {
     const usernamePattern = /^[A-Za-z0-9]+$/;
     const passwordPattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
     if (!username.match(usernamePattern)) {
       setError("Username can only contain alphabets and numbers.");
