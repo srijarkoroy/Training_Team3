@@ -44,7 +44,6 @@ public class User {
     private String email;
 
     @Column(name="phone")
-    @Size(min=10,max=10)
     private Long phone;
 
 }

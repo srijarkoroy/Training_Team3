@@ -3,6 +3,7 @@ package com.example.training.controller;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
+import com.example.training.model.UserDetails;
 import com.example.training.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,8 +42,8 @@ public class LoginController {
 	}
 
 	@PostMapping("/userDetails/createUser")
-	public ResponseEntity<String> saveUserDetails(@RequestBody User user){
-		return new ResponseEntity<>(loginService.saveNewUser(user), HttpStatus.OK);
+	public ResponseEntity<String> saveUserDetails(@RequestBody UserDetails userDetails){
+		return new ResponseEntity<>(loginService.saveNewUser(userDetails), HttpStatus.OK);
 	}
   
 	@PostMapping("/accountDetails/createAccount")
