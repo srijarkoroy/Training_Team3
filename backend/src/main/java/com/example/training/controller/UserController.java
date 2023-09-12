@@ -2,6 +2,8 @@ package com.example.training.controller;
 
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
+import com.example.training.exception.EntityNotFoundException;
+import com.example.training.exception.EntityNotFoundException;
 import com.example.training.model.UserDetails;
 import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ public class UserController {
 
 	private final UserService userService;
 	@GetMapping("/userDetails/{id}")
-	public ResponseEntity<?> getUserDetails(@PathVariable Long id){
+	public ResponseEntity<?> getUserDetails(@PathVariable Long id) throws EntityNotFoundException {
 		Object response = userService.findUser(id);
 		if(response.equals("user not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -27,7 +29,7 @@ public class UserController {
 	}
 
 	@GetMapping("/accountDetails/{accNo}")
-	public ResponseEntity<?> getAccountDetails(@PathVariable Long accNo){
+	public ResponseEntity<?> getAccountDetails(@PathVariable Long accNo) throws EntityNotFoundException {
 		Object response = userService.findAccount(accNo);
 		if(response.equals("account not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -35,7 +37,7 @@ public class UserController {
 	}
 
 	@GetMapping("transactionDetails/{transact}")
-	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact){
+	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact) throws EntityNotFoundException {
 		Object response = userService.findTransaction(transact);
 		if (response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
