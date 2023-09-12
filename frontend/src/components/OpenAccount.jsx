@@ -29,31 +29,36 @@ export default function OpenAccount() {
     const data = new FormData(event.currentTarget);
     const url = "http://localhost:8090/user/accountDetails/createAccount";
     const header = { "Content-Type": "application/json" };
+    
     const sendData = {
       // email: data.get("email"),
       // firstname: data.get("firstname"),
       // lastname: data.get("lastname"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
-      IFSC: data.get("ifsc"),
+      ifsc: data.get("ifsc"),
       address: data.get("address"),
       accType: data.get("accounttype"),
     };
     console.log(sendData);
 
-    await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sendData),
-    })
-      .then((response) => {
-        console.log("finish api call - response:::", response);
-      })
-      .catch((error) => {
-        console.log("something wrong:::", error);
+    try {
+      const response = await fetch(url, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sendData),
       });
+      if(!response.ok) {
+        throw new Error("Something wrong with request");
+      }
+      const resData = await response.json();
+      setResponseData(resData);
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
   };
-
+  const [responseData, setResponseData] = useState("");
   const [email, setEmail] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -194,6 +199,13 @@ export default function OpenAccount() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {responseData && <Typography
+                variant="body2"
+                color="error"
+                sx={{ fontStyle: "bold", margin: "2% 0" }}
+              >
+                Congratulations, your Account No is {responseData.accNo}
+              </Typography>}
             <TextField
               margin="normal"
               required

@@ -45,7 +45,7 @@ public class User {
     @NotNull
     @Size(min=8, message="Password should be at least 8-characters long")
     @Column(name="password")
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
 
     @Column(name="email")

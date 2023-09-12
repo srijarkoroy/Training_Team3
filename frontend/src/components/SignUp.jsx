@@ -23,9 +23,10 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (errors === "") {
+    if (JSON.stringify(errors) === '{}') {
+      
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/signup";
+      const url = "http://localhost:8090/user/userDetails/createUser";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         user:{
@@ -35,7 +36,7 @@ export default function SignUp() {
           password: data.get("password"),
         },
         accNo: data.get("accNo"),
-        transactionPassword: data.get("tpassword")
+        transactionPassword: data.get("tPassword")
       };
       console.log(sendData);
       await axios
