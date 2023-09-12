@@ -7,12 +7,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@Valid
 @Table(name="user")
 public class User {
     @Id

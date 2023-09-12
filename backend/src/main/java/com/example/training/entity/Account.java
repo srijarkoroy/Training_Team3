@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@Valid
 @Table(name="account")
 public class Account {
     @Id
