@@ -34,7 +34,7 @@ public class User {
     )
 
     @Column(name="userId")
-    private String userId;
+    private Long userId;
 
     @NotNull
     @Size(min=1, message="First Name should have at least 1 characters")

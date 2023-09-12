@@ -32,7 +32,7 @@ public class Account {
 
 //    @NotNull
     @Column(name="userId")
-    private String userId;
+    private Long userId;
 
     @Column(name="aadhaarNo")
     @NotNull
