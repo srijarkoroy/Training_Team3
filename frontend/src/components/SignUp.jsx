@@ -23,20 +23,20 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (JSON.stringify(errors) === '{}') {
-      
+    if (JSON.stringify(errors) === "{}") {
       const data = new FormData(event.currentTarget);
       const url = "http://localhost:8090/user/userDetails/createUser";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        user:{
+        user: {
           firstName: data.get("firstName"),
           lastName: data.get("lastName"),
           email: data.get("email"),
           password: data.get("password"),
+          phoneNumber: data.get("phoneNumber"),
         },
         accNo: data.get("accNo"),
-        transactionPassword: data.get("tPassword")
+        transactionPassword: data.get("tPassword"),
       };
       console.log(sendData);
       await axios
@@ -58,6 +58,7 @@ export default function SignUp() {
   const [tPassword, setTPassword] = useState("");
   const [confirmTPassword, setConfirmTPassword] = useState("");
   const [accNo, setAccNo] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -85,6 +86,9 @@ export default function SignUp() {
   };
   const handleAccNoChange = (e) => {
     setAccNo(e.target.value);
+  };
+  const handlePhoneChange = (e) => {
+    setPhoneNumber(e.target.value);
   };
 
   const validateForm = () => {
@@ -119,6 +123,9 @@ export default function SignUp() {
     if (!tPassword || !tPassword.match(passwordPattern)) {
       newErrors.tPassword =
         "Transaction password must be at least 8 characters, including alphabets, numbers, and special characters.";
+    }
+    if (!phoneNumber || !phoneNumber.match(/^\d{10}$/)) {
+      newErrors.phoneNumber = "Invalid phone number";
     }
 
     if (tPassword !== confirmTPassword) {
@@ -199,6 +206,20 @@ export default function SignUp() {
                   onChange={handleEmailChange}
                   error={!!errors.email}
                   helperText={errors.email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  color="error"
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                  error={!!errors.phoneNumber}
+                  helperText={errors.phoneNumber}
                 />
               </Grid>
               <Grid item xs={12}>
