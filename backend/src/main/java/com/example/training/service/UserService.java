@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class UserService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
@@ -44,25 +44,24 @@ public class LoginService {
     }
 
     public String saveNewUser(UserDetails userDetails){
-        userRepository.save(userDetails.getUser());
+        User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
         if(account.isEmpty())
             return "User does not have a bank account";
 
-        account.ifPresent(account1 -> {
-            account1.setUserId(userDetails.getUser().getUserId());
-            account1.setTransactionPassword(userDetails.getTransactionPassword());
-            accountRepository.save(account1);
+        account.ifPresent(userAccount -> {
+            userAccount.setUserId(user.getUserId());
+            userAccount.setTransactionPassword(userDetails.getTransactionPassword());
+            accountRepository.save(userAccount);
         });
-
         return "Successfully Created New User";
     }
 
-    public String saveNewAccount(Account account){
+    public Object saveNewAccount(Account account){
         account.setDateOfCreation(LocalDate.now());
         account.setBalance(0.0f);
-        accountRepository.save(account);
-        return "Successfully Created New Account";
+
+        return accountRepository.save(account);
     }
 
     public String saveNewTransaction(Transaction transaction){
