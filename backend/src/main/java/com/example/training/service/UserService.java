@@ -43,7 +43,7 @@ public class UserService {
         return transact;
     }
 
-    public String saveNewUser(UserDetails userDetails){
+    public Object saveNewUser(UserDetails userDetails){
         User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
         if(account.isEmpty())
@@ -54,7 +54,7 @@ public class UserService {
             userAccount.setTransactionPassword(userDetails.getTransactionPassword());
             accountRepository.save(userAccount);
         });
-        return "Successfully Created New User";
+        return user;
     }
 
     public Object saveNewAccount(Account account){

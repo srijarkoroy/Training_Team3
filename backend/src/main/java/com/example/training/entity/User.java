@@ -1,6 +1,5 @@
 package com.example.training.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,8 +8,10 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
