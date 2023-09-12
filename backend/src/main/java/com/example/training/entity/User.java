@@ -50,8 +50,6 @@ public class User {
     private String email;
 
     @Column(name="phone")
-    @Min(value=1000000000, message="Phone number should be 10-digits long")
-//    @Max(value=9999999999, message="Phone number should be 10-digits long")
     private Long phone;
 
 }

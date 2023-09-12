@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -35,12 +36,10 @@ public class Account {
 
 //    @NotNull
     @Column(name="userId")
-    private Integer userId;
+    private Long userId;
 
     @Column(name="aadhaarNo")
-    @NotNull
-//    @Size(min=12, max=12, message="Aadhar Number should be 12-digits long")
-    private long aadhaarNo;
+    private Long aadhaarNo;
 
     @Column(name="branch")
     private String branch;
