@@ -33,20 +33,20 @@ public class Account {
     )
     private Long accNo;
 
-    @NotNull
+//    @NotNull
     @Column(name="userId")
     private Integer userId;
 
     @Column(name="aadhaarNo")
     @NotNull
-    @Size(min=12, max=12)
+//    @Size(min=12, max=12, message="Aadhar Number should be 12-digits long")
     private long aadhaarNo;
 
     @Column(name="branch")
     private String branch;
 
     @NotNull
-    @Size(min=11,max=11)
+    @Size(min=11,max=11, message="IFSC code should be 11-characters long")
     @Column(name="IFSC")
     private String ifsc;
 
@@ -61,7 +61,7 @@ public class Account {
     private LocalDate dateOfCreation;
 
     @Column(name="transactionPassword")
-    @Size(min=8)
+    @Size(min=8, message="Password should be at least 8-characters long")
     private String transactionPassword;
 
     @Column(name="address")

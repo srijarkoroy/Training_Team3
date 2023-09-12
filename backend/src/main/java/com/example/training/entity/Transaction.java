@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -33,17 +34,17 @@ public class Transaction {
     private Long transactionId;
 
     @NotNull
-    @Size(min=11,max=11)
+    @Size(min=11,max=11, message="Account Number should be 11-digits long")
     @Column(name="senderAccNo")
     private String senderAccNo;
 
     @NotNull
-    @Size(min=11,max=11)
+    @Size(min=11,max=11, message="Account Number should be 11-digits long")
     @Column(name="recipientAccNo")
     private String recipientAccNo;
 
     @NotNull
-    @Min(value=1)
+    @Min(value=1, message="Minimum transaction amount is 1")
     @Column(name="amount")
     private Float amount;
 
@@ -61,7 +62,7 @@ public class Transaction {
     @Size(min=8)
     private String password;
 
-    @Size(min=10,max=10)
+//    @Size(min=10,max=10)
     @Column(name="phone")
     private Long phone;
 
