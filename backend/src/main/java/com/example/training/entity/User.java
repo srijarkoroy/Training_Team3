@@ -43,6 +43,7 @@ public class User {
     private String lastName;
 
     @NotNull
+    @Size(min=8)
     @Column(name="password")
     private String password;
 

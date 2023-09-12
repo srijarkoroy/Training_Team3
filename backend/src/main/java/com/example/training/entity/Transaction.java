@@ -58,7 +58,7 @@ public class Transaction {
     private String email;
 
     @Column(name="password")
-    @Size(min=4,max=15)
+    @Size(min=8)
     private String password;
 
     @Size(min=10,max=10)

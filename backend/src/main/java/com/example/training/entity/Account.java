@@ -33,6 +33,7 @@ public class Account {
     )
     private Long accNo;
 
+    @NotNull
     @Column(name="userId")
     private Integer userId;
 
@@ -60,7 +61,7 @@ public class Account {
     private LocalDate dateOfCreation;
 
     @Column(name="transactionPassword")
-    @Size(min=4,max=15)
+    @Size(min=8)
     private String transactionPassword;
 
     @Column(name="address")
