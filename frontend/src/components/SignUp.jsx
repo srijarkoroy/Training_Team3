@@ -26,7 +26,7 @@ export default function SignUp() {
     if (JSON.stringify(errors) === '{}') {
       
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/signup";
+      const url = "http://localhost:8090/user/userDetails/createUser";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         user:{
