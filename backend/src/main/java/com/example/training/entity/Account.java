@@ -42,7 +42,7 @@ public class Account {
     private String branch;
 
     @NotNull
-    @Size(min=11,max=11, message="IFSC code should be 11-characters long")
+    @Size(min=10,max=10, message="IFSC code should be 11-characters long")
     @Column(name="IFSC")
     private String ifsc;
 

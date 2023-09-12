@@ -62,7 +62,7 @@ public class UserController {
 	}
 
 	@PostMapping("/userDetails/createUser")
-	public ResponseEntity<String> saveUserDetails(@Valid @RequestBody UserDetails userDetails){
+	public ResponseEntity<Object> saveUserDetails(@Valid @RequestBody UserDetails userDetails){
 		return new ResponseEntity<>(userService.saveNewUser(userDetails), HttpStatus.OK);
 	}
   
