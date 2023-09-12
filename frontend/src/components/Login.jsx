@@ -28,21 +28,25 @@ export default function Login() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/login";
+      const url = "http://localhost:8090/user/authenticate";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        username: data.get("username"),
+        userId: data.get("username"),
         password: bcrypt.hashSync(data.get("password"), salt),
       };
       console.log(sendData);
-      await axios
-        .post(url, sendData)
-        .then((response) => {
-          console.log("finish api call - response:::", response);
-        })
-        .catch((error) => {
+      try {
+        const resData = await axios.post(url, sendData);
+        if(resData.status === 200) {
+          console.log("finish api call - response:::", resData);
+          const token = resData.data.body.token;
+          localStorage.setItem('token', token);
+        } else {
+          console.log("Login Failed");
+        }
+      } catch(error) {
           console.log("something wrong:::", error);
-        });
+        };
     }
   };
 
