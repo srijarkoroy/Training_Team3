@@ -3,12 +3,14 @@ package com.example.training.service;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
+import com.example.training.exception.EntityNotFoundException;
 import com.example.training.model.UserDetails;
 import com.example.training.model.UserDetailsDTO;
 import com.example.training.repository.AccountRepository;
 import com.example.training.repository.TransactionRepository;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,9 +23,12 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public Object findUser(Long id) {
+    public Object findUser(Long id) throws EntityNotFoundException {
         Optional<User> user = userRepository.findByUserId(id);
-        if (user.isEmpty()) {
+        if(!user.isPresent()){
+            throw new EntityNotFoundException(String.format("User not found with id "+id));
+        }
+        if(user.isEmpty()){
             return "user not found";
         }
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
@@ -37,17 +42,23 @@ public class UserService {
         return userDetailsDTO;
     }
 
-    public Object findAccount(Long acc) {
+    public Object findAccount(Long acc) throws EntityNotFoundException {
         Optional<Account> account = accountRepository.findByAccNo(acc);
-        if (account.isEmpty()) {
+        if(!account.isPresent()){
+            throw new EntityNotFoundException(String.format("Account not found with id "+acc));
+        }
+        if (account.isEmpty()){
             return "account not found";
         }
         return acc;
     }
 
-    public Object findTransaction(Long transact) {
+    public Object findTransaction(Long transact) throws EntityNotFoundException {
         Optional<Transaction> transaction = transactionRepository.findByTransactionId(transact);
-        if (transaction.isEmpty()) {
+        if(!transaction.isPresent()){
+            throw new EntityNotFoundException(String.format("Transaction not found with id "+transact));
+        }
+        if (transaction.isEmpty()){
             return "transaction not found";
         }
         return transact;
