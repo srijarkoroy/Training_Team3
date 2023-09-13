@@ -50,7 +50,7 @@ public class UserController {
 	}
   
 	@PostMapping("/accountDetails/createAccount")
-	public ResponseEntity<Object> saveAccountDetails(@RequestBody Account account){
+	public ResponseEntity<Object> saveAccountDetails(@Valid @RequestBody Account account){
 		return new ResponseEntity<>(userService.saveNewAccount(account), HttpStatus.OK);
 	}
 
