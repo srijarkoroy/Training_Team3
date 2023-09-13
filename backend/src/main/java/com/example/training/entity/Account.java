@@ -1,18 +1,12 @@
 package com.example.training.entity;
 
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -48,7 +42,7 @@ public class Account {
     private String branch;
 
     @NotNull
-    @Size(min=11,max=11, message="IFSC code should be 11-characters long")
+    @Size(min=10,max=10, message="IFSC code should be 11-characters long")
     @Column(name="IFSC")
     private String ifsc;
 

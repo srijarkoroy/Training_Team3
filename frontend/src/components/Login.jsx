@@ -12,24 +12,46 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import bcrypt from "bcryptjs";
+import axios from "axios";
+
+const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (error === "") {
+      const data = new FormData(event.currentTarget);
+      const url = "http://localhost:8090/user/authenticate";
+      const header = { "Content-Type": "application/json" };
+      const sendData = {
+        userId: data.get("username"),
+        password: data.get("password"),
+      };
+      console.log(sendData);
+      try {
+        const resData = await axios.post(url, sendData);
+        if(resData.status === 200) {
+          console.log("finish api call - response:::", resData);
+          const token = resData.data.token;
+          localStorage.setItem('token', token);
+        } else {
+          console.log("Login Failed");
+        }
+      } catch(error) {
+          console.log("something wrong:::", error);
+        };
+    }
   };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -42,7 +64,7 @@ export default function Login() {
   const handleLogin = () => {
     const usernamePattern = /^[A-Za-z0-9]+$/;
     const passwordPattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
     if (!username.match(usernamePattern)) {
       setError("Username can only contain alphabets and numbers.");
@@ -51,8 +73,8 @@ export default function Login() {
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
     } else {
-      setUsername("");
-      setPassword("");
+      // setUsername("");
+      // setPassword("");
       setError("");
     }
   };

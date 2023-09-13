@@ -4,22 +4,45 @@ import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.exception.EntityNotFoundException;
 import com.example.training.exception.EntityNotFoundException;
+import com.example.training.model.AuthRequest;
 import com.example.training.model.UserDetails;
+import com.example.training.service.JwtService;
 import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/user")
 @RestController
-@CrossOrigin
+@CrossOrigin(allowedHeaders = "*")
 @RequiredArgsConstructor
 public class UserController {
 
 	private final UserService userService;
+	private final AuthenticationManager authenticationManager;
+	private final JwtService jwtService;
+
+	@PostMapping("/authenticate")
+	public ResponseEntity<Map<String,String>> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
+		if (authentication.isAuthenticated()) {
+			Map<String,String> response = new HashMap<>();
+			response.put("token",jwtService.generateToken(String.valueOf(authRequest.getUserId())));
+			return new ResponseEntity<>(response,HttpStatus.OK);
+		} else {
+			throw new UsernameNotFoundException("invalid user request !");
+		}
+	}
+
 	@GetMapping("/userDetails/{id}")
 	public ResponseEntity<?> getUserDetails(@PathVariable Long id) throws EntityNotFoundException {
 		Object response = userService.findUser(id);
@@ -45,7 +68,7 @@ public class UserController {
 	}
 
 	@PostMapping("/userDetails/createUser")
-	public ResponseEntity<String> saveUserDetails(@Valid @RequestBody UserDetails userDetails){
+	public ResponseEntity<Object> saveUserDetails(@Valid @RequestBody UserDetails userDetails){
 		return new ResponseEntity<>(userService.saveNewUser(userDetails), HttpStatus.OK);
 	}
   
