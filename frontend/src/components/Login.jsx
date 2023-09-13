@@ -81,7 +81,7 @@ export default function Login() {
   const handleToken = async() => {
     const tk = {authorization: localStorage.getItem('token')};
     try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10007",
+      const tkData = await axios.get("http://localhost:8090/user/userDetails/10000",
        {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
       if(tkData.status === 200) {
         console.log("finish api call - response:::", tkData);
