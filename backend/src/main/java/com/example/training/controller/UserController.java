@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RequestMapping("/user")
 @RestController
-@CrossOrigin(allowedHeaders = "Authorization")
+@CrossOrigin(allowedHeaders = "*")
 @RequiredArgsConstructor
 public class UserController {
 
