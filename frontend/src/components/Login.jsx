@@ -32,7 +32,7 @@ export default function Login() {
       const header = { "Content-Type": "application/json" };
       const sendData = {
         userId: data.get("username"),
-        password: bcrypt.hashSync(data.get("password"), salt),
+        password: data.get("password"),
       };
       console.log(sendData);
       try {
@@ -73,8 +73,8 @@ export default function Login() {
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
     } else {
-      setUsername("");
-      setPassword("");
+      // setUsername("");
+      // setPassword("");
       setError("");
     }
   };
