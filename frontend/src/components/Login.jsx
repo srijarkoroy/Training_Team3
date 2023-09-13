@@ -39,7 +39,7 @@ export default function Login() {
         const resData = await axios.post(url, sendData);
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
-          const token = resData.data.body.token;
+          const token = resData.data.token;
           localStorage.setItem('token', token);
         } else {
           console.log("Login Failed");
