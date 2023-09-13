@@ -13,10 +13,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import bcrypt from "bcryptjs";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
+const salt = bcrypt.genSaltSync(10);
 
 export default function SignUp() {
   const [errors, setErrors] = useState({});
@@ -32,8 +34,8 @@ export default function SignUp() {
           firstName: data.get("firstName"),
           lastName: data.get("lastName"),
           email: data.get("email"),
-          password: data.get("password"),
-          phoneNumber: data.get("phoneNumber"),
+          password: bcrypt.hashSync(data.get("password"), salt),
+          phone: data.get("phoneNumber"),
         },
         accNo: data.get("accNo"),
         transactionPassword: data.get("tPassword"),
