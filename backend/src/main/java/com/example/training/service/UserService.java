@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +43,16 @@ public class UserService {
         if (account.isEmpty()) {
             return "account not found";
         }
-        return acc;
+        return account;
+    }
+
+    public Object findBalance(Long acc) {
+        Optional<Account> account = accountRepository.findByAccNo(acc);
+        if (account.isEmpty()) {
+            return "account not found";
+        }
+        Account userAcc = account.get();
+        return userAcc.getBalance();
     }
 
     public Object findTransaction(Long transact) {
@@ -50,7 +60,15 @@ public class UserService {
         if (transaction.isEmpty()) {
             return "transaction not found";
         }
-        return transact;
+        return transaction;
+    }
+
+    public Object findAllTransaction(String acc) {
+        List<Transaction> transaction = transactionRepository.findAllBySenderAccNo(acc);
+        if (transaction.size()==0) {
+            return "transaction not found";
+        }
+        return transaction;
     }
 
     public Object saveNewUser(UserDetails userDetails) {

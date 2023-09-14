@@ -56,9 +56,25 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@GetMapping("/accountDetails/getBalance/{accNo}")
+	public ResponseEntity<?> getBalance(@PathVariable Long accNo){
+		Object response = userService.findBalance(accNo);
+		if(response.equals("account balance not found"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 	@GetMapping("transactionDetails/{transact}")
 	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact){
 		Object response = userService.findTransaction(transact);
+		if (response.equals("transaction not found"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@GetMapping("allTransactionDetails/{acc}")
+	public ResponseEntity<?> getAllTransactionDetails(@PathVariable String acc){
+		Object response = userService.findAllTransaction(acc);
 		if (response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
