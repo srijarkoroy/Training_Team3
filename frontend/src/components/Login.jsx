@@ -78,6 +78,22 @@ export default function Login() {
       setError("");
     }
   };
+  const handleToken = async() => {
+    const tk = {authorization: localStorage.getItem('token')};
+    try {
+      const tkData = await axios.get("http://localhost:8090/user/userDetails/10017",
+       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
+      if(tkData.status === 200) {
+        console.log("finish api call - response:::", tkData);
+        // const token = tkData.data.token;
+        // localStorage.setItem('token', token);
+      } else {
+        console.log("Token get Failed");
+      }
+    } catch(error) {
+        console.log("something wrong with token:::", error);
+      };
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -152,6 +168,16 @@ export default function Login() {
                 {error}
               </Typography>
             )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="error"
+              onClick={handleToken}
+            >
+              Send Token
+            </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2" color="error">

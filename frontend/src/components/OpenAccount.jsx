@@ -18,11 +18,12 @@ import axios from "axios";
 
 import Select from "react-dropdown-select";
 import "react-dropdown/style.css";
-
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
-
+Modal.setAppElement('#root');
 export default function OpenAccount() {
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,6 +55,7 @@ export default function OpenAccount() {
       const resData = await response.json();
       setResponseData(resData);
       console.log(responseData);
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -68,6 +70,7 @@ export default function OpenAccount() {
   const [address, setAddress] = useState("");
   const [accounttype, setAccountType] = useState("");
   const [error, setError] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const namePattern = /^[A-Za-z ,.'-]+$/i;
   const aadhaarPattern = /^\d{12}$/;
@@ -174,6 +177,9 @@ export default function OpenAccount() {
   //     setError({});
   //   }
   // };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -199,13 +205,27 @@ export default function OpenAccount() {
             noValidate
             sx={{ mt: 1 }}
           >
-            {responseData && <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "bold", margin: "2% 0" }}
+            {responseData && 
+              <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
               >
-                Congratulations, your Account No is {responseData.accNo}
-              </Typography>}
+                <h2>Congratulations</h2>
+                <h3>Your Account No is {responseData.accNo}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>
+              // <Typography
+              //   variant="body2"
+              //   color="error"
+              //   sx={{ fontStyle: "bold", margin: "2% 0" }}
+              // >
+              //   Congratulations, your Account No is {responseData.accNo}
+              // </Typography>}
+            }
             <TextField
               margin="normal"
               required

@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import bcrypt from "bcryptjs";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -41,17 +43,27 @@ export default function SignUp() {
         transactionPassword: data.get("tPassword"),
       };
       console.log(sendData);
-      await axios
-        .post(url, sendData)
-        .then((response) => {
-          console.log("finish api call - response:::", response);
-        })
-        .catch((error) => {
-          console.log("something wrong:::", error);
+      try {
+        const response = await fetch(url, {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sendData),
         });
+        if(!response.ok) {
+          throw new Error("Something wrong with request");
+        }
+        const resData = await response.json();
+        setResponseData(resData);
+        console.log("resData", responseData);
+        console.log(responseData.userId);
+        setIsModalOpen(true);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+    }
     }
   };
-
+  
+  const [responseData, setResponseData] = useState("");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [lastName, setLastName] = useState("");
@@ -61,6 +73,7 @@ export default function SignUp() {
   const [confirmTPassword, setConfirmTPassword] = useState("");
   const [accNo, setAccNo] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -140,6 +153,9 @@ export default function SignUp() {
 
     setErrors(newErrors);
   };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -164,7 +180,19 @@ export default function SignUp() {
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
-          >
+          > { responseData &&
+            <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h2>Congratulations</h2>
+                <h3>Your User ID is {responseData.userId}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
