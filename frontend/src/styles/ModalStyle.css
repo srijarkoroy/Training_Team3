@@ -1,0 +1,11 @@
+.custom-modal{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid red;
+    padding: 20px;
+    max-width: 80%;
+    text-align: center;
+}
