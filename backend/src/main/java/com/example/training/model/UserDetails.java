@@ -6,12 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Valid
 public class UserDetails {
+
+    @NotNull
     private User user;
+
+    @NotNull
     private Long accNo;
+
+    @NotNull
     private String transactionPassword;
 }
