@@ -19,9 +19,10 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/user")
 @RestController
+@CrossOrigin
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
 
 	private final UserService userService;
