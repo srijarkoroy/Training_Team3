@@ -3,6 +3,8 @@ package com.example.training.service;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
+import com.example.training.model.BalanceRequest;
+import com.example.training.model.PerformTransactionDetails;
 import com.example.training.model.UserDetails;
 import com.example.training.model.UserDetailsDTO;
 import com.example.training.repository.AccountRepository;
@@ -12,8 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,13 +47,16 @@ public class UserService {
         return account;
     }
 
-    public Object findBalance(Long acc) {
-        Optional<Account> account = accountRepository.findByAccNo(acc);
-        if (account.isEmpty()) {
-            return "account not found";
-        }
-        Account userAcc = account.get();
-        return userAcc.getBalance();
+    public Object findBalance(BalanceRequest balanceRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+            return "Incorrect Transaction password";
+        Map<String, Float> map = new HashMap<String, Float>();
+        map.put("balance", userAccount.getBalance());
+        return map;
     }
 
     public Object findTransaction(Long transact) {
@@ -63,12 +67,41 @@ public class UserService {
         return transaction;
     }
 
-    public Object findAllTransaction(String acc) {
-        List<Transaction> transaction = transactionRepository.findAllBySenderAccNo(acc);
-        if (transaction.size()==0) {
+    public Object findAllTransaction(BalanceRequest balanceRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+            return "Incorrect Transaction password";
+        List<Transaction> transaction = transactionRepository.findAllBySenderAccNo(userAccount.getAccNo());
+        if (transaction.isEmpty()) {
             return "transaction not found";
         }
         return transaction;
+    }
+
+    public Object doTransaction(PerformTransactionDetails performTransactionDetails){
+        Optional<Account> senderAccount = accountRepository.findByAccNo(performTransactionDetails.getAccNo());
+        Optional<Account> receiverAccount = accountRepository.findByAccNo(performTransactionDetails.getRecipientAccNo());
+        if (senderAccount.isEmpty())
+            return "User does not have a bank account";
+        if (receiverAccount.isEmpty())
+            return "Receiver does not have a bank account";
+        Account userAccount = senderAccount.get();
+        if(performTransactionDetails.getAmount() > userAccount.getBalance()){
+            return "Insufficient balance";
+        } else {
+            userAccount.setBalance(userAccount.getBalance() - performTransactionDetails.getAmount());
+            accountRepository.save(userAccount);
+        }
+        if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+            return "Incorrect Transaction Password";
+        receiverAccount.ifPresent(recipientAccount -> {
+            recipientAccount.setBalance(recipientAccount.getBalance() + performTransactionDetails.getAmount());
+            accountRepository.save(recipientAccount);
+        });
+        return "transaction executed successfully";
     }
 
     public Object saveNewUser(UserDetails userDetails) {
