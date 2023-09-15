@@ -89,18 +89,24 @@ public class UserService {
         if (receiverAccount.isEmpty())
             return "Receiver does not have a bank account";
         Account userAccount = senderAccount.get();
+        if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+            return "Incorrect Transaction Password";
         if(performTransactionDetails.getAmount() > userAccount.getBalance()){
             return "Insufficient balance";
         } else {
             userAccount.setBalance(userAccount.getBalance() - performTransactionDetails.getAmount());
             accountRepository.save(userAccount);
         }
-        if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
-            return "Incorrect Transaction Password";
         receiverAccount.ifPresent(recipientAccount -> {
             recipientAccount.setBalance(recipientAccount.getBalance() + performTransactionDetails.getAmount());
             accountRepository.save(recipientAccount);
         });
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccNo(performTransactionDetails.getAccNo());
+        transaction.setRecipientAccNo(performTransactionDetails.getRecipientAccNo());
+        transaction.setAmount(performTransactionDetails.getAmount());
+        transaction.setStatement(performTransactionDetails.getStatement());
+        String ret = saveNewTransaction(transaction);
         return "transaction executed successfully";
     }
 

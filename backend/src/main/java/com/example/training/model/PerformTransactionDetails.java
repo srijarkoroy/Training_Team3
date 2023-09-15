@@ -8,7 +8,8 @@ import lombok.Setter;
 public class PerformTransactionDetails {
     private Long accNo;
     private Long recipientAccNo;
-    private Long amount;
+    private Float amount;
     private String transactionPassword;
+    private String statement;
 
 }
