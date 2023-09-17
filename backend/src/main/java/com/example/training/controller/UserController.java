@@ -3,6 +3,8 @@ package com.example.training.controller;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.model.AuthRequest;
+import com.example.training.model.BalanceRequest;
+import com.example.training.model.PerformTransactionDetails;
 import com.example.training.model.UserDetails;
 import com.example.training.service.JwtService;
 import com.example.training.service.UserService;
@@ -56,10 +58,10 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/accountDetails/getBalance/{accNo}")
-	public ResponseEntity<?> getBalance(@PathVariable Long accNo){
-		Object response = userService.findBalance(accNo);
-		if(response.equals("account balance not found"))
+	@PostMapping("/accountDetails/getBalance")
+	public ResponseEntity<?> getBalance(@Valid @RequestBody BalanceRequest balanceRequest){
+		Object response = userService.findBalance(balanceRequest);
+		if(response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -72,12 +74,21 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("allTransactionDetails/{acc}")
-	public ResponseEntity<?> getAllTransactionDetails(@PathVariable String acc){
-		Object response = userService.findAllTransaction(acc);
+	@PostMapping("/allTransactionDetails")
+	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody BalanceRequest balanceRequest){
+
+		Object response = userService.findAllTransaction(balanceRequest);
 		if (response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping("/performTransaction")
+	public ResponseEntity<Object> performTransaction(@Valid @RequestBody PerformTransactionDetails performTransactionDetails){
+		Object response = userService.doTransaction(performTransactionDetails);
+		if (response.equals("transaction executed successfully"))
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping("/userDetails/createUser")
