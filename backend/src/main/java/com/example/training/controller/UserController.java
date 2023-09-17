@@ -17,13 +17,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/user")
 @RestController
+@CrossOrigin
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
 
 	private final UserService userService;
@@ -43,7 +45,7 @@ public class UserController {
 	}
 
 	@GetMapping("/userDetails/{id}")
-	public ResponseEntity<?> getUserDetails(@PathVariable Long id){
+	public ResponseEntity<?> getUserDetails(@PathVariable Long id) throws EntityNotFoundException {
 		Object response = userService.findUser(id);
 		if(response.equals("user not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -51,7 +53,7 @@ public class UserController {
 	}
 
 	@GetMapping("/accountDetails/{accNo}")
-	public ResponseEntity<?> getAccountDetails(@PathVariable Long accNo){
+	public ResponseEntity<?> getAccountDetails(@PathVariable Long accNo) throws EntityNotFoundException {
 		Object response = userService.findAccount(accNo);
 		if(response.equals("account not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -67,7 +69,7 @@ public class UserController {
 	}
 
 	@GetMapping("transactionDetails/{transact}")
-	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact){
+	public ResponseEntity<?> getTransactionDetails(@PathVariable Long transact) throws EntityNotFoundException {
 		Object response = userService.findTransaction(transact);
 		if (response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -97,7 +99,7 @@ public class UserController {
 	}
   
 	@PostMapping("/accountDetails/createAccount")
-	public ResponseEntity<Object> saveAccountDetails(@RequestBody Account account){
+	public ResponseEntity<Object> saveAccountDetails(@Valid @RequestBody Account account){
 		return new ResponseEntity<>(userService.saveNewAccount(account), HttpStatus.OK);
 	}
 
