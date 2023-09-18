@@ -5,6 +5,7 @@ import SignUp from './components/SignUp'
 import OpenAccount from './components/OpenAccount'
 import BalanceCheck from './components/BalanceCheck'
 import {Link, Route, Routes} from 'react-router-dom'
+import Dashboard from './components/Dashboard'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/openaccount" element={<div><OpenAccount /> <Navbar /> </div>} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/balancecheck" element={<BalanceCheck />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
 
     </div>

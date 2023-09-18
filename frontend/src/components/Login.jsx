@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -23,7 +24,7 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
@@ -41,6 +42,7 @@ export default function Login() {
           console.log("finish api call - response:::", resData);
           const token = resData.data.token;
           localStorage.setItem('token', token);
+          navigate("/dashboard");
         } else {
           console.log("Login Failed");
         }

@@ -11,6 +11,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -25,8 +28,11 @@ export default function BalanceCheck() {
       const data = new FormData(event.currentTarget);
       const url = "http://localhost:8090/user/accountDetails/getBalance";
       const header = { "Content-Type": "application/json" };
-      const accNo= data.get("AccNo");
-      const password= data.get("password");
+      const sendData ={
+        accNo:data.get("AccNo"),
+        transactionPassword:data.get("password")
+      }
+  
       const config = {
         headers:{
           Authorization: "Bearer "+localStorage.getItem("token")
@@ -34,14 +40,17 @@ export default function BalanceCheck() {
       };
       // console.log(sendData);
       try {
-        const resData = await axios.get(url+"/"+accNo,config);
+        const resData = await axios.post(url, sendData, config);
         if(resData.status === 200) {
-          console.log("finish api call - response:::", resData.data);
+          console.log("finish api call - response:::", resData.data.balance);
+          
           // const token = resData.data.token;
           // localStorage.setItem('token', token);
         } else {
           console.log("API Call Failed");
         }
+        setResponseData(resData);
+        setIsModalOpen(true);
       } catch(error) {
           console.log("something wrong:::", error);
         };
@@ -50,6 +59,11 @@ export default function BalanceCheck() {
 
   const [accno, setAccNo] = useState("");
   const [password, setPassword] = useState("");
+  const [responseData, setResponseData] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleUsernameChange = (e) => {
     setAccNo(e.target.value);
@@ -94,7 +108,19 @@ export default function BalanceCheck() {
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
-          >
+          >{ responseData &&
+            <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                {/* <h2>Congratulations</h2> */}
+                <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <TextField
               margin="normal"
               required
@@ -113,7 +139,7 @@ export default function BalanceCheck() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Transaction Password"
               type="password"
               id="password"
               autoComplete="current-password"
