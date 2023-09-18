@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -14,6 +14,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import {Link} from "react-router-dom";
+import Transaction from "./Transaction";
+import { useTransaction } from "./TransactionContext";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -21,40 +24,47 @@ const salt = bcrypt.genSaltSync(10);
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function TransactionHistory() {
   const [error, setError] = useState("");
-
+  const [res, setRes] = useState("");
+  const { setTransaction } = useTransaction();
+  // useEffect(() => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/authenticate";
+      const url = "http://localhost:8090/user/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        userId: data.get("username"),
-        password: data.get("password"),
+        accNo: data.get("accNo"),
+        transactionPassword: data.get("password"),
       };
       console.log(sendData);
       try {
-        const resData = await axios.post(url, sendData);
+        const resData = await axios.post(url, sendData, {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
+        
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
-          const token = resData.data.token;
-          localStorage.setItem('token', token);
+          setRes(resData);
+          setTransaction(resData);
+          console.log("res passed:::", {res}.res.data);
+        //   const token = resData.data.token;
+        //   localStorage.setItem('token', token);
         } else {
-          console.log("Login Failed");
+          console.log("Authentication Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
         };
     }
   };
+// });
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [accNo, setAccNo] = useState("");
+  const [transactionPassword, setPassword] = useState("");
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleAccNoChange = (e) => {
+    setAccNo(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -62,13 +72,13 @@ export default function Login() {
   };
 
   const handleLogin = () => {
-    const usernamePattern = /^[A-Za-z0-9]+$/;
-    const passwordPattern =
+    // const accNoPattern = /.,'^[0-9]{10}$/;
+    const transactionPasswordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    if (!username.match(usernamePattern)) {
-      setError("Username can only contain alphabets and numbers.");
-    } else if (!password.match(passwordPattern)) {
+    // if (!accNo.match(accNoPattern)) {
+    //   setError("Account Number should be 11-digits long.");
+    if (!transactionPassword.match(transactionPasswordPattern)) {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
@@ -78,22 +88,22 @@ export default function Login() {
       setError("");
     }
   };
-  const handleToken = async() => {
-    const tk = {authorization: localStorage.getItem('token')};
-    try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
-       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-      if(tkData.status === 200) {
-        console.log("finish api call - response:::", tkData);
-        // const token = tkData.data.token;
-        // localStorage.setItem('token', token);
-      } else {
-        console.log("Token get Failed");
-      }
-    } catch(error) {
-        console.log("something wrong with token:::", error);
-      };
-  };
+//   const handleToken = async() => {
+//     const tk = {authorization: localStorage.getItem('token')};
+//     try {
+//       const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
+//        {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
+//       if(tkData.status === 200) {
+//         console.log("finish api call - response:::", tkData);
+//         // const token = tkData.data.token;
+//         // localStorage.setItem('token', token);
+//       } else {
+//         console.log("Token get Failed");
+//       }
+//     } catch(error) {
+//         console.log("something wrong with token:::", error);
+//       };
+//   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -123,14 +133,14 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="accNo"
+              label="Account Number"
+              name="accNo"
+              autoComplete="accNo"
               color="error"
               autoFocus
-              value={username}
-              onChange={handleUsernameChange}
+              value={accNo}
+              onChange={handleAccNoChange}
             />
             <TextField
               margin="normal"
@@ -142,13 +152,14 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               color="error"
-              value={password}
+              value={transactionPassword}
               onChange={handlePasswordChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="error" />}
               label="Remember me"
             />
+            <Link to={'/viewtransactionhistory'}>
             <Button
               type="submit"
               fullWidth
@@ -157,8 +168,9 @@ export default function Login() {
               color="error"
               onClick={handleLogin}
             >
-              Sign In
+              View Transaction History
             </Button>
+            </Link>
 
             {error && (
               <Typography
@@ -168,7 +180,7 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Button
+            {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -194,7 +206,7 @@ export default function Login() {
                   {"Don't have netbanking? Register here"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Container>
