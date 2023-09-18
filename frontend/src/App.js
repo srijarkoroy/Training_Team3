@@ -17,7 +17,6 @@ function App() {
         <Route path="/openaccount" element={<div><OpenAccount /> <Navbar /> </div>} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/transactionhistory" element={<div><TransactionHistory /> <Navbar /></div>}/>
-        <Route path="/viewtransactionhistory" element={<div><Transaction /> <Navbar /></div>}/>
         <Route path="/performtransaction" element={<div><PerformTransaction /><Navbar /></div>}/>
       </Routes>
 

@@ -5,17 +5,9 @@ import { Icon, Table, Container } from 'semantic-ui-react'
 // import TransactionHistory from './TransactionHistory'
 import 'semantic-ui-css/semantic.min.css'
 import '../styles/Transaction.css'
-import { useTransaction } from './TransactionContext'
 
-function Transaction() {
-    // console.log(props.location.state);
-    // const location = useLocation();
-    // console.log(location.search);
-    // const propsData = location.state;
-    // console.log(propsData);
-
-    const {transactionData} = useTransaction();
-    console.log(transactionData);
+function Transaction(props) {
+    console.log(props.data);
 
     return (
   <Container> 
@@ -28,22 +20,19 @@ function Transaction() {
         <Table.HeaderCell>Amount</Table.HeaderCell>
         <Table.HeaderCell>Timestamp</Table.HeaderCell>
         <Table.HeaderCell>Statement</Table.HeaderCell>
-        <Table.HeaderCell>Status</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
     <Table.Body>
+      {props.data.data.map((item, index) => (
       <Table.Row>
-        <Table.Cell>{transactionData}</Table.Cell>
-        <Table.Cell>Unknown</Table.Cell>
-        <Table.Cell negative>None</Table.Cell>
-        <Table.Cell>Jimmy</Table.Cell>
-        <Table.Cell positive>
-          <Icon name='checkmark' />
-          Approved
-        </Table.Cell>
-        <Table.Cell>None</Table.Cell>
-        <Table.Cell>None</Table.Cell>
+        <Table.Cell>{item.transactionId}</Table.Cell>
+        <Table.Cell>{item.senderAccNo}</Table.Cell>
+        <Table.Cell negative>{item.recipientAccNo}</Table.Cell>
+        <Table.Cell>{item.amount}</Table.Cell>
+        <Table.Cell positive>{item.timestamp}</Table.Cell>
+        <Table.Cell>{item.statement}</Table.Cell>
       </Table.Row>
+      ))}
     </Table.Body>
   </Table>
   </Container> 

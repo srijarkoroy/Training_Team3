@@ -74,7 +74,7 @@ public class UserService {
         Account userAccount = account.get();
         if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
-        List<Transaction> transaction = transactionRepository.findAllBySenderAccNo(userAccount.getAccNo());
+        List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
         if (transaction.isEmpty()) {
             return "transaction not found";
         }

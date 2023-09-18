@@ -15,13 +15,15 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
-
+Modal.setAppElement('#root');
 export default function PerformTransaction() {
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
@@ -44,8 +46,9 @@ export default function PerformTransaction() {
         const resData = await axios.post(url, sendData, {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
-          setRes(resData);
-          console.log("res passed:::", {res}.res.data);
+          setRes(resData.data);
+          console.log("res passed:::", res.data);
+          setIsModalOpen(true);
         //   const token = resData.data.token;
         //   localStorage.setItem('token', token);
         } else {
@@ -53,6 +56,9 @@ export default function PerformTransaction() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setRes(error.response.data);
+          setIsModalOpen(true);
+          console.log(res);
         };
     }
   };
@@ -62,6 +68,7 @@ export default function PerformTransaction() {
   const [amount, setAmount] = useState("");
   const [statement, setStatement] = useState("");
   const [transactionPassword, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAccNoChange = (e) => {
     setAccNo(e.target.value);
@@ -101,6 +108,12 @@ export default function PerformTransaction() {
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setRes("");
+  };
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -125,6 +138,18 @@ export default function PerformTransaction() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {res && 
+              <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>{res}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <TextField
               margin="normal"
               required

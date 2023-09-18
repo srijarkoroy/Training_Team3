@@ -16,7 +16,6 @@ import bcrypt from "bcryptjs";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import Transaction from "./Transaction";
-import { useTransaction } from "./TransactionContext";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -27,7 +26,7 @@ const defaultTheme = createTheme();
 export default function TransactionHistory() {
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
-  const { setTransaction } = useTransaction();
+  const [showTransaction, setShowTransation] = useState(false)
   // useEffect(() => {
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,8 +45,8 @@ export default function TransactionHistory() {
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
           setRes(resData);
-          setTransaction(resData);
           console.log("res passed:::", {res}.res.data);
+          setShowTransation(true);
         //   const token = resData.data.token;
         //   localStorage.setItem('token', token);
         } else {
@@ -83,27 +82,9 @@ export default function TransactionHistory() {
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
     } else {
-      // setUsername("");
-      // setPassword("");
       setError("");
     }
   };
-//   const handleToken = async() => {
-//     const tk = {authorization: localStorage.getItem('token')};
-//     try {
-//       const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
-//        {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-//       if(tkData.status === 200) {
-//         console.log("finish api call - response:::", tkData);
-//         // const token = tkData.data.token;
-//         // localStorage.setItem('token', token);
-//       } else {
-//         console.log("Token get Failed");
-//       }
-//     } catch(error) {
-//         console.log("something wrong with token:::", error);
-//       };
-//   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -155,11 +136,6 @@ export default function TransactionHistory() {
               value={transactionPassword}
               onChange={handlePasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="error" />}
-              label="Remember me"
-            />
-            <Link to={'/viewtransactionhistory'}>
             <Button
               type="submit"
               fullWidth
@@ -170,7 +146,6 @@ export default function TransactionHistory() {
             >
               View Transaction History
             </Button>
-            </Link>
 
             {error && (
               <Typography
@@ -180,33 +155,9 @@ export default function TransactionHistory() {
                 {error}
               </Typography>
             )}
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="error"
-              onClick={handleToken}
-            >
-              Send Token
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2" color="error">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/openaccount" variant="body2" color="error">
-                  {"Open Bank Account"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2" color="error">
-                  {"Don't have netbanking? Register here"}
-                </Link>
-              </Grid>
-            </Grid> */}
+            {showTransaction && (
+              <Transaction data={res} />
+            )}
           </Box>
         </Box>
       </Container>
