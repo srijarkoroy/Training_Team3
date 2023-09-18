@@ -81,7 +81,7 @@ public class UserController {
 	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody BalanceRequest balanceRequest){
 
 		Object response = userService.findAllTransaction(balanceRequest);
-		if (response.equals("transaction not found"))
+		if (response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password") || response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
