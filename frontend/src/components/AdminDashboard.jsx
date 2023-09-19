@@ -75,7 +75,7 @@ export default function FlexDirection() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Check Balance
+            Search Users
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Enter Account Number and Transaction Pin to instantly check your account balance
@@ -100,7 +100,7 @@ export default function FlexDirection() {
             Transaction History
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly check your Transaction History
+          Enter Account Number to find the Transaction History
           </Typography>
         </CardContent>
       </CardActionArea>

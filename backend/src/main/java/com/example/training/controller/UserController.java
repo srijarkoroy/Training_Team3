@@ -4,10 +4,6 @@ import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.exception.EntityNotFoundException;
 import com.example.training.model.*;
-import com.example.training.model.AuthRequest;
-import com.example.training.model.BalanceRequest;
-import com.example.training.model.PerformTransactionDetails;
-import com.example.training.model.UserDetails;
 import com.example.training.service.JwtService;
 import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +30,7 @@ public class UserController {
 	private final JwtService jwtService;
 
 	@PostMapping("/authenticate")
-	public ResponseEntity<Map<String,String>> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+	public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
 		if (authentication.isAuthenticated()) {
 			Map<String,String> response = new HashMap<>();
