@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -14,49 +14,76 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {Link} from "react-router-dom";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
-
-export default function Login() {
+Modal.setAppElement('#root');
+export default function PerformTransaction() {
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [res, setRes] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/authenticate";
+      const url = "http://localhost:8090/user/performTransaction";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        userId: data.get("username"),
-        password: data.get("password"),
+        accNo: data.get("accNo"),
+        recipientAccNo: data.get("recipientAccNo"),
+        amount: data.get("amount"),
+        statement: data.get("statement"),
+        transactionPassword: data.get("password")
+
       };
       console.log(sendData);
       try {
-        const resData = await axios.post(url, sendData);
+        const resData = await axios.post(url, sendData, {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
-          const token = resData.data.token;
-          localStorage.setItem('token', token);
-          navigate("/dashboard");
+          setRes(resData.data);
+          console.log("res passed:::", res.data);
+          setIsModalOpen(true);
+        //   const token = resData.data.token;
+        //   localStorage.setItem('token', token);
         } else {
-          console.log("Login Failed");
+          console.log("Authentication Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setRes(error.response.data);
+          setIsModalOpen(true);
+          console.log(res);
         };
     }
   };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [accNo, setAccNo] = useState("");
+  const [recipientAccNo, setRecipientAccNo] = useState("");
+  const [amount, setAmount] = useState("");
+  const [statement, setStatement] = useState("");
+  const [transactionPassword, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleAccNoChange = (e) => {
+    setAccNo(e.target.value);
+  };
+
+  const handleRecipientAccNoChange = (e) => {
+    setRecipientAccNo(e.target.value);
+  };
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const handleStatementChange = (e) => {
+    setStatement(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -64,13 +91,13 @@ export default function Login() {
   };
 
   const handleLogin = () => {
-    const usernamePattern = /^[A-Za-z0-9]+$/;
-    const passwordPattern =
+    // const accNoPattern = /.,'^[0-9]{10}$/;
+    const transactionPasswordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    if (!username.match(usernamePattern)) {
-      setError("Username can only contain alphabets and numbers.");
-    } else if (!password.match(passwordPattern)) {
+    // if (!accNo.match(accNoPattern)) {
+    //   setError("Account Number should be 11-digits long.");
+    if (!transactionPassword.match(transactionPasswordPattern)) {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
@@ -80,22 +107,12 @@ export default function Login() {
       setError("");
     }
   };
-  const handleToken = async() => {
-    const tk = {authorization: localStorage.getItem('token')};
-    try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
-       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-      if(tkData.status === 200) {
-        console.log("finish api call - response:::", tkData);
-        // const token = tkData.data.token;
-        // localStorage.setItem('token', token);
-      } else {
-        console.log("Token get Failed");
-      }
-    } catch(error) {
-        console.log("something wrong with token:::", error);
-      };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setRes("");
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -109,11 +126,8 @@ export default function Login() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#FFCD41" }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Funds Transfer
           </Typography>
           <Box
             component="form"
@@ -121,19 +135,74 @@ export default function Login() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {res && 
+              <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>{res}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <TextField
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="accNo"
+              label="Sender Account Number"
+              name="accNo"
+              autoComplete="accNo"
               color="error"
               autoFocus
-              value={username}
-              onChange={handleUsernameChange}
+              value={accNo}
+              onChange={handleAccNoChange}
             />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="recipientAccNo"
+              label="Recipient Account Number"
+              name="recipientAccNo"
+              autoComplete="recipientAccNo"
+              color="error"
+              autoFocus
+              value={recipientAccNo}
+              onChange={handleRecipientAccNoChange}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="amount"
+              label="Amount"
+              name="amount"
+              autoComplete="amount"
+              color="error"
+              autoFocus
+              value={amount}
+              onChange={handleAmountChange}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="statement"
+              label="Statement"
+              name="statement"
+              autoComplete="statement"
+              color="error"
+              autoFocus
+              value={statement}
+              onChange={handleStatementChange}
+            />
+
             <TextField
               margin="normal"
               required
@@ -144,13 +213,10 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               color="error"
-              value={password}
+              value={transactionPassword}
               onChange={handlePasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="error" />}
-              label="Remember me"
-            />
+            {/* <Link to={'/viewtransactionhistory'} state={res}> */}
             <Button
               type="submit"
               fullWidth
@@ -159,8 +225,9 @@ export default function Login() {
               color="error"
               onClick={handleLogin}
             >
-              Sign In
+              Confirm Transaction
             </Button>
+            {/* </Link> */}
 
             {error && (
               <Typography
@@ -170,7 +237,7 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Button
+            {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -196,7 +263,7 @@ export default function Login() {
                   {"Don't have netbanking? Register here"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Container>

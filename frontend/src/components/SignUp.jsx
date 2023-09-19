@@ -15,7 +15,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import Modal from "react-modal";
-import "../styles/ModalStyle.css";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 

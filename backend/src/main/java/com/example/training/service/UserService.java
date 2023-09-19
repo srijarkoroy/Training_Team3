@@ -3,18 +3,15 @@ package com.example.training.service;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
-import com.example.training.exception.EntityNotFoundException;
-import com.example.training.model.UserDetails;
-import com.example.training.model.UserDetailsDTO;
+import com.example.training.model.*;
 import com.example.training.repository.AccountRepository;
 import com.example.training.repository.TransactionRepository;
 import com.example.training.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +20,9 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public Object findUser(Long id) throws EntityNotFoundException {
+    public Object findUser(Long id) {
         Optional<User> user = userRepository.findByUserId(id);
-        if(!user.isPresent()){
-            throw new EntityNotFoundException(String.format("User not found with id "+id));
-        }
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return "user not found";
         }
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
@@ -42,28 +36,89 @@ public class UserService {
         return userDetailsDTO;
     }
 
-    public Object findAccount(Long acc) throws EntityNotFoundException {
+    public Object findAccount(Long acc) {
         Optional<Account> account = accountRepository.findByAccNo(acc);
-        if(!account.isPresent()){
-            throw new EntityNotFoundException(String.format("Account not found with id "+acc));
-        }
-        if (account.isEmpty()){
+        if (account.isEmpty()) {
             return "account not found";
         }
-        return acc;
+        return account;
     }
 
-    public Object findTransaction(Long transact) throws EntityNotFoundException {
+    public Object findBalance(BalanceRequest balanceRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+            return "Incorrect Transaction password";
+        Map<String, Float> map = new HashMap<String, Float>();
+        map.put("balance", userAccount.getBalance());
+        return map;
+    }
+
+    public Object findTransaction(Long transact) {
         Optional<Transaction> transaction = transactionRepository.findByTransactionId(transact);
-        if(!transaction.isPresent()){
-            throw new EntityNotFoundException(String.format("Transaction not found with id "+transact));
-        }
-        if (transaction.isEmpty()){
+        if (transaction.isEmpty()) {
             return "transaction not found";
         }
-        return transact;
+        return transaction;
     }
 
+    public Object findAllTransaction(BalanceRequest balanceRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+            return "Incorrect Transaction password";
+        List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
+        if (transaction.isEmpty()) {
+            return "transaction not found";
+        }
+        return transaction;
+    }
+
+    public Object doTransaction(PerformTransactionDetails performTransactionDetails){
+        Optional<Account> senderAccount = accountRepository.findByAccNo(performTransactionDetails.getAccNo());
+        Optional<Account> receiverAccount = accountRepository.findByAccNo(performTransactionDetails.getRecipientAccNo());
+        if (senderAccount.isEmpty())
+            return "User does not have a bank account";
+        if (receiverAccount.isEmpty())
+            return "Receiver does not have a bank account";
+        Account userAccount = senderAccount.get();
+        if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+            return "Incorrect Transaction Password";
+        if(performTransactionDetails.getAmount() > userAccount.getBalance()){
+            return "Insufficient balance";
+        } else {
+            userAccount.setBalance(userAccount.getBalance() - performTransactionDetails.getAmount());
+            accountRepository.save(userAccount);
+        }
+        receiverAccount.ifPresent(recipientAccount -> {
+            recipientAccount.setBalance(recipientAccount.getBalance() + performTransactionDetails.getAmount());
+            accountRepository.save(recipientAccount);
+        });
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccNo(performTransactionDetails.getAccNo());
+        transaction.setRecipientAccNo(performTransactionDetails.getRecipientAccNo());
+        transaction.setAmount(performTransactionDetails.getAmount());
+        transaction.setStatement(performTransactionDetails.getStatement());
+        String ret = saveNewTransaction(transaction);
+        return "transaction executed successfully";
+    }
+    public Object withdrawAmount(Withdraw withdrawDetails){
+        Optional<Account> account = accountRepository.findByAccNo(withdrawDetails.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(withdrawDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+            return "Incorrect Transaction Password";
+        if(withdrawDetails.getAmount() > userAccount.getBalance())
+            return "Insufficient balance";
+        userAccount.setBalance(userAccount.getBalance() - withdrawDetails.getAmount());
+        accountRepository.save(userAccount);
+        return "Amount withdrawn successfully";
+    }
     public Object saveNewUser(UserDetails userDetails) {
         User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());

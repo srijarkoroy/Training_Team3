@@ -5,97 +5,91 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import bcrypt from "bcryptjs";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
-const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function BalanceCheck() {
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/authenticate";
+      const url = "http://localhost:8090/user/accountDetails/getBalance";
       const header = { "Content-Type": "application/json" };
-      const sendData = {
-        userId: data.get("username"),
-        password: data.get("password"),
-      };
-      console.log(sendData);
-      try {
-        const resData = await axios.post(url, sendData);
-        if(resData.status === 200) {
-          console.log("finish api call - response:::", resData);
-          const token = resData.data.token;
-          localStorage.setItem('token', token);
-          navigate("/dashboard");
-        } else {
-          console.log("Login Failed");
+      const sendData ={
+        accNo:data.get("AccNo"),
+        transactionPassword:data.get("password")
+      }
+  
+      const config = {
+        headers:{
+          Authorization: "Bearer "+localStorage.getItem("token")
         }
+      };
+      // console.log(sendData);
+      try {
+        const resData = await axios.post(url, sendData, config);
+        if(resData.status === 200) {
+          console.log("finish api call - response:::", resData.data.balance);
+          
+          // const token = resData.data.token;
+          // localStorage.setItem('token', token);
+        } else {
+          console.log("API Call Failed");
+        }
+        setResponseData(resData);
+        setIsModalOpen(true);
       } catch(error) {
           console.log("something wrong:::", error);
         };
     }
   };
 
-  const [username, setUsername] = useState("");
+  const [accno, setAccNo] = useState("");
   const [password, setPassword] = useState("");
+  const [responseData, setResponseData] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    setAccNo(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = () => {
-    const usernamePattern = /^[A-Za-z0-9]+$/;
-    const passwordPattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+  // const handleBalanceCheck = () => {
+  //   const usernamePattern = /^[A-Za-z0-9]+$/;
+  //   const passwordPattern =
+  //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    if (!username.match(usernamePattern)) {
-      setError("Username can only contain alphabets and numbers.");
-    } else if (!password.match(passwordPattern)) {
-      setError(
-        "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
-      );
-    } else {
-      // setUsername("");
-      // setPassword("");
-      setError("");
-    }
-  };
-  const handleToken = async() => {
-    const tk = {authorization: localStorage.getItem('token')};
-    try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
-       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-      if(tkData.status === 200) {
-        console.log("finish api call - response:::", tkData);
-        // const token = tkData.data.token;
-        // localStorage.setItem('token', token);
-      } else {
-        console.log("Token get Failed");
-      }
-    } catch(error) {
-        console.log("something wrong with token:::", error);
-      };
-  };
+  //   if (!username.match(usernamePattern)) {
+  //     setError("Username can only contain alphabets and numbers.");
+  //   } else if (!password.match(passwordPattern)) {
+  //     setError(
+  //       "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
+  //     );
+  //   } else {
+  //     // setUsername("");
+  //     // setPassword("");
+  //     setError("");
+  //   }
+  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -108,30 +102,38 @@ export default function Login() {
             flexDirection: "column",
             alignItems: "center",
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "#FFCD41" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+        >  
+        <Typography component="h1" variant="h5">
+            Account Balance Check
+          </Typography>       
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
-          >
+          >{ responseData &&
+            <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <TextField
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="AccNo"
+              label="Account Number"
+              name="AccNo"
+              autoComplete="Account Number"
               color="error"
               autoFocus
-              value={username}
+              value={accno}
               onChange={handleUsernameChange}
             />
             <TextField
@@ -139,7 +141,7 @@ export default function Login() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Transaction Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -147,19 +149,16 @@ export default function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="error" />}
-              label="Remember me"
-            />
+          
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               color="error"
-              onClick={handleLogin}
+              // onClick={handleBalanceCheck}
             >
-              Sign In
+              Check Balance
             </Button>
 
             {error && (
@@ -170,17 +169,7 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="error"
-              onClick={handleToken}
-            >
-              Send Token
-            </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2" color="error">
                   Forgot password?
@@ -196,7 +185,7 @@ export default function Login() {
                   {"Don't have netbanking? Register here"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Container>
