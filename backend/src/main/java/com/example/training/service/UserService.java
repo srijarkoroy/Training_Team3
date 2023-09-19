@@ -24,12 +24,9 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public Object findUser(Long id) throws EntityNotFoundException {
+    public Object findUser(Long id) {
         Optional<User> user = userRepository.findByUserId(id);
-        if(!user.isPresent()){
-            throw new EntityNotFoundException(String.format("User not found with id "+id));
-        }
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return "user not found";
         }
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
@@ -43,12 +40,9 @@ public class UserService {
         return userDetailsDTO;
     }
 
-    public Object findAccount(Long acc) throws EntityNotFoundException {
+    public Object findAccount(Long acc) {
         Optional<Account> account = accountRepository.findByAccNo(acc);
-        if(!account.isPresent()){
-            throw new EntityNotFoundException(String.format("Account not found with id "+acc));
-        }
-        if (account.isEmpty()){
+        if (account.isEmpty()) {
             return "account not found";
         }
         return account;
@@ -66,12 +60,9 @@ public class UserService {
         return map;
     }
 
-    public Object findTransaction(Long transact) throws EntityNotFoundException {
+    public Object findTransaction(Long transact) {
         Optional<Transaction> transaction = transactionRepository.findByTransactionId(transact);
-        if(!transaction.isPresent()){
-            throw new EntityNotFoundException(String.format("Transaction not found with id "+transact));
-        }
-        if (transaction.isEmpty()){
+        if (transaction.isEmpty()) {
             return "transaction not found";
         }
         return transaction;
@@ -84,7 +75,7 @@ public class UserService {
         Account userAccount = account.get();
         if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
-        List<Transaction> transaction = transactionRepository.findAllBySenderAccNo(userAccount.getAccNo());
+        List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
         if (transaction.isEmpty()) {
             return "transaction not found";
         }
