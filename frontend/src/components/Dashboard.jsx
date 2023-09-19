@@ -185,6 +185,7 @@ export default function FlexDirection() {
       </CardActionArea>
     </Card>
     </Link>
+    <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
     <Card
     className='custom-card'>
       <CardActionArea>
@@ -205,6 +206,8 @@ export default function FlexDirection() {
         </CardContent>
       </CardActionArea>
     </Card>
+    </Link>
+    <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
     <Card 
     className='custom-card'>
       <CardActionArea>
@@ -225,6 +228,7 @@ export default function FlexDirection() {
         </CardContent>
       </CardActionArea>
     </Card>
+    </Link>
       </Box>
     </div>
   );

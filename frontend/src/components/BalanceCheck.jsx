@@ -102,7 +102,10 @@ export default function BalanceCheck() {
             flexDirection: "column",
             alignItems: "center",
           }}
-        >         
+        >  
+        <Typography component="h1" variant="h5">
+            Account Balance Check
+          </Typography>       
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -117,7 +120,6 @@ export default function BalanceCheck() {
                 fullWidth
                 className="custom-modal"
               >
-                {/* <h2>Congratulations</h2> */}
                 <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
