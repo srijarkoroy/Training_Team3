@@ -9,6 +9,7 @@ import {Link, Route, Routes} from 'react-router-dom'
 import Dashboard from './components/Dashboard'
 import Transaction from './components/Transaction';
 import PerformTransaction from './components/PerformTransaction';
+import Withdraw from './components/Withdraw';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactionhistory" element={<div><TransactionHistory /> <Navbar /></div>}/>
         <Route path="/performtransaction" element={<div><PerformTransaction /><Navbar /></div>}/>
+        <Route path="/withdraw" element={<div><Withdraw /><Navbar /></div>}/>
       </Routes>
 
     </div>
