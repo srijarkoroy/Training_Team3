@@ -98,11 +98,8 @@ export default function TransactionHistory() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#FFCD41" }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Transaction History
           </Typography>
           <Box
             component="form"

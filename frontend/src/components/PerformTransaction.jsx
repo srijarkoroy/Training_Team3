@@ -126,11 +126,8 @@ export default function PerformTransaction() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#FFCD41" }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Funds Transfer
           </Typography>
           <Box
             component="form"
@@ -155,7 +152,7 @@ export default function PerformTransaction() {
               required
               fullWidth
               id="accNo"
-              label="Account Number"
+              label="Sender Account Number"
               name="accNo"
               autoComplete="accNo"
               color="error"

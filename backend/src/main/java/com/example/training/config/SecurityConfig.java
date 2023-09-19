@@ -37,8 +37,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .cors()
-//                .configurationSource(option->buildConfig())
+                .cors().configurationSource(option->buildConfig())
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/user/authenticate","/user/userDetails/createUser",
