@@ -3,7 +3,6 @@ package com.example.training.controller;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.exception.EntityNotFoundException;
-import com.example.training.exception.EntityNotFoundException;
 import com.example.training.model.AuthRequest;
 import com.example.training.model.UserDetails;
 import com.example.training.service.JwtService;
