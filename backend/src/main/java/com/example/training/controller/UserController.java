@@ -3,11 +3,7 @@ package com.example.training.controller;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.exception.EntityNotFoundException;
-import com.example.training.exception.EntityNotFoundException;
-import com.example.training.model.AuthRequest;
-import com.example.training.model.BalanceRequest;
-import com.example.training.model.PerformTransactionDetails;
-import com.example.training.model.UserDetails;
+import com.example.training.model.*;
 import com.example.training.service.JwtService;
 import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +86,14 @@ public class UserController {
 	public ResponseEntity<Object> performTransaction(@Valid @RequestBody PerformTransactionDetails performTransactionDetails){
 		Object response = userService.doTransaction(performTransactionDetails);
 		if (response.equals("transaction executed successfully"))
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	}
+
+	@PostMapping("/withdraw")
+	public ResponseEntity<Object> withdraw(@Valid @RequestBody Withdraw withdrawDetails){
+		Object response = userService.withdrawAmount(withdrawDetails);
+		if (response.equals("Amount withdrawn successfully"))
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}

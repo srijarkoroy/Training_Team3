@@ -3,10 +3,7 @@ package com.example.training.service;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.entity.User;
-import com.example.training.model.BalanceRequest;
-import com.example.training.model.PerformTransactionDetails;
-import com.example.training.model.UserDetails;
-import com.example.training.model.UserDetailsDTO;
+import com.example.training.model.*;
 import com.example.training.repository.AccountRepository;
 import com.example.training.repository.TransactionRepository;
 import com.example.training.repository.UserRepository;
@@ -109,7 +106,19 @@ public class UserService {
         String ret = saveNewTransaction(transaction);
         return "transaction executed successfully";
     }
-
+    public Object withdrawAmount(Withdraw withdrawDetails){
+        Optional<Account> account = accountRepository.findByAccNo(withdrawDetails.getAccNo());
+        if(account.isEmpty())
+            return "User does not have a bank account";
+        Account userAccount = account.get();
+        if(!Objects.equals(withdrawDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+            return "Incorrect Transaction Password";
+        if(withdrawDetails.getAmount() > userAccount.getBalance())
+            return "Insufficient balance";
+        userAccount.setBalance(userAccount.getBalance() - withdrawDetails.getAmount());
+        accountRepository.save(userAccount);
+        return "Amount withdrawn successfully";
+    }
     public Object saveNewUser(UserDetails userDetails) {
         User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
