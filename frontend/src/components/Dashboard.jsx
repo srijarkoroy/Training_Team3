@@ -153,6 +153,7 @@ export default function FlexDirection() {
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          justifyContent:'space-between',
           flexWrap:'wrap',
           p: 1,
           m: 12,
@@ -176,7 +177,7 @@ export default function FlexDirection() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Check Account Balance
+            Check Balance
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Enter Account Number and Transaction Pin to instantly check your account balance
@@ -224,6 +225,28 @@ export default function FlexDirection() {
           </Typography>
           <Typography variant="body2" color="text.secondary">
           Enter Account Number and Transaction Pin to instantly transfer money
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </Link>
+    <Link to={"/withdraw"} style={{textDecoration:"none"}}>
+    <Card 
+    className='custom-card'>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
+          alt="withdraw funds"
+          sx={{objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Withdraw Funds
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+          Enter Account Number and Transaction Pin to instantly withdraw money
           </Typography>
         </CardContent>
       </CardActionArea>
