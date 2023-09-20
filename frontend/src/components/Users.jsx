@@ -1,14 +1,43 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Link, useLocation} from 'react-router-dom'
 // import { useLocation } from 'react-router'
 import { Icon, Table, Container } from 'semantic-ui-react'
 // import TransactionHistory from './TransactionHistory'
 import 'semantic-ui-css/semantic.min.css'
 import '../styles/Transaction.css'
+import Switch from '@mui/material/Switch';
+import axios from "axios";
+import Button from "@mui/material/Button";
 
 function Users(props) {
     console.log(props.data);
     const item = props.data.data;
+    const [checked, setChecked] = React.useState(item.enable);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+  const handleEnable = async() => {
+    const config = {
+      headers:{
+        Authorization: "Bearer "+localStorage.getItem("token")
+      }
+    };
+    const sendData ={
+      userId:item.userId,
+      enable:checked
+    }
+    try {
+      const res = await axios.post("http://localhost:8090/admin/userEnable",sendData,config);
+      if(res.status === 200) {
+        console.log("finish api call - response:::", res.data);
+      } else {
+        console.log("Token get Failed");
+      }
+    } catch(error) {
+        console.log("something wrong with token:::", error);
+      };
+  };
 
     return (
   <Container> 
@@ -32,10 +61,24 @@ function Users(props) {
         <Table.Cell>{item.email}</Table.Cell>
         <Table.Cell positive>{item.phone}</Table.Cell>
         <Table.Cell>{item.roles}</Table.Cell>
-        <Table.Cell>{item.enable}</Table.Cell>
+        <Table.Cell>{<Switch
+      checked={checked}
+      onChange={handleChange}
+      inputProps={{ 'aria-label': 'controlled' }}
+    />}</Table.Cell>
       </Table.Row>
     </Table.Body>
   </Table>
+  <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="error"
+              onClick={handleEnable}
+            >
+              Save Changes
+            </Button>
   </Container> 
     )
 }

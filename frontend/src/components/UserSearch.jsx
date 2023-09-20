@@ -78,24 +78,9 @@ export default function UserSearch() {
       // setPassword("");
       setError("");
     }
+      
   };
-  const handleToken = async() => {
-    const tk = {authorization: localStorage.getItem('token')};
-    try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10013",
-       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-      if(tkData.status === 200) {
-        console.log("finish api call - response:::", tkData);
-        // const token = tkData.data.token;
-        // localStorage.setItem('token', token);
-      } else {
-        console.log("Token get Failed");
-      }
-    } catch(error) {
-        console.log("something wrong with token:::", error);
-      };
-  };
-
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

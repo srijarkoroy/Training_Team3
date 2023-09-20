@@ -50,7 +50,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/userEnable")
+    @PostMapping("/userEnable")
     public ResponseEntity<?> getAdminDetails(@RequestBody UserEnable userEnable) {
         Object response = adminService.setUserStatus(userEnable);
         if(response.equals("user not found"))
