@@ -1,12 +1,15 @@
 package com.example.training;
 
 import com.example.training.controller.UserController;
-import com.example.training.entity.User;
+import com.example.training.entity.Account;
 import com.example.training.service.UserService;
+import com.example.training.entity.User;
+import com.example.training.model.UserDetailsDTO;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,7 +24,12 @@ import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,25 +48,44 @@ public class TrainingGroup3ApplicationTests {
 	@InjectMocks
 	private UserController userController;
 
-	User RECORD_1 = new User(123L, "Arjun", "J", "sss", "cam@gmail.com", 79044L, "king");
 
+	UserDetailsDTO userDetailsDTO = new UserDetailsDTO(123L, "Arjun", "J", "cam@gmail.com", 79044L);
+	LocalDate date = LocalDate.parse("2020-01-08");
+	Account account = new Account(
+			123L,
+			123L,
+			123L,
+			"a",
+			"a123",
+			"savings",
+			1.1F,
+			date,
+			"a",
+			"a");
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 	}
 	@Test
-	public void contextLoads() throws Exception{
+	public void testFindUser() throws Exception{
+		Mockito.when(userService.findUser(123L)).thenReturn(userDetailsDTO);
 
+		UserDetailsDTO temp = (UserDetailsDTO) userService.findUser(123L);
+		assertThat(temp).isNotNull();
+		assertEquals(temp, userDetailsDTO);
+	}
 
-			Mockito.when(userService.findUser(123L)).thenReturn(RECORD_1);
-			mockMvc.perform(MockMvcRequestBuilders
-					.get("/userDetails/123L")
-					.contentType(MediaType.APPLICATION_JSON)
-			).andExpect(status().isOk());
+	@Test
+	public void testFindAccount() throws Exception{
+		Mockito.when(userService.findAccount(123L)).thenReturn(account);
 
+		Account found = (Account) userService.findAccount(123L);
+		assertThat(found).isNotNull();
+		assertEquals(found, account);
 
-
+		Account notFound = (Account) userService.findAccount(12L);
+		assertThat(notFound).isNull();
 	}
 
 }
