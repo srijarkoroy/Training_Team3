@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors().configurationSource(option->buildConfig())
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/user/authenticate","/user/userDetails/createUser",
+                .antMatchers("/user/authenticate","/admin/authenticate","/user/userDetails/createUser",
                         "/user/accountDetails/createAccount")
                 .permitAll()
                 .and()
