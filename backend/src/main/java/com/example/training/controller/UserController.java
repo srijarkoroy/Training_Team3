@@ -112,4 +112,12 @@ public class UserController {
 	public ResponseEntity<String> saveTransactionDetails(@Valid @RequestBody Transaction transaction){
 		return new ResponseEntity<>(userService.saveNewTransaction(transaction), HttpStatus.OK);
 	}
+
+	@GetMapping("/userAccounts/{id}")
+	public ResponseEntity<?> getUserAccounts(@PathVariable Long id) throws EntityNotFoundException {
+		Object response = userService.findUserAccounts(id);
+		if(response.equals("No Accounts found for this user"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

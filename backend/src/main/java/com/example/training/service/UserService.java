@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -154,5 +155,13 @@ public class UserService {
     public String saveNewTransaction(Transaction transaction) {
         transactionRepository.save(transaction);
         return "Transaction Successful";
+    }
+
+    public Object findUserAccounts(Long userId) {
+        List<Long> accountNos = accountRepository.findByUserId(userId).stream()
+                                .map(Account::getAccNo).collect(Collectors.toList());
+        if(accountNos.isEmpty())
+            return "No Accounts found for this user";
+        return accountNos;
     }
 }
