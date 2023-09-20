@@ -5,21 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDetailsDTO {
-
+@NoArgsConstructor
+public class UserEnable {
     private Long userId;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String email;
-
-    private Long phone;
-
-    private String roles;
-
     private Boolean enable;
 }

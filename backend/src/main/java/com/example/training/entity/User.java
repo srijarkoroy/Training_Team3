@@ -60,6 +60,10 @@ public class User {
     @Min(value=1000000000, message="Phone number should be 10-digits long")
     private Long phone;
 
+    @Column(name="roles")
     private String roles;
+
+    @Column(name="enable")
+    private Boolean enable;
 
 }

@@ -120,6 +120,8 @@ public class UserService {
         return "Amount withdrawn successfully";
     }
     public Object saveNewUser(UserDetails userDetails) {
+        userDetails.getUser().setRoles("USER");
+        userDetails.getUser().setEnable(true);
         User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
         if (account.isEmpty())
@@ -136,6 +138,8 @@ public class UserService {
         userDetailsDTO.setLastName(user.getLastName());
         userDetailsDTO.setEmail(user.getEmail());
         userDetailsDTO.setPhone(user.getPhone());
+        userDetailsDTO.setRoles(user.getRoles());
+        userDetailsDTO.setEnable(user.getEnable());
 
         return userDetailsDTO;
     }

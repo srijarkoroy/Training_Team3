@@ -51,12 +51,12 @@ export default function Dashboard() {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent:'space-between',
+          justifyContent:'space-evenly',
           flexWrap:'wrap',
           p: 1,
           m: 12,
-          marginTop:20,
-        //   marginRight: 10,
+          marginTop:12,
+        //   marginRight:10,
           bgcolor: 'background.paper',
           borderRadius: 1,
         }}
@@ -113,7 +113,7 @@ export default function Dashboard() {
           height="200"
           image="https://previews.123rf.com/images/khalide91/khalide911912/khalide91191200363/136621325-bank-to-bank-money-transfer-icon.jpg"
           alt="fund transfer"
-          sx={{objectFit: "contain" }}
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -127,8 +127,7 @@ export default function Dashboard() {
     </Card>
     </Link>
     <Link to={"/withdraw"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'
-    sx={{marginTop:5}}>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -148,7 +147,28 @@ export default function Dashboard() {
       </CardActionArea>
     </Card>
     </Link>
-      </Box>
+    <Link to={"/openaccount"} style={{textDecoration:"none"}}>
+    <Card className='custom-card' sx={{marginTop:5}}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://static.thenounproject.com/png/3104881-200.png"
+          alt="open accounts"
+          sx={{objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Open Account
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+          Enter Account Number and Transaction Pin to instantly withdraw money
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </Link>
+    </Box>
     </div>
   );
 }
