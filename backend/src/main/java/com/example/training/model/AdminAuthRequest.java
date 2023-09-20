@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminAuthRequest {
 
-    private String id;
+    private Long userId;
     private String password;
 }

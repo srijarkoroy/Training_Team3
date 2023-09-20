@@ -1,9 +1,8 @@
 package com.example.training.controller;
 
-import com.example.training.exception.EntityNotFoundException;
+import com.example.training.entity.User;
 import com.example.training.model.AdminAuthRequest;
-import com.example.training.model.AuthRequest;
-import com.example.training.service.AdminService;
+import com.example.training.repository.UserRepository;
 import com.example.training.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -23,28 +23,35 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final AdminService adminService;
+//    private final AdminService adminService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<Map<String,String>> adminAuthenticateAndGetToken(@RequestBody AdminAuthRequest adminAuthRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminAuthRequest.getId(), adminAuthRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            Map<String,String> response = new HashMap<>();
-            response.put("token",jwtService.generateToken(String.valueOf(adminAuthRequest.getId())));
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
+    public ResponseEntity<?> adminAuthenticateAndGetToken(@RequestBody AdminAuthRequest adminAuthRequest) {
+
+        Optional<User> adminUser = userRepository.findByUserId(adminAuthRequest.getUserId());
+        if(adminUser.isPresent() && adminUser.get().getRoles().equals("ADMIN"))
+        {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminAuthRequest.getUserId(), adminAuthRequest.getPassword()));
+            if (authentication.isAuthenticated()) {
+                Map<String, String> response = new HashMap<>();
+                response.put("token", jwtService.generateToken(String.valueOf(adminAuthRequest.getUserId())));
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                throw new UsernameNotFoundException("invalid user request !");
+            }
         }
+        return new ResponseEntity<>("User is not a Admin",HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/adminDetails/{id}")
-    public ResponseEntity<?> getAdminDetails(@PathVariable String id) {
-        Object response = adminService.findAdmin(id);
-        if(response.equals("user not found"))
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @GetMapping("/adminDetails/{id}")
+//    public ResponseEntity<?> getAdminDetails(@PathVariable String id) {
+//        Object response = adminService.findAdmin(id);
+//        if(response.equals("user not found"))
+//            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
 }
