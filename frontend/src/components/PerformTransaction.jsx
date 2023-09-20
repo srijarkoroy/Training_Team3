@@ -157,7 +157,6 @@ export default function PerformTransaction() {
               autoComplete="accNo"
               autoFocus
               color="error"
-              autoFocus
               value={accNo}
               onChange={handleAccNoChange}
             />

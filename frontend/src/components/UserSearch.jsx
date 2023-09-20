@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import Users from "./Users";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -23,6 +24,8 @@ const defaultTheme = createTheme();
 
 export default function UserSearch() {
   const [error, setError] = useState("");
+  const [showUsers, setShowUsers] = useState(false);
+  const [res, setRes] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,6 +47,9 @@ export default function UserSearch() {
         console.log("out:::",resData);
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
+          setRes(resData);
+          console.log("res passed:::", {res}.res.data);
+          setShowUsers(true);
           // const token = resData.data.token;
           // localStorage.setItem('token', token);
         } else {
@@ -135,7 +141,17 @@ export default function UserSearch() {
             >
               Search User
             </Button>
-
+            {error && (
+              <Typography
+                variant="body2"
+                sx={{ fontStyle: "italic", margin: "2% 0" }}
+              >
+                {error}
+              </Typography>
+            )}
+            {showUsers && (
+              <Users data={res} />
+            )}
           </Box>
         </Box>
       </Container>

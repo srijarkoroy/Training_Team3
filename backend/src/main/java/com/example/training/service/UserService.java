@@ -33,6 +33,8 @@ public class UserService {
             userDetailsDTO.setLastName(userDetails.getLastName());
             userDetailsDTO.setEmail(userDetails.getEmail());
             userDetailsDTO.setPhone(userDetails.getPhone());
+            userDetailsDTO.setRoles(userDetails.getRoles());
+            userDetailsDTO.setEnable(userDetails.getEnable());
         });
         return userDetailsDTO;
     }
