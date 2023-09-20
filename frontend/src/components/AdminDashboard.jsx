@@ -44,7 +44,7 @@ Item.propTypes = {
   ]),
 };
 
-export default function FlexDirection() {
+export default function AdminDashboard() {
   return (
     <div style={{ width: '100%' }}>
       <Box
@@ -62,95 +62,69 @@ export default function FlexDirection() {
         }}
       >
     <Link to={"/balancecheck"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
           height="200"
-          image='https://cdn.icon-icons.com/icons2/1369/PNG/512/-account-balance_90300.png'
-          alt="acc balance"
-          sx={{objectFit: "contain" }}
-
+          image='https://static.thenounproject.com/png/642902-200.png'
+          alt="user account"
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             Search Users
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Enter Account Number and Transaction Pin to instantly check your account balance
+          Enter User ID to search for user and enable/disable account
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
     </Link>
     <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
-    <Card
-    className='custom-card'>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
           height="200"
-          image="https://cdn-icons-png.flaticon.com/512/2761/2761001.png"
+          image="https://cdn-icons-png.flaticon.com/512/9764/9764509.png"
           alt="transactions"
-          sx={{objectFit: "contain" }}
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             Transaction History
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          Enter Account Number to find the Transaction History
+          Enter Account Number to find the Transaction History for an account
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
     </Link>
     <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
           height="200"
-          image="https://previews.123rf.com/images/khalide91/khalide911912/khalide91191200363/136621325-bank-to-bank-money-transfer-icon.jpg"
+          image="https://icons.veryicon.com/png/o/miscellaneous/water-icon/account-opening-management-01.png"
           alt="fund transfer"
-          sx={{objectFit: "contain" }}
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Fund Transfer
+            Open Account
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly transfer money
+          Enter User Details to open a new bank account for a user
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
     </Link>
-    <Link to={"/withdraw"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
-          alt="withdraw funds"
-          sx={{objectFit: "contain" }}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Withdraw Funds
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly withdraw money
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    </Link>
-      </Box>
+    </Box>
     </div>
   );
 }

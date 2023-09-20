@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import "../styles/CardsStyle.css";
+import "../styles/CardsStyleAdmin.css";
 import { Link } from 'react-router-dom';
 
 function Item(props) {
@@ -44,7 +44,7 @@ Item.propTypes = {
   ]),
 };
 
-export default function FlexDirection() {
+export default function Dashboard() {
   return (
     <div style={{ width: '100%' }}>
       <Box
@@ -85,8 +85,7 @@ export default function FlexDirection() {
     </Card>
     </Link>
     <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
-    <Card
-    className='custom-card'>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -107,8 +106,7 @@ export default function FlexDirection() {
     </Card>
     </Link>
     <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -129,8 +127,8 @@ export default function FlexDirection() {
     </Card>
     </Link>
     <Link to={"/withdraw"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
+    <Card className='custom-card'
+    sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
