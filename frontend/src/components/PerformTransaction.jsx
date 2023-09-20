@@ -155,6 +155,7 @@ export default function PerformTransaction() {
               label="Sender Account Number"
               name="accNo"
               autoComplete="accNo"
+              autoFocus
               color="error"
               autoFocus
               value={accNo}
@@ -170,7 +171,6 @@ export default function PerformTransaction() {
               name="recipientAccNo"
               autoComplete="recipientAccNo"
               color="error"
-              autoFocus
               value={recipientAccNo}
               onChange={handleRecipientAccNoChange}
             />
@@ -184,7 +184,6 @@ export default function PerformTransaction() {
               name="amount"
               autoComplete="amount"
               color="error"
-              autoFocus
               value={amount}
               onChange={handleAmountChange}
             />
@@ -198,7 +197,6 @@ export default function PerformTransaction() {
               name="statement"
               autoComplete="statement"
               color="error"
-              autoFocus
               value={statement}
               onChange={handleStatementChange}
             />

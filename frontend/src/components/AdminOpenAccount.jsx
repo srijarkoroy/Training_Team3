@@ -28,7 +28,7 @@ export default function OpenAccount() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const url = "http://localhost:8090/user/accountDetails/createAccount";
+    const url = "http://localhost:8090/admin/createAccount";
     const header = { "Content-Type": "application/json" };
     
     const sendData = {
@@ -74,7 +74,6 @@ export default function OpenAccount() {
   const [error, setError] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const userPattern = /^\d{5}$/;
   const namePattern = /^[A-Za-z ,.'-]+$/i;
   const aadhaarPattern = /^\d{12}$/;
   const ifscPattern = /^[A-Z0-9]{10,}/;
@@ -96,8 +95,8 @@ export default function OpenAccount() {
   const defaultOption = options[0];
 
   const handleUseridChange = (e) => {
-    setUserid(e.target.value);
-  };
+    setUserid(e,target.value);
+  }
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -134,8 +133,8 @@ export default function OpenAccount() {
   const validateForm = () => {
     const newError = {};
 
-    if (!userid.match(userPattern)) {
-      newError.userId = "Invalid";
+    if (!userid.match(useridPattern)) {
+        newError.userId = "Invalid";
     }
 
     if (!address.match(addressPattern)) {
@@ -237,7 +236,6 @@ export default function OpenAccount() {
               //   Congratulations, your Account No is {responseData.accNo}
               // </Typography>}
             }
-
             <TextField
               margin="normal"
               required
@@ -253,7 +251,6 @@ export default function OpenAccount() {
               error={!!error.userId}
               helperText={error.userId}
             />
-
             <TextField
               margin="normal"
               required
