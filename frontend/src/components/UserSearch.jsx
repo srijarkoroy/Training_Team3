@@ -33,9 +33,14 @@ export default function UserSearch() {
       const sendData = {
         userId: data.get("username")
       };
+      const config = {
+        headers:{
+          Authorization: "Bearer "+localStorage.getItem("token")
+        }
+      };
       console.log(sendData);
       try {
-        const resData = await axios.get(`http://localhost:8090/user/userDetails/${sendData.userId}`);
+        const resData = await axios.get(url+'/'+sendData.userId,config);
         console.log("out:::",resData);
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
@@ -97,11 +102,9 @@ export default function UserSearch() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#FFCD41" }}>
-            <LockOutlinedIcon />
-          </Avatar>
+        
           <Typography component="h1" variant="h5">
-            Sign in
+            Search Users
           </Typography>
           <Box
             component="form"
@@ -130,7 +133,7 @@ export default function UserSearch() {
               color="error"
               onClick={handleLogin}
             >
-              Sign In
+              Search User
             </Button>
 
           </Box>

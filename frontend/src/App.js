@@ -29,7 +29,6 @@ function App() {
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/transactionhistory" element={<div><TransactionHistory /> <Navbar /></div>}/>
         <Route path="/performtransaction" element={<div><PerformTransaction /><Navbar /></div>}/>
-        <Route path ="/admindashboard" element={<div><Item /><Navbar /></div>}/>
         <Route path="/withdraw" element={<div><Withdraw /><Navbar /></div>}/>
         <Route path="/usersearch" element={<div><UserSearch /><Navbar /></div>}/>
       </Routes>

@@ -9,6 +9,7 @@ import com.example.training.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,6 +49,7 @@ public class AdminController {
         return new ResponseEntity<>("User is not a Admin",HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/userEnable")
     public ResponseEntity<?> getAdminDetails(@RequestBody UserEnable userEnable) {
         Object response = adminService.setUserStatus(userEnable);

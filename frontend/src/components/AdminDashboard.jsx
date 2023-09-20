@@ -61,7 +61,7 @@ export default function AdminDashboard() {
           borderRadius: 1,
         }}
       >
-    <Link to={"/balancecheck"} style={{textDecoration:"none"}}>
+    <Link to={"/usersearch"} style={{textDecoration:"none"}}>
     <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
       </CardActionArea>
     </Card>
     </Link>
-    <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
+    <Link to={"/openaccount"} style={{textDecoration:"none"}}>
     <Card className='custom-card'>
       <CardActionArea>
         <CardMedia

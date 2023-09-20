@@ -9,6 +9,7 @@ import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,6 +42,7 @@ public class UserController {
 		}
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/userDetails/{id}")
 	public ResponseEntity<?> getUserDetails(@PathVariable Long id) throws EntityNotFoundException {
 		Object response = userService.findUser(id);
