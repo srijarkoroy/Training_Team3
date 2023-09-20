@@ -35,6 +35,7 @@ export default function OpenAccount() {
       // email: data.get("email"),
       // firstname: data.get("firstname"),
       // lastname: data.get("lastname"),
+      userId: data.get("userid"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
       ifsc: data.get("ifsc"),
@@ -61,6 +62,7 @@ export default function OpenAccount() {
     }
   };
   const [responseData, setResponseData] = useState("");
+  const [userid, setUserid] = useState("");
   const [email, setEmail] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -72,6 +74,7 @@ export default function OpenAccount() {
   const [error, setError] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const userPattern = /^\d{5}$/;
   const namePattern = /^[A-Za-z ,.'-]+$/i;
   const aadhaarPattern = /^\d{12}$/;
   const ifscPattern = /^[A-Z0-9]{10,}/;
@@ -91,6 +94,10 @@ export default function OpenAccount() {
     { value: "Fixed Deposit", label: "Fixed Deposit" },
   ];
   const defaultOption = options[0];
+
+  const handleUseridChange = (e) => {
+    setUserid(e.target.value);
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -126,6 +133,10 @@ export default function OpenAccount() {
 
   const validateForm = () => {
     const newError = {};
+
+    if (!userid.match(userPattern)) {
+      newError.userId = "Invalid";
+    }
 
     if (!address.match(addressPattern)) {
       newError.address = "Invalid";
@@ -226,6 +237,23 @@ export default function OpenAccount() {
               //   Congratulations, your Account No is {responseData.accNo}
               // </Typography>}
             }
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="userid"
+              label="User Id"
+              name="userid"
+              autoComplete="userid"
+              autoFocus
+              color="error"
+              value={userid}
+              onChange={handleUseridChange}
+              error={!!error.userId}
+              helperText={error.userId}
+            />
+
             <TextField
               margin="normal"
               required
@@ -235,7 +263,6 @@ export default function OpenAccount() {
               name="firstname"
               autoComplete="firstname"
               color="error"
-              autoFocus
               value={firstname}
               onChange={handleFirstnameChange}
               error={!!error.firstName}
