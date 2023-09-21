@@ -47,12 +47,12 @@ public class UserService {
         return account;
     }
 
-    public Object findBalance(BalanceRequest balanceRequest) {
-        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+    public Object findBalance(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
         if(account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         Map<String, Float> map = new HashMap<String, Float>();
         map.put("balance", userAccount.getBalance());
@@ -67,12 +67,12 @@ public class UserService {
         return transaction;
     }
 
-    public Object findAllTransaction(BalanceRequest balanceRequest) {
-        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+    public Object findAllTransaction(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
         if(account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
         if (transaction.isEmpty()) {

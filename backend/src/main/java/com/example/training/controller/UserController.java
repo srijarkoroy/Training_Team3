@@ -60,8 +60,8 @@ public class UserController {
 	}
 
 	@PostMapping("/accountDetails/getBalance")
-	public ResponseEntity<?> getBalance(@Valid @RequestBody BalanceRequest balanceRequest){
-		Object response = userService.findBalance(balanceRequest);
+	public ResponseEntity<?> getBalance(@Valid @RequestBody AccountRequest accountRequest){
+		Object response = userService.findBalance(accountRequest);
 		if(response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -76,9 +76,9 @@ public class UserController {
 	}
 
 	@PostMapping("/allTransactionDetails")
-	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody BalanceRequest balanceRequest){
+	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody AccountRequest accountRequest){
 
-		Object response = userService.findAllTransaction(balanceRequest);
+		Object response = userService.findAllTransaction(accountRequest);
 		if (response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password") || response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);

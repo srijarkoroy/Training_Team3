@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BalanceRequest {
+public class AccountRequest {
     private Long accNo;
     private String transactionPassword;
 }

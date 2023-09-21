@@ -1,6 +1,7 @@
 package com.example.training.controller;
 
 import com.example.training.entity.User;
+import com.example.training.model.AccountRequest;
 import com.example.training.model.AdminAuthRequest;
 import com.example.training.model.UserEnable;
 import com.example.training.repository.UserRepository;
@@ -54,6 +55,16 @@ public class AdminController {
     public ResponseEntity<?> getAdminDetails(@RequestBody UserEnable userEnable) {
         Object response = adminService.setUserStatus(userEnable);
         if(response.equals("user not found"))
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/allTransactionDetails/{accNo}")
+    public ResponseEntity<?> getAllTransactionDetails(@PathVariable Long accNo){
+
+        Object response = adminService.findAllTransaction(accNo);
+        if (response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password") || response.equals("transaction not found"))
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
