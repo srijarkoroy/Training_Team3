@@ -102,7 +102,7 @@ export default function AdminDashboard() {
       </CardActionArea>
     </Card>
     </Link>
-    <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
+    <Link to={"/admintransaction"} style={{textDecoration:"none"}}>
     <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
