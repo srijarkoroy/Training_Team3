@@ -71,7 +71,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/allTransactionDetails/{accNo}")
+    @GetMapping("/allTransactionDetails/{accNo}")
     public ResponseEntity<?> getAllTransactionDetails(@PathVariable Long accNo){
 
         Object response = adminService.findAllTransaction(accNo);
