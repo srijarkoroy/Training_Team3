@@ -115,9 +115,10 @@ public class UserController {
 		return new ResponseEntity<>(userService.saveNewTransaction(transaction), HttpStatus.OK);
 	}
 
-	@GetMapping("/userAccounts/{id}")
-	public ResponseEntity<?> getUserAccounts(@PathVariable Long userId) throws EntityNotFoundException {
-		Object response = userService.findUserAccounts(userId);
+	@GetMapping("/userAccounts")
+	public ResponseEntity<?> getUserAccounts(@RequestHeader("Authorization") String token) throws EntityNotFoundException {
+		token = token.substring(7);
+		Object response = userService.findUserAccounts(Long.valueOf(jwtService.extractUsername(token)));
 		if(response.equals("No Accounts found for this user"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);

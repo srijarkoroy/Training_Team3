@@ -40,7 +40,7 @@ public class TrainingGroup3ApplicationTests {
 	@InjectMocks
 	private UserController userController;
 
-	User RECORD_1 = new User(123L, "Arjun", "J", "sss", "cam@gmail.com", 79044L, "king");
+	User RECORD_1 = new User(123L, "Arjun", "J", "sss", "cam@gmail.com", 79044L, "king",true);
 
 	@Before
 	public void setUp() {
