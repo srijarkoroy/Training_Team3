@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import { useNavigate } from "react-router-dom";
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -21,6 +22,23 @@ const defaultTheme = createTheme();
 
 export default function BalanceCheck() {
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const confi = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => { 
+    const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+    console.log(ad);
+    if(ad.data !== false){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    userCheck();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

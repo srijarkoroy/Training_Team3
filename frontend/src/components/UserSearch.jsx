@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Users from "./Users";
 
 const salt = bcrypt.genSaltSync(10);
@@ -26,6 +27,23 @@ export default function UserSearch() {
   const [error, setError] = useState("");
   const [showUsers, setShowUsers] = useState(false);
   const [res, setRes] = useState("");
+  const navigate = useNavigate();
+
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+    console.log(ad);
+    if(ad.data != true){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

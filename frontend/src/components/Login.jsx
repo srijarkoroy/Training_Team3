@@ -42,7 +42,23 @@ export default function Login() {
           console.log("finish api call - response:::", resData);
           const token = resData.data.token;
           localStorage.setItem('token', token);
-          navigate("/dashboard");
+          const config = {
+            headers:{
+              Authorization: "Bearer "+localStorage.getItem("token")
+            }
+          };
+          const adminCheck = await axios.get("http://localhost:8090/admin/adminCheck", config);
+          let route = "";
+          if(adminCheck.data == true){
+            route = "/admindashboard";
+            // navigate("/admindashboard");
+          } else if(adminCheck.data == false){
+            route = "/dashboard";
+            // navigate("/dashboard");
+          } else {
+            console.log("error admin check ", adminCheck);
+          }
+          navigate(route);
         } else {
           console.log("Login Failed");
         }

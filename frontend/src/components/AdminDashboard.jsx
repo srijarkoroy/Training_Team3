@@ -7,7 +7,9 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import "../styles/CardsStyle.css";
-import { Link } from 'react-router-dom';
+import axios from "axios"
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -45,6 +47,24 @@ Item.propTypes = {
 };
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+    console.log(ad);
+    if(ad.data != true){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
+
   return (
     <div style={{ width: '100%' }}>
       <Box
