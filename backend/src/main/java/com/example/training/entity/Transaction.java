@@ -1,6 +1,8 @@
 package com.example.training.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -16,6 +18,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Valid
 @Table(name="transaction")
 public class Transaction {

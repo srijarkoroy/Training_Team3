@@ -2,6 +2,7 @@ package com.example.training;
 
 import com.example.training.controller.UserController;
 import com.example.training.entity.Account;
+import com.example.training.entity.Transaction;
 import com.example.training.service.UserService;
 import com.example.training.entity.User;
 import com.example.training.model.UserDetailsDTO;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +53,7 @@ public class TrainingGroup3ApplicationTests {
 
 	UserDetailsDTO userDetailsDTO = new UserDetailsDTO(123L, "Arjun", "J", "cam@gmail.com", 79044L);
 	LocalDate date = LocalDate.parse("2020-01-08");
+	Transaction transaction = new Transaction(123L, 1L, 2L, 100F, Timestamp.valueOf("2018-09-01 09:01:15"), "summa", "a@x.com", "summa", 12345L);
 	Account account = new Account(
 			123L,
 			123L,
@@ -88,4 +91,15 @@ public class TrainingGroup3ApplicationTests {
 		assertThat(notFound).isNull();
 	}
 
+	@Test
+	public void testFindTransaction() throws Exception{
+		Mockito.when(userService.findTransaction(123L)).thenReturn(transaction);
+
+		Transaction found = (Transaction) userService.findTransaction(123L);
+		assertThat(found).isNotNull();
+		assertEquals(found, transaction);
+
+		Transaction notFound = (Transaction) userService.findTransaction(12L);
+		assertThat(notFound).isNull();
+	}
 }
