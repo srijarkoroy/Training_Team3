@@ -27,16 +27,16 @@ export default function BalanceCheck() {
   const navigate = useNavigate();
 
   const confi = {
-    headers:{
-      Authorization: "Bearer "+localStorage.getItem("token")
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
     }
   };
-  const userCheck = async () => { 
+  const userCheck = async () => {
     const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
     console.log(ad);
-    if(ad.data !== false){
+    if (ad.data !== false) {
       navigate("/");
-    } 
+    }
   }
   useEffect(() => {
     userCheck();
@@ -176,17 +176,17 @@ export default function BalanceCheck() {
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
             {isError &&
-            <Modal
-              isOpen={isModalOpen}
-              onRequestClose={closeModal}
-              contentLabel="Token Modal"
-              margin="normal"
-              fullWidth
-              className="custom-modal"
-            >
-              <h3>{isError}</h3>
-              <button onClick={closeModal} color="red">Close</button>
-            </Modal>}
+              <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>{isError}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label"
                 color="error">
@@ -243,26 +243,9 @@ export default function BalanceCheck() {
                 {error}
               </Typography>
             )}
-            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2" color="error">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/openaccount" variant="body2" color="error">
-                  {"Open Bank Account"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2" color="error">
-                  {"Don't have netbanking? Register here"}
-                </Link>
-              </Grid>
-            </Grid> */}
           </Box>
         </Box>
       </Container>
     </ThemeProvider>
   );
-          }
+}
