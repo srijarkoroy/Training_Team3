@@ -14,7 +14,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -23,6 +24,7 @@ const defaultTheme = createTheme();
 
 export default function TransactionHistory() {
   const [error, setError] = useState("");
+  const [isError, setIsError] = useState("");
   const [res, setRes] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
 
@@ -33,7 +35,7 @@ export default function TransactionHistory() {
       const url = "http://localhost:8090/user/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        accNo: data.get("accNo"),
+        accNo: data.get("AccNo"),
         transactionPassword: data.get("password"),
       };
       console.log(sendData);
@@ -52,6 +54,8 @@ export default function TransactionHistory() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setIsError(error.response.data);
+          setIsModalOpen(true);
         };
     }
   };
@@ -85,7 +89,11 @@ export default function TransactionHistory() {
 
   const [accno, setAccNo] = useState("");
   const [transactionPassword, setPassword] = useState("");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError("");
+  };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -131,6 +139,18 @@ export default function TransactionHistory() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {isError &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>{isError}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label"
                 color="error">

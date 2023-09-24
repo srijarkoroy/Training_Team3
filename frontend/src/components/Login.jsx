@@ -15,6 +15,8 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -64,13 +66,20 @@ export default function Login() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setIsError("Invalid Credentials");
+          setIsModalOpen(true);
         };
     }
   };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isError, setIsError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError("");
+  };
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -137,6 +146,18 @@ export default function Login() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {isError &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>{isError}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
             <TextField
               margin="normal"
               required

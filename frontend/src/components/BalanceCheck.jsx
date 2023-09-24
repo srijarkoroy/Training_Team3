@@ -23,6 +23,7 @@ const defaultTheme = createTheme();
 
 export default function BalanceCheck() {
   const [error, setError] = useState("");
+  const [isError, setIsError] = useState("");
   const navigate = useNavigate();
 
   const confi = {
@@ -95,6 +96,8 @@ export default function BalanceCheck() {
         setIsModalOpen(true);
       } catch (error) {
         console.log("something wrong:::", error);
+        setIsError(error.response.data);
+        setIsModalOpen(true);
       };
     }
   };
@@ -105,6 +108,8 @@ export default function BalanceCheck() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsError("");
+    setResponseData("");
   };
 
   const handleUsernameChange = (e) => {
@@ -168,6 +173,18 @@ export default function BalanceCheck() {
               className="custom-modal"
             >
               <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
+            {isError &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>{isError}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
             <FormControl fullWidth>

@@ -38,22 +38,23 @@ export default function OpenAccount() {
       accType: data.get("accounttype"),
     };
     console.log(sendData);
-
-    try {
-      const response = await fetch(url, {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sendData),
-      });
-      if(!response.ok) {
-        throw new Error("Something wrong with request");
+    if(!error){
+      try {
+        const response = await fetch(url, {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sendData),
+        });
+        if(!response.ok) {
+          throw new Error("Something wrong with request");
+        }
+        const resData = await response.json();
+        setResponseData(resData);
+        console.log(responseData);
+        setIsModalOpen(true);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
       }
-      const resData = await response.json();
-      setResponseData(resData);
-      console.log(responseData);
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error("Error fetching data: ", error);
     }
   };
   const [responseData, setResponseData] = useState("");
@@ -235,7 +236,6 @@ export default function OpenAccount() {
 
             <TextField
               margin="normal"
-              required
               fullWidth
               id="userid"
               label="User Id"

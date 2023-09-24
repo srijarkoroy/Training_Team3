@@ -16,6 +16,8 @@ import bcrypt from "bcryptjs";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import Transaction from "./Transaction";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -53,13 +55,20 @@ export default function AdminTransactionHistory() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setIsError(error.response.data);
+          setIsModalOpen(true);
         };
     }
   };
 // });
 
   const [accNo, setAccNo] = useState("");
-
+  const [isError, setIsError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError("");
+  };
   const handleAccNoChange = (e) => {
     setAccNo(e.target.value);
   };
@@ -86,6 +95,18 @@ export default function AdminTransactionHistory() {
             alignItems: "center",
           }}
         >
+          {isError &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>{isError}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
           <Typography component="h1" variant="h5">
             Transaction History
           </Typography>
