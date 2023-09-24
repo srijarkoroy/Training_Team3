@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -10,6 +10,10 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import Transaction from "./Transaction";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -21,7 +25,7 @@ export default function TransactionHistory() {
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
-  // useEffect(() => {
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
@@ -51,17 +55,43 @@ export default function TransactionHistory() {
         };
     }
   };
-// });
 
-  const [accNo, setAccNo] = useState("");
+  useEffect(() => {
+    handleAccounts();
+  }, []);
+
+  const [accounts, setAccounts] = useState([]);
+  const handleAccounts = async () => {
+    const url = "http://localhost:8090/user/userAccounts";
+    const header = { "Content-Type": "application/json" };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    };
+    try {
+      const resData = await axios.get(url, config);
+      if (resData.status === 200) {
+        console.log("finish api call - response:::", resData.data);
+      } else {
+        console.log("API Call Failed");
+      }
+      setAccounts(resData.data);
+    } catch (error) {
+      console.log("something wrong:::", error);
+    };
+  };
+
+  const [accno, setAccNo] = useState("");
   const [transactionPassword, setPassword] = useState("");
 
-  const handleAccNoChange = (e) => {
-    setAccNo(e.target.value);
-  };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+  const handleAccNoChange = (event) => {
+    setAccNo(event.target.value);
   };
 
   const handleLogin = () => {
@@ -101,19 +131,29 @@ export default function TransactionHistory() {
             noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="accNo"
-              label="Account Number"
-              name="accNo"
-              autoComplete="accNo"
-              color="error"
-              autoFocus
-              value={accNo}
-              onChange={handleAccNoChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"
+                color="error">
+                Account Number
+              </InputLabel>
+              <Select
+                margin="normal"
+                required
+                fullWidth
+                id="AccNo"
+                label="Account Number"
+                name="AccNo"
+                autoComplete="Account Number"
+                color="error"
+                value={accno}
+                autoFocus
+                onChange={handleAccNoChange}
+              >
+                {accounts.map((row, i) => (
+                  <MenuItem key={i} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="normal"
               required

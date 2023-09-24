@@ -4,7 +4,7 @@ import {Link, useLocation} from 'react-router-dom'
 import { Icon, Table, Container } from 'semantic-ui-react'
 // import TransactionHistory from './TransactionHistory'
 import 'semantic-ui-css/semantic.min.css'
-import '../styles/Transaction.css'
+import '../styles/Transaction.css' 
 
 function Transaction(props) {
     console.log(props.data);

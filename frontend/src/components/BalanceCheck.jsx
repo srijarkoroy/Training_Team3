@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Modal from "react-modal";
-import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import "../styles/ModalStyle.css";
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -40,14 +39,10 @@ export default function BalanceCheck() {
   }
   useEffect(() => {
     userCheck();
-  }, []);
-  const [accounts, setAccounts] = useState([]);
-
-  useEffect(() => {
     handleAccounts();
-  }, []
-  );
+  }, []);
 
+  const [accounts, setAccounts] = useState([]);
   const handleAccounts = async () => {
     const url = "http://localhost:8090/user/userAccounts";
     const header = { "Content-Type": "application/json" };
@@ -198,19 +193,6 @@ export default function BalanceCheck() {
                 ))}
               </Select>
             </FormControl>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="AccNo"
-              label="Account Number"
-              name="AccNo"
-              autoComplete="Account Number"
-              color="error"
-              autoFocus
-              value={accno}
-              onChange={handleUsernameChange}
-            />
             <TextField
               margin="normal"
               required

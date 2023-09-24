@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import AdminDashboard from './components/AdminDashboard';
-import AdminLogin from './components/AdminLogin';
+import AdminTransactionHistory from './components/AdminTransaction';
 import BalanceCheck from './components/BalanceCheck';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
@@ -12,9 +12,6 @@ import SignUp from './components/SignUp';
 import TransactionHistory from './components/TransactionHistory';
 import UserSearch from './components/UserSearch';
 import Withdraw from './components/Withdraw';
-import Item from './components/AdminDashboard';
-import UserSearch from './components/UserSearch';
-import AdminTransactionHistory from './components/AdminTransaction';
 
 function App() {
   return (
