@@ -1,7 +1,6 @@
 package com.example.training.controller;
 
 import com.example.training.entity.User;
-import com.example.training.model.AccountRequest;
 import com.example.training.model.AdminAuthRequest;
 import com.example.training.model.UserEnable;
 import com.example.training.repository.UserRepository;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.AuthorityAuthorizationDecision;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

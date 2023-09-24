@@ -26,6 +26,7 @@ public class AdminService {
             return "user not found";
         }
         user.ifPresent(userAcc->{userAcc.setEnable(userEnable.getEnable());});
+        userRepository.save(user.get());
         if(userEnable.getEnable())
             return "User Account Enabled";
         return "User Account Disabled";
