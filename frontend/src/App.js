@@ -1,26 +1,24 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Login from './components/Login'
-import Navbar from './components/Navbar'
-import SignUp from './components/SignUp'
-import OpenAccount from './components/OpenAccount'
-import BalanceCheck from './components/BalanceCheck'
-import TransactionHistory from './components/TransactionHistory'
-import {Link, Route, Routes} from 'react-router-dom'
-import Dashboard from './components/Dashboard'
-import AdminDashboard from './components/AdminDashboard'
-import Transaction from './components/Transaction';
+import AdminDashboard from './components/AdminDashboard';
+import AdminLogin from './components/AdminLogin';
+import BalanceCheck from './components/BalanceCheck';
+import Dashboard from './components/Dashboard';
+import Login from './components/Login';
+import Navbar from './components/Navbar';
+import OpenAccount from './components/OpenAccount';
 import PerformTransaction from './components/PerformTransaction';
+import SignUp from './components/SignUp';
+import TransactionHistory from './components/TransactionHistory';
+import UserSearch from './components/UserSearch';
 import Withdraw from './components/Withdraw';
-import AdminLogin from './components/AdminLogin'
-import Item from './components/AdminDashboard'
-import UserSearch from './components/UserSearch'
 
 function App() {
   return (
     <div >
       <Navbar />
       <Routes>
-        <Route path="/" element={<div><Login /> <Navbar /> </div>} />
+        <Route path="/" element={<div><Login /> </div>} />
         <Route path="/openaccount" element={<div><OpenAccount /> <Navbar /> </div>} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/adminlogin" element={<AdminLogin />} />

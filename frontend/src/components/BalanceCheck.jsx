@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -21,29 +21,56 @@ const defaultTheme = createTheme();
 
 export default function BalanceCheck() {
   const [error, setError] = useState("");
+  const [accounts, setAccounts] = useState([]);
 
+  useEffect(() => {
+    handleAccounts();
+  }, []
+  );
+
+  const handleAccounts = async () => {
+    const url = "http://localhost:8090/user/userAccounts";
+    const header = { "Content-Type": "application/json" };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    };
+    try {
+      const resData = await axios.get(url, config);
+      if (resData.status === 200) {
+        console.log("finish api call - response:::", resData.data);
+      } else {
+        console.log("API Call Failed");
+      }
+      setAccounts(resData.data);
+    } catch (error) {
+      console.log("something wrong:::", error);
+    };
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
       const url = "http://localhost:8090/user/accountDetails/getBalance";
       const header = { "Content-Type": "application/json" };
-      const sendData ={
-        accNo:data.get("AccNo"),
-        transactionPassword:data.get("password")
+      const sendData = {
+        accNo: data.get("AccNo"),
+        transactionPassword: data.get("password")
       }
-  
+
       const config = {
-        headers:{
-          Authorization: "Bearer "+localStorage.getItem("token")
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
         }
       };
       // console.log(sendData);
       try {
         const resData = await axios.post(url, sendData, config);
-        if(resData.status === 200) {
+        if (resData.status === 200) {
           console.log("finish api call - response:::", resData.data.balance);
-          
+
           // const token = resData.data.token;
           // localStorage.setItem('token', token);
         } else {
@@ -51,9 +78,9 @@ export default function BalanceCheck() {
         }
         setResponseData(resData);
         setIsModalOpen(true);
-      } catch(error) {
-          console.log("something wrong:::", error);
-        };
+      } catch (error) {
+        console.log("something wrong:::", error);
+      };
     }
   };
 
@@ -71,6 +98,11 @@ export default function BalanceCheck() {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+
+  const handleAccNoChange = (event) => {
+    setAccNo(event.target.value);
+    console.log(accno);
   };
 
   // const handleBalanceCheck = () => {
@@ -102,27 +134,50 @@ export default function BalanceCheck() {
             flexDirection: "column",
             alignItems: "center",
           }}
-        >  
-        <Typography component="h1" variant="h5">
+        >
+          <Typography component="h1" variant="h5">
             Account Balance Check
-          </Typography>       
+          </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
-          >{ responseData &&
-            <Modal 
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                contentLabel="Token Modal"
+          >{responseData &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"
+                color="error">
+                Account Number
+              </InputLabel>
+              <Select
                 margin="normal"
+                required
                 fullWidth
-                className="custom-modal"
+                id="AccNo"
+                label="Account Number"
+                name="AccNo"
+                autoComplete="Account Number"
+                color="error"
+                value={accno}
+                autoFocus
+                onChange={handleAccNoChange}
               >
-                <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
-                <button onClick={closeModal} color="red">Close</button>
-              </Modal>}
+                {accounts.map((row, i) => (
+                  <MenuItem key={i} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="normal"
               required
@@ -149,14 +204,14 @@ export default function BalanceCheck() {
               value={password}
               onChange={handlePasswordChange}
             />
-          
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               color="error"
-              // onClick={handleBalanceCheck}
+            // onClick={handleBalanceCheck}
             >
               Check Balance
             </Button>
