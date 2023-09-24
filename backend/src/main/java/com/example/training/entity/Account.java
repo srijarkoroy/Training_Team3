@@ -1,9 +1,9 @@
 package com.example.training.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Valid
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="account")
 public class Account {
     @Id
