@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,6 +11,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import { useNavigate } from "react-router-dom";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -21,6 +24,23 @@ const defaultTheme = createTheme();
 
 export default function BalanceCheck() {
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const confi = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => { 
+    const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+    console.log(ad);
+    if(ad.data !== false){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    userCheck();
+  }, []);
   const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
@@ -246,4 +266,4 @@ export default function BalanceCheck() {
       </Container>
     </ThemeProvider>
   );
-}
+          }

@@ -10,6 +10,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Select from "react-dropdown-select";
 import "react-dropdown/style.css";
@@ -20,6 +22,24 @@ import "../styles/ModalStyle.css";
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
 export default function OpenAccount() {
+  const navigate = useNavigate();
+
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+    console.log(ad);
+    if(ad.data != true){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

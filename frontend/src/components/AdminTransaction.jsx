@@ -1,15 +1,21 @@
-import Box from "@mui/material/Box";
+import React, { useState, useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+// import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Users from "./Users";
+import axios from "axios";
+import {Link} from "react-router-dom";
+import Transaction from "./Transaction";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -17,82 +23,57 @@ const salt = bcrypt.genSaltSync(10);
 
 const defaultTheme = createTheme();
 
-export default function UserSearch() {
+export default function AdminTransactionHistory() {
   const [error, setError] = useState("");
-  const [showUsers, setShowUsers] = useState(false);
   const [res, setRes] = useState("");
-  const navigate = useNavigate();
-
-  const config = {
-    headers:{
-      Authorization: "Bearer "+localStorage.getItem("token")
-    }
-  };
-  const adminCheck = async () => { 
-    const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
-    console.log(ad);
-    if(ad.data != true){
-      navigate("/");
-    } 
-  }
-  useEffect(() => {
-    adminCheck();
-  }, []);
-
+  const [showTransaction, setShowTransation] = useState(false)
+  // useEffect(() => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/userDetails";
+      const url = "http://localhost:8090/admin/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        userId: data.get("username")
-      };
-      const config = {
-        headers:{
-          Authorization: "Bearer "+localStorage.getItem("token")
-        }
+        accNo: data.get("accNo")
       };
       console.log(sendData);
       try {
-        const resData = await axios.get(url+'/'+sendData.userId,config);
-        console.log("out:::",resData);
+        const resData = await axios.get(url+'/'+sendData.accNo, {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
+        
         if(resData.status === 200) {
           console.log("finish api call - response:::", resData);
           setRes(resData);
           console.log("res passed:::", {res}.res.data);
-          setShowUsers(true);
-          // const token = resData.data.token;
-          // localStorage.setItem('token', token);
+          setShowTransation(true);
+        //   const token = resData.data.token;
+        //   localStorage.setItem('token', token);
         } else {
-          console.log("Login Failed");
+          console.log("Authentication Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
         };
     }
   };
+// });
 
-  const [username, setUsername] = useState("");
+  const [accNo, setAccNo] = useState("");
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleAccNoChange = (e) => {
+    setAccNo(e.target.value);
   };
 
   const handleLogin = () => {
-    const usernamePattern = /^[A-Za-z0-9]+$/;
+    const accNoPattern = /^\d{10}$/;
 
-    if (!username.match(usernamePattern)) {
-      setError("Username can only contain alphabets and numbers.");
-    }
-      else {
-      // setUsername("");
-      // setPassword("");
+    if (!accNo.match(accNoPattern)) {
+      setError("Account Number should be 10-digits long.");
+    } else {
       setError("");
     }
-      
   };
-  
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -105,9 +86,8 @@ export default function UserSearch() {
             alignItems: "center",
           }}
         >
-        
           <Typography component="h1" variant="h5">
-            Search Users
+            Transaction History
           </Typography>
           <Box
             component="form"
@@ -119,14 +99,14 @@ export default function UserSearch() {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="accNo"
+              label="Account Number"
+              name="accNo"
+              autoComplete="accNo"
               color="error"
               autoFocus
-              value={username}
-              onChange={handleUsernameChange}
+              value={accNo}
+              onChange={handleAccNoChange}
             />
             <Button
               type="submit"
@@ -136,8 +116,9 @@ export default function UserSearch() {
               color="error"
               onClick={handleLogin}
             >
-              Search User
+              View Transaction History
             </Button>
+
             {error && (
               <Typography
                 variant="body2"
@@ -146,8 +127,8 @@ export default function UserSearch() {
                 {error}
               </Typography>
             )}
-            {showUsers && (
-              <Users data={res} />
+            {showTransaction && (
+              <Transaction data={res} />
             )}
           </Box>
         </Box>
