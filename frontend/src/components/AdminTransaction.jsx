@@ -18,6 +18,7 @@ import {Link} from "react-router-dom";
 import Transaction from "./Transaction";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import { useNavigate } from "react-router-dom";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -26,10 +27,32 @@ const salt = bcrypt.genSaltSync(10);
 const defaultTheme = createTheme();
 
 export default function AdminTransactionHistory() {
+  const [isError, setIsError] = useState("");
+  const [mssg, setMssg] = useState("");
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
+  const navigate = useNavigate();
   // useEffect(() => {
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    try {
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+      console.log(ad);
+      if(ad.data != true){
+        navigate("/");
+      } 
+    } catch(error){
+      setIsError(error);
+    }
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
@@ -55,18 +78,33 @@ export default function AdminTransactionHistory() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setIsError(error.response.data);
-          setIsModalOpen(true);
+          setIsError(error);
         };
     }
   };
 // });
-
+useEffect(() => {
+  if(isError !== ""){
+    console.log("inside use", isError);
+    if(isError.response.data.status === 401){
+      setMssg("Session Expired");
+      setIsModalOpen(true);
+    } else if(isError.response.status === 404){
+      setMssg(isError.response.data);
+    } else{
+      setMssg("Some error occured");
+    }
+    setIsModalOpen(true);
+  }
+}, [isError])
   const [accNo, setAccNo] = useState("");
-  const [isError, setIsError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
     setIsError("");
   };
   const handleAccNoChange = (e) => {
@@ -95,7 +133,7 @@ export default function AdminTransactionHistory() {
             alignItems: "center",
           }}
         >
-          {isError &&
+          {mssg &&
             <Modal
               isOpen={isModalOpen}
               onRequestClose={closeModal}
@@ -104,7 +142,7 @@ export default function AdminTransactionHistory() {
               fullWidth
               className="custom-modal"
             >
-              <h3>{isError}</h3>
+              <h3>{mssg}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
           <Typography component="h1" variant="h5">
