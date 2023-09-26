@@ -56,7 +56,7 @@ public class TrainingGroup3ApplicationTests {
 	private UserService userService;
 
 
-	UserDetailsDTO userDetailsDTO = new UserDetailsDTO(123L, "Arjun", "J", "cam@gmail.com", 79044L);
+	UserDetailsDTO userDetailsDTO = new UserDetailsDTO(123L, "Arjun", "J", "cam@gmail.com", 79044L,"TEST",true);
 	LocalDate date = LocalDate.parse("2020-01-08");
 	Transaction transaction = new Transaction(123L, 1L, 2L, 100F, Timestamp.valueOf("2018-09-01 09:01:15"), "summa", "a@x.com", "summa", 12345L);
 	Account account = new Account(
