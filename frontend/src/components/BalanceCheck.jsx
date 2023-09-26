@@ -22,6 +22,7 @@ import "../styles/ModalStyle.css";
 const defaultTheme = createTheme();
 
 export default function BalanceCheck() {
+  const [mssg, setMssg] = useState("");
   const [error, setError] = useState("");
   const [isError, setIsError] = useState("");
   const navigate = useNavigate();
@@ -32,16 +33,33 @@ export default function BalanceCheck() {
     }
   };
   const userCheck = async () => {
-    const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
-    console.log(ad);
-    if (ad.data !== false) {
-      navigate("/");
+    try {
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      console.log(ad);
+      if (ad.data !== false) {
+        navigate("/");
+      }
+    } catch(error){
+      setIsError(error);
     }
   }
   useEffect(() => {
     userCheck();
     handleAccounts();
   }, []);
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+      } else if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      }else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  }, [isError])
 
   const [accounts, setAccounts] = useState([]);
   const handleAccounts = async () => {
@@ -63,6 +81,7 @@ export default function BalanceCheck() {
       setAccounts(resData.data);
     } catch (error) {
       console.log("something wrong:::", error);
+      setIsError(error);
     };
   };
   const handleSubmit = async (event) => {
@@ -96,8 +115,7 @@ export default function BalanceCheck() {
         setIsModalOpen(true);
       } catch (error) {
         console.log("something wrong:::", error);
-        setIsError(error.response.data);
-        setIsModalOpen(true);
+        setIsError(error);
       };
     }
   };
@@ -108,6 +126,10 @@ export default function BalanceCheck() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
     setIsError("");
     setResponseData("");
   };
@@ -175,7 +197,7 @@ export default function BalanceCheck() {
               <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
-            {isError &&
+            {mssg &&
               <Modal
                 isOpen={isModalOpen}
                 onRequestClose={closeModal}
@@ -184,7 +206,7 @@ export default function BalanceCheck() {
                 fullWidth
                 className="custom-modal"
               >
-                <h3>{isError}</h3>
+                <h3>{mssg}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
             <FormControl fullWidth>

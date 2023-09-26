@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,6 +17,7 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import { useNavigate } from "react-router-dom";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -25,6 +26,44 @@ const salt = bcrypt.genSaltSync(10);
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
 export default function PerformTransaction() {
+  const [isError, setIsError] = useState("");
+  const [mssg, setMssg] = useState("");
+  const confi = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => {
+    try {
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      console.log(ad);
+      if (ad.data !== false) {
+        navigate("/");
+      }
+    } catch(error){
+      setIsError(error);
+    }
+  }
+
+  useEffect(() => {
+    userCheck();
+  }, []);
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        setIsModalOpen(true);
+      } else if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      }else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  }, [isError])
+
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
   const handleSubmit = async (event) => {
@@ -57,8 +96,8 @@ export default function PerformTransaction() {
       } catch(error) {
           console.log("something wrong:::", error);
           setRes(error.response.data);
-          setIsModalOpen(true);
           console.log(res);
+          setIsError(error);
         };
     }
   };
@@ -111,6 +150,10 @@ export default function PerformTransaction() {
   const closeModal = () => {
     setIsModalOpen(false);
     setRes("");
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
   };
 
 
@@ -145,6 +188,18 @@ export default function PerformTransaction() {
                 className="custom-modal"
               >
                 <h3>{res}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
+              {mssg && 
+              <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>{mssg}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
             <TextField

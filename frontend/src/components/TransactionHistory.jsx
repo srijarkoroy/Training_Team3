@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import {useNavigate} from "react-router-dom";
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -23,8 +24,31 @@ const salt = bcrypt.genSaltSync(10);
 const defaultTheme = createTheme();
 
 export default function TransactionHistory() {
-  const [error, setError] = useState("");
   const [isError, setIsError] = useState("");
+  const [mssg, setMssg] = useState("");
+  const navigate = useNavigate();
+  const confi = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => {
+    try {
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      console.log(ad);
+      if (ad.data !== false) {
+        navigate("/");
+      }
+    } catch(error){
+      setIsError(error);
+    }
+  }
+
+  useEffect(() => {
+    userCheck();
+  }, []);
+
+  const [error, setError] = useState("");
   const [res, setRes] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
 
@@ -54,8 +78,7 @@ export default function TransactionHistory() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setIsError(error.response.data);
-          setIsModalOpen(true);
+          setIsError(error);
         };
     }
   };
@@ -63,6 +86,20 @@ export default function TransactionHistory() {
   useEffect(() => {
     handleAccounts();
   }, []);
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        setIsModalOpen(true);
+      } else if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      } else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  }, [isError])
 
   const [accounts, setAccounts] = useState([]);
   const handleAccounts = async () => {
@@ -84,6 +121,7 @@ export default function TransactionHistory() {
       setAccounts(resData.data);
     } catch (error) {
       console.log("something wrong:::", error);
+      setIsError(error);
     };
   };
 
@@ -92,6 +130,10 @@ export default function TransactionHistory() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
     setIsError("");
   };
 
@@ -139,7 +181,7 @@ export default function TransactionHistory() {
             noValidate
             sx={{ mt: 1 }}
           >
-            {isError &&
+            {mssg &&
             <Modal
               isOpen={isModalOpen}
               onRequestClose={closeModal}
@@ -148,7 +190,7 @@ export default function TransactionHistory() {
               fullWidth
               className="custom-modal"
             >
-              <h3>{isError}</h3>
+              <h3>{mssg}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
             <FormControl fullWidth>
