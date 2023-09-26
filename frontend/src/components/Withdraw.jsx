@@ -207,7 +207,6 @@ export default function Withdraw() {
               name="amount"
               autoComplete="amount"
               color="error"
-              autoFocus
               value={amount}
               onChange={handleAmountChange}
             />
