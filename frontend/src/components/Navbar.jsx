@@ -13,6 +13,7 @@ const Navbar = () => {
     }
   };
   const userCheck = async () => { 
+    try {
     const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
     console.log(ad);
     if(ad.data === false){
@@ -20,6 +21,9 @@ const Navbar = () => {
     } else if(ad.data === true){
       navigate("/admindashboard");
     } else {
+      navigate("/");
+    }
+    } catch(error){
       navigate("/");
     }
   }

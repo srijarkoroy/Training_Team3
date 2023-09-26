@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -11,6 +11,7 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import { useNavigate } from "react-router-dom";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -19,7 +20,45 @@ const salt = bcrypt.genSaltSync(10);
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
 export default function Withdraw() {
+  const [isError, setIsError] = useState("");
+  const navigate = useNavigate();
+  const confi = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => {
+    try{
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      console.log(ad);
+      if (ad.data !== false) {
+        navigate("/");
+      }
+    } catch (error){
+      setIsError(error);
+    }
+  }
+  useEffect(() => {
+    userCheck();
+  }, []);
+
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        setIsModalOpen(true);
+      } else if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      } else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  }, [isError])
+
   const [error, setError] = useState("");
+  const [mssg, setMssg] = useState("");
   const [res, setRes] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,8 +86,9 @@ export default function Withdraw() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setRes(error.response.data);
-          setIsModalOpen(true);
+          // setRes(error.response.data);
+          setIsError(error);
+          // setIsModalOpen(true);
           console.log(res);
         };
     }
@@ -92,6 +132,10 @@ export default function Withdraw() {
   const closeModal = () => {
     setIsModalOpen(false);
     setRes("");
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
   };
 
 
@@ -126,6 +170,18 @@ export default function Withdraw() {
                 className="custom-modal"
               >
                 <h3>{res}</h3>
+                <button onClick={closeModal} color="red">Close</button>
+              </Modal>}
+              {mssg && 
+              <Modal 
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Token Modal"
+                margin="normal"
+                fullWidth
+                className="custom-modal"
+              >
+                <h3>{mssg}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
             <TextField
