@@ -51,11 +51,15 @@ public class TrainingGroup3ApplicationTests {
 
 	@Mock
 	private TransactionRepository transactionRepository;
+	@Mock
+	private UserRepository userRepository;
+	@Mock
+	private AccountRepository accountRepository;
 
 	@InjectMocks
 	private UserService userService;
 
-
+	User user = new User(123L, "Arjun", "J", "hi","cam@gmail.com", 79044L, "customer");
 	UserDetailsDTO userDetailsDTO = new UserDetailsDTO(123L, "Arjun", "J", "cam@gmail.com", 79044L);
 	LocalDate date = LocalDate.parse("2020-01-08");
 	Transaction transaction = new Transaction(123L, 1L, 2L, 100F, Timestamp.valueOf("2018-09-01 09:01:15"), "summa", "a@x.com", "summa", 12345L);
@@ -75,42 +79,48 @@ public class TrainingGroup3ApplicationTests {
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = MockMvcBuilders.standaloneSetup(userService).build();
 	}
-//	@Test
-//	public void testFindUser() throws Exception{
+	@Test
+	public void testFindUser() throws Exception{
+		Long id = 123L;
+		Mockito.when(userRepository.findByUserId(id)).thenReturn(Optional.of(user));
 //		Mockito.when(userService.findUser(123L)).thenReturn(userDetailsDTO);
-//
-//		UserDetailsDTO temp = (UserDetailsDTO) userService.findUser(123L);
+
+		Object temp =  userService.findUser(id);
+//		System.ou
 //		assertThat(temp).isNotNull();
-//		assertEquals(temp, userDetailsDTO);
-//	}
-//
-//	@Test
-//	public void testFindAccount() throws Exception{
-//		Mockito.when(userService.findAccount(123L)).thenReturn(account);
-//
-//		Account found = (Account) userService.findAccount(123L);
-//		assertThat(found).isNotNull();
-//		assertEquals(found, account);
-//
-//		Account notFound = (Account) userService.findAccount(12L);
-//		assertThat(notFound).isNull();
-//	}
+		assertEquals(temp, userDetailsDTO);
+	}
+
+	@Test
+	public void testFindAccount() throws Exception{
+		Long transact = 123L;
+		Long invalidTransact = 124L;
+		Mockito.when(transactionRepository.findByTransactionId(transact)).thenReturn(Optional.of(transaction));
+
+		Object found =  Optional.of(userService.findTransaction(transact));
+		assertThat(found).isNotNull();
+
+		Object notFound =  Optional.of(userService.findTransaction(invalidTransact));
+		assertThat(notFound).isNotNull();
+	}
 
 	@Test
 	public void testFindTransaction() throws Exception{
 		Long transact = 123L;
+		Long invalidTransact = 124L;
 		Mockito.when(transactionRepository.findByTransactionId(transact)).thenReturn(Optional.of(transaction));
 
 		Object found =  Optional.of(userService.findTransaction(transact));
-
 		assertThat(found).isNotNull();
+
+		Object notFound =  Optional.of(userService.findTransaction(invalidTransact));
+		assertThat(notFound).isNotNull();
 	}
-//	@Test
-//	public void testSaveNewTransaction() throws Exception{
-//		Mockito.when(userService.saveNewTransaction(transaction)).thenReturn("Transaction Successful");
-//		String actualResult = userService.saveNewTransaction(transaction);
-//		assertEquals(actualResult, "Transaction Successful");
-//	}
+	@Test
+	public void testSaveNewTransaction() throws Exception{
+		String actualResult = userService.saveNewTransaction(transaction);
+		assertEquals(actualResult, "Transaction Successful");
+	}
 //
 //	@Test
 //	public void testFindAllTransaction() throws Exception{
