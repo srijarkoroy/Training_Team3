@@ -51,12 +51,12 @@ export default function PerformTransaction() {
   useEffect(() => {
     if(isError !== ""){
       console.log("inside use", isError);
-      if(isError.response.data.status === 401){
-        setMssg("Session Expired");
-        setIsModalOpen(true);
-      } else if(isError.response.status === 404){
+      if(isError.response.status === 404){
         setMssg(isError.response.data);
-      }else{
+      }else if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        // setIsModalOpen(true);
+      } else{
         setMssg("Some error occured");
       }
       setIsModalOpen(true);
@@ -95,7 +95,7 @@ export default function PerformTransaction() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setRes(error.response.data);
+          // setRes(error.response.data);
           console.log(res);
           setIsError(error);
         };

@@ -86,11 +86,11 @@ export default function AdminTransactionHistory() {
 useEffect(() => {
   if(isError !== ""){
     console.log("inside use", isError);
-    if(isError.response.data.status === 401){
+     if(isError.response.status === 404){
+      setMssg(isError.response.data);
+    } else if(isError.response.data.status === 401){
       setMssg("Session Expired");
       setIsModalOpen(true);
-    } else if(isError.response.status === 404){
-      setMssg(isError.response.data);
     } else{
       setMssg("Some error occured");
     }
