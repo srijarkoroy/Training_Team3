@@ -50,11 +50,11 @@ export default function BalanceCheck() {
   useEffect(() => {
     if(isError !== ""){
       console.log("inside use", isError);
-      if(isError.response.data.status === 401){
-        setMssg("Session Expired");
-      } else if(isError.response.status === 404){
+      if(isError.response.status === 404){
         setMssg(isError.response.data);
-      }else{
+      }else if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+      } else{
         setMssg("Some error occured");
       }
       setIsModalOpen(true);

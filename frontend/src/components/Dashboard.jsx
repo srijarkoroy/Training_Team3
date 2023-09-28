@@ -6,8 +6,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "../styles/CardsStyleAdmin.css";
+import { useEffect, useState } from 'react';
+import axios from "axios";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -45,6 +49,51 @@ Item.propTypes = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const [isError, setIsError] = useState("");
+  const [mssg, setMssg] = useState("");
+
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    try{
+      const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+      console.log(ad);
+      if(ad.data != false){
+        navigate("/");
+      } 
+    } catch (error){
+      setIsError(error);
+    }
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      }else if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+      } else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  },[isError]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
+    setIsError("");
+  };
   return (
     <div style={{ width: '100%' }}>
       <Box
@@ -61,6 +110,18 @@ export default function Dashboard() {
           borderRadius: 1,
         }}
       >
+        {mssg &&
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={closeModal}
+            contentLabel="Token Modal"
+            margin="normal"
+            fullWidth
+            className="custom-modal"
+          >
+            <h3>{mssg}</h3>
+            <button onClick={closeModal} color="red">Close</button>
+          </Modal>}
     <Link to={"/balancecheck"} style={{textDecoration:"none"}}>
     <Card 
     className='custom-card'>
