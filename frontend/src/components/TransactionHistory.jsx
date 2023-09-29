@@ -17,6 +17,7 @@ import Select from '@mui/material/Select';
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import {useNavigate} from "react-router-dom";
+import Endpoints from "./Endpoints.js"
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -34,7 +35,7 @@ export default function TransactionHistory() {
   };
   const userCheck = async () => {
     try {
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
       console.log(ad);
       if (ad.data !== false) {
         navigate("/");
@@ -56,7 +57,7 @@ export default function TransactionHistory() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/allTransactionDetails";
+      const url = Endpoints.BASE_URL_USER + "/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("AccNo"),
@@ -103,7 +104,7 @@ export default function TransactionHistory() {
 
   const [accounts, setAccounts] = useState([]);
   const handleAccounts = async () => {
-    const url = "http://localhost:8090/user/userAccounts";
+    const url = Endpoints.BASE_URL_USER + "/userAccounts";
     const header = { "Content-Type": "application/json" };
 
     const config = {

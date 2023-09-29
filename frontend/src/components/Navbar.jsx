@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Endpoints from "./Endpoints.js"
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Navbar = () => {
   };
   const userCheck = async () => { 
     try {
-    const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+    const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
     console.log(ad);
     if(ad.data === false){
       navigate("/dashboard");

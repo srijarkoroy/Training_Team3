@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Users from "./Users";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import Endpoints from "./Endpoints";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -34,7 +35,7 @@ export default function UserSearch() {
   };
   const adminCheck = async () => { 
     try {
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
       console.log(ad);
       if(ad.data != true){
         navigate("/");
@@ -66,7 +67,7 @@ export default function UserSearch() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/userDetails";
+      const url = Endpoints.BASE_URL_USER + "/userDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         userId: data.get("username")

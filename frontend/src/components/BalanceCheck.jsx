@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import "../styles/ModalStyle.css";
+import Endpoints from "./Endpoints.js"
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -34,7 +35,7 @@ export default function BalanceCheck() {
   };
   const userCheck = async () => {
     try {
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
       console.log(ad);
       if (ad.data !== false) {
         navigate("/");
@@ -63,7 +64,7 @@ export default function BalanceCheck() {
 
   const [accounts, setAccounts] = useState([]);
   const handleAccounts = async () => {
-    const url = "http://localhost:8090/user/userAccounts";
+    const url = Endpoints.BASE_URL_USER + "/userAccounts";
     const header = { "Content-Type": "application/json" };
 
     const config = {
@@ -88,7 +89,7 @@ export default function BalanceCheck() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/accountDetails/getBalance";
+      const url = Endpoints.BASE_URL_USER + "/accountDetails/getBalance";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("AccNo"),

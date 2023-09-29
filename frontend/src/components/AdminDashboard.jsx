@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import Endpoints from './Endpoints';
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -60,7 +61,7 @@ export default function AdminDashboard() {
   };
   const adminCheck = async () => { 
     try{
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
       console.log(ad);
       if(ad.data != true){
         navigate("/");

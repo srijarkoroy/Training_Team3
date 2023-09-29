@@ -19,6 +19,7 @@ import Transaction from "./Transaction";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
+import Endpoints from "./Endpoints.js"
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -41,7 +42,7 @@ export default function AdminTransactionHistory() {
   };
   const adminCheck = async () => { 
     try {
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
       console.log(ad);
       if(ad.data != true){
         navigate("/");
@@ -57,7 +58,7 @@ export default function AdminTransactionHistory() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/admin/allTransactionDetails";
+      const url = Endpoints.BASE_URL_ADMIN + "/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("accNo")
