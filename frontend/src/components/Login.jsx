@@ -17,6 +17,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import "../styles/Login.css";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -208,16 +209,18 @@ export default function Login() {
               </Typography>
             )}
             <Grid container>
-              <Grid item xs>
+              <Grid item fullWidth>
                 <Link href="#" variant="body2" color="error">
-                  Forgot password?
+                  {"Forgot password"}
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid item justifyContent="flex-end">
                 <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
               </Grid>
+            </Grid>
+            <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2" color="error">
                   {"Don't have netbanking? Register here"}
