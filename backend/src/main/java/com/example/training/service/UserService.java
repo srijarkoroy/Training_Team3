@@ -87,7 +87,7 @@ public class UserService {
         if (senderAccount.isEmpty())
             return "User does not have a bank account";
         if (receiverAccount.isEmpty())
-            return "Receiver does not have a bank account";
+                return "Receiver does not have a bank account";
         Account userAccount = senderAccount.get();
         if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
             return "Incorrect Transaction Password";
