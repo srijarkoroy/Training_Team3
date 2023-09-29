@@ -17,6 +17,7 @@ import Select from "react-dropdown-select";
 import "react-dropdown/style.css";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
+import Endpoints from "./Endpoints.js"
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
@@ -30,7 +31,7 @@ export default function OpenAccount() {
     }
   };
   const adminCheck = async () => { 
-    const ad = await axios.get('http://localhost:8090/admin/adminCheck', config);
+    const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
     console.log(ad);
     if(ad.data != true){
       navigate("/");
@@ -43,7 +44,7 @@ export default function OpenAccount() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const url = "http://localhost:8090/admin/createAccount";
+    const url = Endpoints.BASE_URL_ADMIN + "/createAccount";
     const header = { "Content-Type": "application/json" };
     
     const sendData = {

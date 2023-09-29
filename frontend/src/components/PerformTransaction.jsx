@@ -18,6 +18,7 @@ import {Link} from "react-router-dom";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
+import Endpoints from "./Endpoints.js"
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -35,7 +36,7 @@ export default function PerformTransaction() {
   };
   const userCheck = async () => {
     try {
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
       console.log(ad);
       if (ad.data !== false) {
         navigate("/");
@@ -51,12 +52,12 @@ export default function PerformTransaction() {
   useEffect(() => {
     if(isError !== ""){
       console.log("inside use", isError);
-      if(isError.response.data.status === 401){
-        setMssg("Session Expired");
-        setIsModalOpen(true);
-      } else if(isError.response.status === 404){
+      if(isError.response.status === 404){
         setMssg(isError.response.data);
-      }else{
+      }else if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        // setIsModalOpen(true);
+      } else{
         setMssg("Some error occured");
       }
       setIsModalOpen(true);
@@ -70,7 +71,7 @@ export default function PerformTransaction() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/performTransaction";
+      const url = Endpoints.BASE_URL_USER + "/performTransaction";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("accNo"),
@@ -95,7 +96,7 @@ export default function PerformTransaction() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setRes(error.response.data);
+          // setRes(error.response.data);
           console.log(res);
           setIsError(error);
         };

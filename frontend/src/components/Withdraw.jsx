@@ -12,6 +12,7 @@ import bcrypt from "bcryptjs";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
+import Endpoints from "./Endpoints";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -29,7 +30,7 @@ export default function Withdraw() {
   };
   const userCheck = async () => {
     try{
-      const ad = await axios.get('http://localhost:8090/admin/adminCheck', confi);
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
       console.log(ad);
       if (ad.data !== false) {
         navigate("/");
@@ -64,7 +65,7 @@ export default function Withdraw() {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/withdraw";
+      const url = Endpoints.BASE_URL_USER + "/withdraw";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("accNo"),

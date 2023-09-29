@@ -38,7 +38,8 @@ export default function OpenAccount() {
       accType: data.get("accounttype"),
     };
     console.log(sendData);
-    if(!error){
+    console.log(error);
+    if(JSON.stringify(error) === "{}"){
       try {
         const response = await fetch(url, {
           method: "post",
