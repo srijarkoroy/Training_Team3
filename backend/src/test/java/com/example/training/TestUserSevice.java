@@ -1,43 +1,24 @@
 package com.example.training;
 
-import com.example.training.controller.UserController;
 import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
-import com.example.training.model.BalanceRequest;
-import com.example.training.model.UserDetails;
+import com.example.training.model.*;
 import com.example.training.repository.AccountRepository;
 import com.example.training.repository.TransactionRepository;
 import com.example.training.repository.UserRepository;
 import com.example.training.service.UserService;
 import com.example.training.entity.User;
-import com.example.training.model.UserDetailsDTO;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +29,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -141,17 +121,6 @@ public class TrainingGroup3ApplicationTests {
 		Object notFound = userService.saveNewUser(udInvalid);
 		assertEquals(notFound, "User does not have a bank account");
 	}
-//	@Test
-//	public void testSaveNewTransaction() throws Exception{
-//		Mockito.when(userService.saveNewTransaction(transaction)).thenReturn("Transaction Successful");
-//		String actualResult = userService.saveNewTransaction(transaction);
-//		assertEquals(actualResult, "Transaction Successful");
-//	}
-//
-//	@Test
-//	public void testFindAllTransaction() throws Exception{
-//
-//	}
 
 	@Test
 	public void testFindBalance() throws Exception{
@@ -177,4 +146,106 @@ public class TrainingGroup3ApplicationTests {
 		found = userService.findBalance(invalidBalanceRequest);
 		assertEquals(found, "User does not have a bank account");
 	}
+
+	@Test
+	public void testFindAllTransaction() throws Exception{
+		BalanceRequest balanceRequest = new BalanceRequest();
+		balanceRequest.setAccNo(123L);
+		Account account = new Account();
+		balanceRequest.setTransactionPassword("summa");
+		account.setAccNo(123L);
+		account.setTransactionPassword("summa");
+		Transaction transaction = new Transaction();
+		List<Transaction> transactionList = new ArrayList<Transaction>();
+		transactionList.add(transaction);
+		when(accountRepository.findByAccNo(123L)).thenReturn(Optional.of(account));
+		when(transactionRepository.findAllBySenderAccNoOrRecipientAccNo(123L, 123L)).thenReturn((List<Transaction>) transactionList);
+
+		Object found = userService.findAllTransaction(balanceRequest);
+		assertEquals(found, transactionList);
+
+		transactionList.clear();
+		found = userService.findAllTransaction(balanceRequest);
+		assertEquals(found, "transaction not found");
+
+		account.setTransactionPassword("wrong");
+		found = userService.findAllTransaction(balanceRequest);
+		assertEquals(found, "Incorrect Transaction password");
+
+		BalanceRequest invalidBalanceRequest = new BalanceRequest();
+		found = userService.findAllTransaction(invalidBalanceRequest);
+		assertEquals(found, "User does not have a bank account");
+	}
+
+	@Test
+	public void testDoTransaction() throws Exception {
+		PerformTransactionDetails performTransactionDetails = new PerformTransactionDetails();
+		performTransactionDetails.setAccNo(123L);
+		performTransactionDetails.setRecipientAccNo(124L);
+		Account senderAccount = new Account();
+		Account receiverAccount = new Account();
+		senderAccount.setTransactionPassword("summa");
+		performTransactionDetails.setTransactionPassword("summa");
+		performTransactionDetails.setAmount(1F);
+		senderAccount.setBalance(2F);
+		receiverAccount.setBalance(2F);
+
+		when(accountRepository.findByAccNo(123L)).thenReturn(Optional.of(senderAccount));
+		when(accountRepository.findByAccNo(124L)).thenReturn(Optional.of(receiverAccount));
+
+		Object found = userService.doTransaction(performTransactionDetails);
+		assertEquals(found, "transaction executed successfully");
+
+		performTransactionDetails.setAmount(2F);
+		senderAccount.setBalance(1F);
+		found = userService.doTransaction(performTransactionDetails);
+		assertEquals(found, "Insufficient balance");
+
+		performTransactionDetails.setTransactionPassword("wrong");
+		found = userService.doTransaction(performTransactionDetails);
+		assertEquals(found, "Incorrect Transaction Password");
+
+		performTransactionDetails.setRecipientAccNo(12L);
+		found = userService.doTransaction(performTransactionDetails);
+		assertEquals(found, "Receiver does not have a bank account");
+
+		performTransactionDetails.setAccNo(12L);
+		found = userService.doTransaction(performTransactionDetails);
+		assertEquals(found, "User does not have a bank account");
+	}
+
+	@Test
+	public void testWithdrawAmount() throws Exception{
+		Withdraw withdrawDetails = new Withdraw();
+		withdrawDetails.setAccNo(123L);
+		Account account = new Account();
+		account.setTransactionPassword("summa");
+		withdrawDetails.setTransactionPassword("summa");
+		withdrawDetails.setAmount(1F);
+		account.setBalance(1F);
+		when(accountRepository.findByAccNo(123L)).thenReturn(Optional.of(account));
+
+		Object found = userService.withdrawAmount(withdrawDetails);
+		assertEquals(found, "Amount withdrawn successfully");
+
+		withdrawDetails.setAmount(2F);
+		found = userService.withdrawAmount(withdrawDetails);
+		assertEquals(found, "Insufficient balance");
+
+		withdrawDetails.setTransactionPassword("wrong");
+		found = userService.withdrawAmount(withdrawDetails);
+		assertEquals(found, "Incorrect Transaction Password");
+
+		withdrawDetails.setAccNo(124L);
+		found = userService.withdrawAmount(withdrawDetails);
+		assertEquals(found, "User does not have a bank account");
+	}
+
+	@Test
+	public void testSaveNewAccount() throws Exception{
+		Account account = new Account();
+		Object found = userService.saveNewAccount(account);
+		verify(accountRepository).save(account);
+	}
 }
+
