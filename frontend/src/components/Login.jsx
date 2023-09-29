@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import bcrypt from "bcryptjs";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
+import bcrypt from "bcryptjs";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
+import "../styles/Login.css";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -42,19 +45,42 @@ export default function Login() {
           console.log("finish api call - response:::", resData);
           const token = resData.data.token;
           localStorage.setItem('token', token);
-          navigate("/dashboard");
+          const config = {
+            headers:{
+              Authorization: "Bearer "+localStorage.getItem("token")
+            }
+          };
+          const adminCheck = await axios.get("http://localhost:8090/admin/adminCheck", config);
+          let route = "";
+          if(adminCheck.data == true){
+            route = "/admindashboard";
+            // navigate("/admindashboard");
+          } else if(adminCheck.data == false){
+            route = "/dashboard";
+            // navigate("/dashboard");
+          } else {
+            console.log("error admin check ", adminCheck);
+          }
+          navigate(route);
         } else {
           console.log("Login Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setIsError("Invalid Credentials");
+          setIsModalOpen(true);
         };
     }
   };
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isError, setIsError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError("");
+  };
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -80,22 +106,22 @@ export default function Login() {
       setError("");
     }
   };
-  const handleToken = async() => {
-    const tk = {authorization: localStorage.getItem('token')};
-    try {
-      const tkData = await axios.get("http://localhost:8090/user/userDetails/10011",
-       {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-      if(tkData.status === 200) {
-        console.log("finish api call - response:::", tkData);
-        // const token = tkData.data.token;
-        // localStorage.setItem('token', token);
-      } else {
-        console.log("Token get Failed");
-      }
-    } catch(error) {
-        console.log("something wrong with token:::", error);
-      };
-  };
+  // const handleToken = async() => {
+  //   const tk = {authorization: localStorage.getItem('token')};
+  //   try {
+  //     const tkData = await axios.get("http://localhost:8090/user/userDetails/10017",
+  //      {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
+  //     if(tkData.status === 200) {
+  //       console.log("finish api call - response:::", tkData);
+  //       // const token = tkData.data.token;
+  //       // localStorage.setItem('token', token);
+  //     } else {
+  //       console.log("Token get Failed");
+  //     }
+  //   } catch(error) {
+  //       console.log("something wrong with token:::", error);
+  //     };
+  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -121,6 +147,18 @@ export default function Login() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {isError &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
+              margin="normal"
+              fullWidth
+              className="custom-modal"
+            >
+              <h3>{isError}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
             <TextField
               margin="normal"
               required
@@ -170,27 +208,19 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="error"
-              onClick={handleToken}
-            >
-              Send Token
-            </Button>
             <Grid container>
-              <Grid item xs>
+              <Grid item fullWidth>
                 <Link href="#" variant="body2" color="error">
-                  Forgot password?
+                  {"Forgot password"}
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid item justifyContent="flex-end">
                 <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
               </Grid>
+            </Grid>
+            <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2" color="error">
                   {"Don't have netbanking? Register here"}

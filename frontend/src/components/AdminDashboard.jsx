@@ -1,18 +1,18 @@
-import { CardActionArea } from '@mui/material';
+import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import "../styles/CardsStyleAdmin.css";
+import { CardActionArea } from '@mui/material';
+import "../styles/CardsStyle.css";
+import axios from "axios"
 import { useEffect, useState } from 'react';
-import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
-import Endpoints from "./Endpoints.js"
+import Endpoints from './Endpoints';
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -49,7 +49,7 @@ Item.propTypes = {
   ]),
 };
 
-export default function Dashboard() {
+export default function AdminDashboard() {
   const navigate = useNavigate();
   const [isError, setIsError] = useState("");
   const [mssg, setMssg] = useState("");
@@ -63,7 +63,7 @@ export default function Dashboard() {
     try{
       const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
       console.log(ad);
-      if(ad.data != false){
+      if(ad.data != true){
         navigate("/");
       } 
     } catch (error){
@@ -95,18 +95,19 @@ export default function Dashboard() {
     }
     setIsError("");
   };
+
   return (
     <div style={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent:'space-evenly',
+          justifyContent:'space-between',
           flexWrap:'wrap',
           p: 1,
           m: 12,
-          marginTop:12,
-        //   marginRight:10,
+          marginTop:20,
+        //   marginRight: 10,
           bgcolor: 'background.paper',
           borderRadius: 1,
         }}
@@ -123,108 +124,64 @@ export default function Dashboard() {
             <h3>{mssg}</h3>
             <button onClick={closeModal} color="red">Close</button>
           </Modal>}
-    <Link to={"/balancecheck"} style={{textDecoration:"none"}}>
-    <Card 
-    className='custom-card'>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image='https://cdn.icon-icons.com/icons2/1369/PNG/512/-account-balance_90300.png'
-          alt="acc balance"
-          sx={{objectFit: "contain" }}
-
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Check Balance
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Enter Account Number and Transaction Pin to instantly check your account balance
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    </Link>
-    <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
+    <Link to={"/usersearch"} style={{textDecoration:"none"}}>
     <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
           height="200"
-          image="https://cdn-icons-png.flaticon.com/512/2761/2761001.png"
+          image='https://static.thenounproject.com/png/642902-200.png'
+          alt="user account"
+          sx={{objectFit: "contain"}}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Search Users
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+          Enter User ID to search for user and enable/disable account
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </Link>
+    <Link to={"/admintransaction"} style={{textDecoration:"none"}}>
+    <Card className='custom-card'>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://cdn-icons-png.flaticon.com/512/9764/9764509.png"
           alt="transactions"
-          sx={{objectFit: "contain" }}
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             Transaction History
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly check your Transaction History
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    </Link>
-    <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image="https://previews.123rf.com/images/khalide91/khalide911912/khalide91191200363/136621325-bank-to-bank-money-transfer-icon.jpg"
-          alt="fund transfer"
-          sx={{objectFit: "contain"}}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Fund Transfer
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly transfer money
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    </Link>
-    <Link to={"/withdraw"} style={{textDecoration:"none"}}>
-    <Card className='custom-card' sx={{marginTop:5}}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
-          alt="withdraw funds"
-          sx={{objectFit: "contain" }}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Withdraw Funds
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly withdraw money
+          Enter Account Number to find the Transaction History for an account
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
     </Link>
     <Link to={"/openaccount"} style={{textDecoration:"none"}}>
-    <Card className='custom-card' sx={{marginTop:5}}>
+    <Card className='custom-card'>
       <CardActionArea>
         <CardMedia
           component="img"
           height="200"
-          image="https://static.thenounproject.com/png/3104881-200.png"
-          alt="open accounts"
-          sx={{objectFit: "contain" }}
+          image="https://icons.veryicon.com/png/o/miscellaneous/water-icon/account-opening-management-01.png"
+          alt="fund transfer"
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             Open Account
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          Enter Account Number and Transaction Pin to instantly withdraw money
+          Enter User Details to open a new bank account for a user
           </Typography>
         </CardContent>
       </CardActionArea>

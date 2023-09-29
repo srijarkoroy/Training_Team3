@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import React, { useState, useEffect } from "react";
 // import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import bcrypt from "bcryptjs";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import bcrypt from "bcryptjs";
 import Transaction from "./Transaction";
-
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Modal from "react-modal";
+import "../styles/ModalStyle.css";
+import {useNavigate} from "react-router-dom";
+import Endpoints from "./Endpoints.js"
 const salt = bcrypt.genSaltSync(10);
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -24,18 +25,43 @@ const salt = bcrypt.genSaltSync(10);
 const defaultTheme = createTheme();
 
 export default function TransactionHistory() {
+  const [isError, setIsError] = useState("");
+  const [mssg, setMssg] = useState("");
+  const navigate = useNavigate();
+  const confi = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => {
+    try {
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
+      console.log(ad);
+      if (ad.data !== false) {
+        navigate("/");
+      }
+    } catch(error){
+      setIsError(error);
+    }
+  }
+
+  useEffect(() => {
+    userCheck();
+  }, []);
+
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
+  const [acc, setAcc] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
-  // useEffect(() => {
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (error === "") {
       const data = new FormData(event.currentTarget);
-      const url = "http://localhost:8090/user/allTransactionDetails";
+      const url = Endpoints.BASE_URL_USER + "/allTransactionDetails";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        accNo: data.get("accNo"),
+        accNo: data.get("AccNo"),
         transactionPassword: data.get("password"),
       };
       console.log(sendData);
@@ -47,6 +73,7 @@ export default function TransactionHistory() {
           setRes(resData);
           console.log("res passed:::", {res}.res.data);
           setShowTransation(true);
+          setAcc(sendData.accNo);
         //   const token = resData.data.token;
         //   localStorage.setItem('token', token);
         } else {
@@ -54,20 +81,70 @@ export default function TransactionHistory() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
+          setIsError(error);
         };
     }
   };
-// });
 
-  const [accNo, setAccNo] = useState("");
+  useEffect(() => {
+    handleAccounts();
+  }, []);
+  useEffect(() => {
+    if(isError !== ""){
+      console.log("inside use", isError);
+      if(isError.response.data.status === 401){
+        setMssg("Session Expired");
+        setIsModalOpen(true);
+      } else if(isError.response.status === 404){
+        setMssg(isError.response.data);
+      } else{
+        setMssg("Some error occured");
+      }
+      setIsModalOpen(true);
+    }
+  }, [isError])
+
+  const [accounts, setAccounts] = useState([]);
+  const handleAccounts = async () => {
+    const url = Endpoints.BASE_URL_USER + "/userAccounts";
+    const header = { "Content-Type": "application/json" };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    };
+    try {
+      const resData = await axios.get(url, config);
+      if (resData.status === 200) {
+        console.log("finish api call - response:::", resData.data);
+      } else {
+        console.log("API Call Failed");
+      }
+      setAccounts(resData.data);
+    } catch (error) {
+      console.log("something wrong:::", error);
+      setIsError(error);
+    };
+  };
+
+  const [accno, setAccNo] = useState("");
   const [transactionPassword, setPassword] = useState("");
-
-  const handleAccNoChange = (e) => {
-    setAccNo(e.target.value);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if(mssg === "Session Expired"){
+      setMssg("");
+      navigate("/");
+    }
+    setIsError("");
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+  const handleAccNoChange = (event) => {
+    setAccNo(event.target.value);
   };
 
   const handleLogin = () => {
@@ -107,19 +184,41 @@ export default function TransactionHistory() {
             noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
+            {mssg &&
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Token Modal"
               margin="normal"
-              required
               fullWidth
-              id="accNo"
-              label="Account Number"
-              name="accNo"
-              autoComplete="accNo"
-              color="error"
-              autoFocus
-              value={accNo}
-              onChange={handleAccNoChange}
-            />
+              className="custom-modal"
+            >
+              <h3>{mssg}</h3>
+              <button onClick={closeModal} color="red">Close</button>
+            </Modal>}
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"
+                color="error">
+                Account Number
+              </InputLabel>
+              <Select
+                margin="normal"
+                required
+                fullWidth
+                id="AccNo"
+                label="Account Number"
+                name="AccNo"
+                autoComplete="Account Number"
+                color="error"
+                value={accno}
+                autoFocus
+                onChange={handleAccNoChange}
+              >
+                {accounts.map((row, i) => (
+                  <MenuItem key={i} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="normal"
               required
@@ -153,7 +252,7 @@ export default function TransactionHistory() {
               </Typography>
             )}
             {showTransaction && (
-              <Transaction data={res} />
+              <Transaction data={res} accNo={acc} />
             )}
           </Box>
         </Box>

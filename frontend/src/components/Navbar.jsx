@@ -2,8 +2,40 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Endpoints from "./Endpoints.js"
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const confi = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const userCheck = async () => { 
+    try {
+    const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', confi);
+    console.log(ad);
+    if(ad.data === false){
+      navigate("/dashboard");
+    } else if(ad.data === true){
+      navigate("/admindashboard");
+    } else {
+      navigate("/");
+    }
+    } catch(error){
+      navigate("/");
+    }
+  }
+  const handleClick = () => {
+    userCheck();
+  }
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate("/");
+  }
   return (
     <Box
       id="navbar-container"
@@ -55,11 +87,24 @@ const Navbar = () => {
                 cursor: "pointer",
               },
             }}
+            onClick={handleClick}
           >
             <Typography color={"white"} fontSize={24} fontWeight={600}>
-              TEAM3
+              Online Bank T3
             </Typography>
           </Box>
+          <IconButton
+            data-testid="menubtn"
+            sx={{
+              color: "white",
+              m: 1,
+              mt: 1.5,
+              mb: 1.5,
+            }}
+            onClick={handleLogout}
+          >
+            <ExitToAppIcon />
+          </IconButton>
         </Box>
         <Box
           id="yellow-strip"

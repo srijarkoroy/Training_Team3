@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,8 @@ public class UserService {
             userDetailsDTO.setLastName(userDetails.getLastName());
             userDetailsDTO.setEmail(userDetails.getEmail());
             userDetailsDTO.setPhone(userDetails.getPhone());
+            userDetailsDTO.setRoles(userDetails.getRoles());
+            userDetailsDTO.setEnable(userDetails.getEnable());
         });
         return userDetailsDTO;
     }
@@ -44,12 +47,12 @@ public class UserService {
         return account;
     }
 
-    public Object findBalance(BalanceRequest balanceRequest) {
-        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+    public Object findBalance(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
         if(account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         Map<String, Float> map = new HashMap<String, Float>();
         map.put("balance", userAccount.getBalance());
@@ -64,12 +67,12 @@ public class UserService {
         return transaction;
     }
 
-    public Object findAllTransaction(BalanceRequest balanceRequest) {
-        Optional<Account> account = accountRepository.findByAccNo(balanceRequest.getAccNo());
+    public Object findAllTransaction(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
         if(account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), balanceRequest.getTransactionPassword()))
+        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
         if (transaction.isEmpty()) {
@@ -120,6 +123,8 @@ public class UserService {
         return "Amount withdrawn successfully";
     }
     public Object saveNewUser(UserDetails userDetails) {
+        userDetails.getUser().setRoles("USER");
+        userDetails.getUser().setEnable(true);
         User user = userRepository.save(userDetails.getUser());
         Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
         if (account.isEmpty())
@@ -136,6 +141,8 @@ public class UserService {
         userDetailsDTO.setLastName(user.getLastName());
         userDetailsDTO.setEmail(user.getEmail());
         userDetailsDTO.setPhone(user.getPhone());
+        userDetailsDTO.setRoles(user.getRoles());
+        userDetailsDTO.setEnable(user.getEnable());
 
         return userDetailsDTO;
     }
@@ -150,5 +157,13 @@ public class UserService {
     public String saveNewTransaction(Transaction transaction) {
         transactionRepository.save(transaction);
         return "Transaction Successful";
+    }
+
+    public Object findUserAccounts(Long userId) {
+        List<Long> accountNos = accountRepository.findByUserId(userId).stream()
+                                .map(Account::getAccNo).collect(Collectors.toList());
+        if(accountNos.isEmpty())
+            return "No Accounts found for this user";
+        return accountNos;
     }
 }

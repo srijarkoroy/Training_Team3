@@ -1,6 +1,7 @@
 package com.example.training.config;
 
 import com.example.training.filter.JwtAuthFilter;
+import com.example.training.util.AuthEntryPointJwt;
 import com.example.training.util.UserInfoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,9 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter authFilter;
 
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserInfoUserDetailsService();
@@ -39,8 +43,9 @@ public class SecurityConfig {
         return http.csrf().disable()
                 .cors().configurationSource(option->buildConfig())
                 .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeHttpRequests()
-                .antMatchers("/user/authenticate","/user/userDetails/createUser",
+                .antMatchers("/user/authenticate","/admin/authenticate","/user/userDetails/createUser",
                         "/user/accountDetails/createAccount")
                 .permitAll()
                 .and()

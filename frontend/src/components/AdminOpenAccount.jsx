@@ -10,21 +10,41 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Select from "react-dropdown-select";
 import "react-dropdown/style.css";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
-import Endpoints from "./Endpoints";
+import Endpoints from "./Endpoints.js"
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
 export default function OpenAccount() {
+  const navigate = useNavigate();
+
+  const config = {
+    headers:{
+      Authorization: "Bearer "+localStorage.getItem("token")
+    }
+  };
+  const adminCheck = async () => { 
+    const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
+    console.log(ad);
+    if(ad.data != true){
+      navigate("/");
+    } 
+  }
+  useEffect(() => {
+    adminCheck();
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const url = Endpoints.BASE_URL_USER+"/accountDetails/createAccount";
+    const url = Endpoints.BASE_URL_ADMIN + "/createAccount";
     const header = { "Content-Type": "application/json" };
     
     const sendData = {
@@ -39,24 +59,22 @@ export default function OpenAccount() {
       accType: data.get("accounttype"),
     };
     console.log(sendData);
-    console.log(error);
-    if(JSON.stringify(error) === "{}"){
-      try {
-        const response = await fetch(url, {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(sendData),
-        });
-        if(!response.ok) {
-          throw new Error("Something wrong with request");
-        }
-        const resData = await response.json();
-        setResponseData(resData);
-        console.log(responseData);
-        setIsModalOpen(true);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
+
+    try {
+      const response = await fetch(url, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sendData),
+      });
+      if(!response.ok) {
+        throw new Error("Something wrong with request");
       }
+      const resData = await response.json();
+      setResponseData(resData);
+      console.log(responseData);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
     }
   };
   const [responseData, setResponseData] = useState("");
@@ -72,7 +90,6 @@ export default function OpenAccount() {
   const [error, setError] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const userPattern = /^\d{5}$/;
   const namePattern = /^[A-Za-z ,.'-]+$/i;
   const aadhaarPattern = /^\d{12}$/;
   const ifscPattern = /^[A-Z0-9]{10,}/;
@@ -94,8 +111,8 @@ export default function OpenAccount() {
   const defaultOption = options[0];
 
   const handleUseridChange = (e) => {
-    setUserid(e.target.value);
-  };
+    setUserid(e,target.value);
+  }
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -132,8 +149,8 @@ export default function OpenAccount() {
   const validateForm = () => {
     const newError = {};
 
-    if (!userid.match(userPattern)) {
-      newError.userId = "Invalid";
+    if (!userid.match(useridPattern)) {
+        newError.userId = "Invalid";
     }
 
     if (!address.match(addressPattern)) {
@@ -235,9 +252,9 @@ export default function OpenAccount() {
               //   Congratulations, your Account No is {responseData.accNo}
               // </Typography>}
             }
-
             <TextField
               margin="normal"
+              required
               fullWidth
               id="userid"
               label="User Id"
@@ -250,7 +267,6 @@ export default function OpenAccount() {
               error={!!error.userId}
               helperText={error.userId}
             />
-
             <TextField
               margin="normal"
               required

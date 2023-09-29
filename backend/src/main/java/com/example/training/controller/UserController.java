@@ -4,15 +4,12 @@ import com.example.training.entity.Account;
 import com.example.training.entity.Transaction;
 import com.example.training.exception.EntityNotFoundException;
 import com.example.training.model.*;
-import com.example.training.model.AuthRequest;
-import com.example.training.model.BalanceRequest;
-import com.example.training.model.PerformTransactionDetails;
-import com.example.training.model.UserDetails;
 import com.example.training.service.JwtService;
 import com.example.training.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +31,7 @@ public class UserController {
 	private final JwtService jwtService;
 
 	@PostMapping("/authenticate")
-	public ResponseEntity<Map<String,String>> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+	public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
 		if (authentication.isAuthenticated()) {
 			Map<String,String> response = new HashMap<>();
@@ -45,6 +42,7 @@ public class UserController {
 		}
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/userDetails/{id}")
 	public ResponseEntity<?> getUserDetails(@PathVariable Long id) throws EntityNotFoundException {
 		Object response = userService.findUser(id);
@@ -62,8 +60,8 @@ public class UserController {
 	}
 
 	@PostMapping("/accountDetails/getBalance")
-	public ResponseEntity<?> getBalance(@Valid @RequestBody BalanceRequest balanceRequest){
-		Object response = userService.findBalance(balanceRequest);
+	public ResponseEntity<?> getBalance(@Valid @RequestBody AccountRequest accountRequest){
+		Object response = userService.findBalance(accountRequest);
 		if(response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -78,9 +76,9 @@ public class UserController {
 	}
 
 	@PostMapping("/allTransactionDetails")
-	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody BalanceRequest balanceRequest){
+	public ResponseEntity<?> getAllTransactionDetails(@Valid @RequestBody AccountRequest accountRequest){
 
-		Object response = userService.findAllTransaction(balanceRequest);
+		Object response = userService.findAllTransaction(accountRequest);
 		if (response.equals("User does not have a bank account") || response.equals("Incorrect Transaction password") || response.equals("transaction not found"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -115,5 +113,14 @@ public class UserController {
 	@PostMapping("/transactionDetails/createTransaction")
 	public ResponseEntity<String> saveTransactionDetails(@Valid @RequestBody Transaction transaction){
 		return new ResponseEntity<>(userService.saveNewTransaction(transaction), HttpStatus.OK);
+	}
+
+	@GetMapping("/userAccounts")
+	public ResponseEntity<?> getUserAccounts(@RequestHeader("Authorization") String token) throws EntityNotFoundException {
+		token = token.substring(7);
+		Object response = userService.findUserAccounts(Long.valueOf(jwtService.extractUsername(token)));
+		if(response.equals("No Accounts found for this user"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
