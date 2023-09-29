@@ -45,7 +45,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testFindUser() throws Exception {
+    public void testFindUser() {
         UserDetailsDTO ud = new UserDetailsDTO();
         ud.setUserId(123L);
         User user = new User();
@@ -61,7 +61,7 @@ public class TestUserService {
 
 
     @Test
-    public void testFindAccount() throws Exception {
+    public void testFindAccount() {
         Account account = new Account();
         account.setAccNo(123L);
         given(accountRepository.findByAccNo(123L)).willReturn(Optional.of(account));
@@ -74,7 +74,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testFindTransaction() throws Exception {
+    public void testFindTransaction() {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(123L);
         given(transactionRepository.findByTransactionId(123L)).willReturn(Optional.of(transaction));
@@ -95,7 +95,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testFindNewUser() throws Exception {
+    public void testFindNewUser() {
         UserDetails ud = new UserDetails();
         UserDetails udInvalid = new UserDetails();
         Account account = new Account();
@@ -122,7 +122,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testFindBalance() throws Exception {
+    public void testFindBalance() {
         AccountRequest balanceRequest = new AccountRequest();
         balanceRequest.setAccNo(123L);
         balanceRequest.setTransactionPassword("summa");
@@ -147,7 +147,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testFindAllTransaction() throws Exception {
+    public void testFindAllTransaction() {
         AccountRequest balanceRequest = new AccountRequest();
         balanceRequest.setAccNo(123L);
         Account account = new Account();
@@ -177,7 +177,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testDoTransaction() throws Exception {
+    public void testDoTransaction() {
         PerformTransactionDetails performTransactionDetails = new PerformTransactionDetails();
         performTransactionDetails.setAccNo(123L);
         performTransactionDetails.setRecipientAccNo(124L);
@@ -214,7 +214,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testWithdrawAmount() throws Exception {
+    public void testWithdrawAmount() {
         Withdraw withdrawDetails = new Withdraw();
         withdrawDetails.setAccNo(123L);
         Account account = new Account();
@@ -241,14 +241,14 @@ public class TestUserService {
     }
 
     @Test
-    public void testSaveNewAccount() throws Exception {
+    public void testSaveNewAccount() {
         Account account = new Account();
         Object found = userService.saveNewAccount(account);
         verify(accountRepository).save(account);
     }
 
     @Test
-    public void testFindUserAccounts() throws Exception {
+    public void testFindUserAccounts() {
 
         List<Long> accNos = new ArrayList<>();
         accNos.add(123L);
