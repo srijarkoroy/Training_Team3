@@ -51,6 +51,7 @@ export default function TransactionHistory() {
 
   const [error, setError] = useState("");
   const [res, setRes] = useState("");
+  const [acc, setAcc] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
 
   const handleSubmit = async (event) => {
@@ -72,6 +73,7 @@ export default function TransactionHistory() {
           setRes(resData);
           console.log("res passed:::", {res}.res.data);
           setShowTransation(true);
+          setAcc(sendData.accNo);
         //   const token = resData.data.token;
         //   localStorage.setItem('token', token);
         } else {
@@ -250,7 +252,7 @@ export default function TransactionHistory() {
               </Typography>
             )}
             {showTransaction && (
-              <Transaction data={res} />
+              <Transaction data={res} accNo={acc} />
             )}
           </Box>
         </Box>
