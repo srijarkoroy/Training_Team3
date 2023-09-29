@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-// import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
-import {Link} from "react-router-dom";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +15,6 @@ import Endpoints from "./Endpoints.js"
 
 const salt = bcrypt.genSaltSync(10);
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
@@ -56,7 +48,6 @@ export default function PerformTransaction() {
         setMssg(isError.response.data);
       }else if(isError.response.data.status === 401){
         setMssg("Session Expired");
-        // setIsModalOpen(true);
       } else{
         setMssg("Some error occured");
       }
@@ -89,14 +80,11 @@ export default function PerformTransaction() {
           setRes(resData.data);
           console.log("res passed:::", res.data);
           setIsModalOpen(true);
-        //   const token = resData.data.token;
-        //   localStorage.setItem('token', token);
         } else {
           console.log("Authentication Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          // setRes(error.response.data);
           console.log(res);
           setIsError(error);
         };
@@ -131,19 +119,14 @@ export default function PerformTransaction() {
   };
 
   const handleLogin = () => {
-    // const accNoPattern = /.,'^[0-9]{10}$/;
     const transactionPasswordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    // if (!accNo.match(accNoPattern)) {
-    //   setError("Account Number should be 11-digits long.");
     if (!transactionPassword.match(transactionPasswordPattern)) {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
     } else {
-      // setUsername("");
-      // setPassword("");
       setError("");
     }
   };
@@ -290,33 +273,6 @@ export default function PerformTransaction() {
                 {error}
               </Typography>
             )}
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="error"
-              onClick={handleToken}
-            >
-              Send Token
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2" color="error">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/openaccount" variant="body2" color="error">
-                  {"Open Bank Account"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2" color="error">
-                  {"Don't have netbanking? Register here"}
-                </Link>
-              </Grid>
-            </Grid> */}
           </Box>
         </Box>
       </Container>

@@ -17,8 +17,7 @@ import Select from "react-dropdown-select";
 import "react-dropdown/style.css";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
-import Endpoints from "./Endpoints.js"
-// TODO remove, this demo shouldn't need to reset the theme.
+import Endpoints from "./Endpoints.js";
 
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
@@ -48,9 +47,6 @@ export default function OpenAccount() {
     const header = { "Content-Type": "application/json" };
     
     const sendData = {
-      // email: data.get("email"),
-      // firstname: data.get("firstname"),
-      // lastname: data.get("lastname"),
       userId: data.get("userid"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
@@ -120,8 +116,6 @@ export default function OpenAccount() {
 
   const handleFirstnameChange = (e) => {
     setFirstname(e.target.value);
-
-    const namePattern = /^[A-Za-z ,.'-]+$/i;
   };
 
   const handleLastnameChange = (e) => {
@@ -134,8 +128,6 @@ export default function OpenAccount() {
 
   const handleBranchChange = (e) => {
     setBranch(e[0].value);
-    // console.log("logsss", e[0].value);
-    // console.log("branch", branch);
   };
 
   const handleIfscChange = (e) => {
@@ -178,7 +170,6 @@ export default function OpenAccount() {
 
     if (!email.match(emailPattern)) {
       newError.email = "Valid email is required.";
-      // console.log(newError);
     }
 
     if (!accounttype) {
@@ -186,23 +177,12 @@ export default function OpenAccount() {
     }
 
     setError(newError);
-    // console.log(newError);
   };
 
   const handleAccountTypeChange = (e) => {
     setAccountType(e[0].value);
-    // console.log("log acc", e[0].value);
-    // console.log("type", accounttype);
   };
 
-  // const handleOpenAccount = () => {
-  //   validateForm();
-  //   if (error) {
-  //     setError("An error occured");
-  //   } else {
-  //     setError({});
-  //   }
-  // };
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -244,13 +224,6 @@ export default function OpenAccount() {
                 <h3>Your Account No is {responseData.accNo}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>
-              // <Typography
-              //   variant="body2"
-              //   color="error"
-              //   sx={{ fontStyle: "bold", margin: "2% 0" }}
-              // >
-              //   Congratulations, your Account No is {responseData.accNo}
-              // </Typography>}
             }
             <TextField
               margin="normal"
@@ -281,15 +254,6 @@ export default function OpenAccount() {
               error={!!error.firstName}
               helperText={error.firstName}
             />
-            {/* {error && error.match("First") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <TextField
               margin="normal"
@@ -305,15 +269,6 @@ export default function OpenAccount() {
               error={!!error.lastName}
               helperText={error.lastName}
             />
-            {/* {error && error.match("Last") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <TextField
               margin="normal"
@@ -330,15 +285,6 @@ export default function OpenAccount() {
               error={!!error.email}
               helperText={error.email}
             />
-            {/* {error && error.match("Email") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <TextField
               margin="normal"
@@ -354,15 +300,6 @@ export default function OpenAccount() {
               error={!!error.aadhaar}
               helperText={error.aadhaar}
             />
-            {/* {error && error.match("Aadhaar") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <TextField
               margin="normal"
@@ -378,15 +315,6 @@ export default function OpenAccount() {
               error={!!error.address}
               helperText={error.address}
             />
-            {/* {error && error.match("Address") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <Select
               margin="normal"
@@ -401,15 +329,6 @@ export default function OpenAccount() {
               error={!!error.branch}
               helperText={error.branch}
             />
-            {/* {error && error.match("Branch") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <TextField
               margin="normal"
@@ -425,15 +344,6 @@ export default function OpenAccount() {
               error={!!error.ifsc}
               helperText={error.ifsc}
             />
-            {/* {error && error.match("IFSC") && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
 
             <Select
               margin="normal"
@@ -459,14 +369,6 @@ export default function OpenAccount() {
               Submit
             </Button>
 
-            {/* {error && (
-              <Typography
-                variant="body2"
-                sx={{ fontStyle: "italic", margin: "2% 0" }}
-              >
-                {error}
-              </Typography>
-            )} */}
           </Box>
         </Box>
       </Container>

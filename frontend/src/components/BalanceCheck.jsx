@@ -18,7 +18,6 @@ import "../styles/ModalStyle.css";
 import Endpoints from "./Endpoints.js"
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -101,14 +100,11 @@ export default function BalanceCheck() {
           Authorization: "Bearer " + localStorage.getItem("token")
         }
       };
-      // console.log(sendData);
       try {
         const resData = await axios.post(url, sendData, config);
         if (resData.status === 200) {
           console.log("finish api call - response:::", resData.data.balance);
 
-          // const token = resData.data.token;
-          // localStorage.setItem('token', token);
         } else {
           console.log("API Call Failed");
         }
@@ -148,23 +144,6 @@ export default function BalanceCheck() {
     console.log(accno);
   };
 
-  // const handleBalanceCheck = () => {
-  //   const usernamePattern = /^[A-Za-z0-9]+$/;
-  //   const passwordPattern =
-  //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-
-  //   if (!username.match(usernamePattern)) {
-  //     setError("Username can only contain alphabets and numbers.");
-  //   } else if (!password.match(passwordPattern)) {
-  //     setError(
-  //       "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
-  //     );
-  //   } else {
-  //     // setUsername("");
-  //     // setPassword("");
-  //     setError("");
-  //   }
-  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>
