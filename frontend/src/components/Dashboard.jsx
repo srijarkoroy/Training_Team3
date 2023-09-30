@@ -230,6 +230,27 @@ export default function Dashboard() {
       </CardActionArea>
     </Card>
     </Link>
+    <Link to={"/changepassword"} style={{textDecoration:"none"}}>
+    <Card className='custom-card' sx={{marginTop:5}}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://static.thenounproject.com/png/3104881-200.png"
+          alt="open accounts"
+          sx={{objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Change Transaction Password
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Select to change transaction password
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </Link>
     </Box>
     </div>
   );
