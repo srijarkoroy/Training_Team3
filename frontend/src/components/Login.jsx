@@ -208,13 +208,13 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Grid container>
+            <Grid container justifyContent={'space-between'}>
               <Grid item fullWidth>
                 <Link href="#" variant="body2" color="error">
                   {"Forgot password"}
                 </Link>
               </Grid>
-              <Grid item justifyContent="flex-end">
+              <Grid item>
                 <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
