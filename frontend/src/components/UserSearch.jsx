@@ -16,8 +16,6 @@ import Endpoints from "./Endpoints";
 
 const salt = bcrypt.genSaltSync(10);
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 export default function UserSearch() {
@@ -86,8 +84,6 @@ export default function UserSearch() {
           setRes(resData);
           console.log("res passed:::", {res}.res.data);
           setShowUsers(true);
-          // const token = resData.data.token;
-          // localStorage.setItem('token', token);
         } else {
           console.log("Login Failed");
         }
@@ -120,8 +116,6 @@ export default function UserSearch() {
       setError("Username can only contain alphabets and numbers.");
     }
       else {
-      // setUsername("");
-      // setPassword("");
       setError("");
     }
       

@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-// import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import bcrypt from "bcryptjs";
 import axios from "axios";
-import {Link} from "react-router-dom";
 import Transaction from "./Transaction";
 import Modal from "react-modal";
 import "../styles/ModalStyle.css";
@@ -23,7 +16,6 @@ import Endpoints from "./Endpoints.js"
 
 const salt = bcrypt.genSaltSync(10);
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -34,7 +26,6 @@ export default function AdminTransactionHistory() {
   const [res, setRes] = useState("");
   const [showTransaction, setShowTransation] = useState(false)
   const navigate = useNavigate();
-  // useEffect(() => {
   const config = {
     headers:{
       Authorization: "Bearer "+localStorage.getItem("token")
@@ -71,9 +62,8 @@ export default function AdminTransactionHistory() {
           console.log("finish api call - response:::", resData);
           setRes(resData);
           console.log("res passed:::", {res}.res.data);
+          setAcc(sendData.accNo);
           setShowTransation(true);
-        //   const token = resData.data.token;
-        //   localStorage.setItem('token', token);
         } else {
           console.log("Authentication Failed");
         }
@@ -83,7 +73,6 @@ export default function AdminTransactionHistory() {
         };
     }
   };
-// });
 useEffect(() => {
   if(isError !== ""){
     console.log("inside use", isError);
@@ -99,6 +88,7 @@ useEffect(() => {
   }
 }, [isError])
   const [accNo, setAccNo] = useState("");
+  const [acc, setAcc] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
@@ -188,7 +178,7 @@ useEffect(() => {
               </Typography>
             )}
             {showTransaction && (
-              <Transaction data={res} />
+              <Transaction data={res} accNo={acc}/>
             )}
           </Box>
         </Box>
