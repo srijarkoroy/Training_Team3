@@ -36,12 +36,10 @@ public class Transaction {
     private Long transactionId;
 
     @NotNull
-//    @Size(min=11,max=11, message="Account Number should be 11-digits long")
     @Column(name="senderAccNo")
     private Long senderAccNo;
 
     @NotNull
-//    @Size(min=11,max=11, message="Account Number should be 11-digits long")
     @Column(name="recipientAccNo")
     private Long recipientAccNo;
 
