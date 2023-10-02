@@ -119,7 +119,7 @@ public class UserController {
 	public ResponseEntity<?> getUserAccounts(@RequestHeader("Authorization") String token) throws EntityNotFoundException {
 		token = token.substring(7);
 		Object response = userService.findUserAccounts(Long.valueOf(jwtService.extractUsername(token)));
-		if(response.equals("No Accounts found for this user"))
+				if(response.equals("No Accounts found for this user"))
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
