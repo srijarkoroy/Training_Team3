@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import React, { useState, useEffect } from "react";
-// import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -20,7 +19,6 @@ import {useNavigate} from "react-router-dom";
 import Endpoints from "./Endpoints.js"
 const salt = bcrypt.genSaltSync(10);
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -74,8 +72,6 @@ export default function TransactionHistory() {
           console.log("res passed:::", {res}.res.data);
           setShowTransation(true);
           setAcc(sendData.accNo);
-        //   const token = resData.data.token;
-        //   localStorage.setItem('token', token);
         } else {
           console.log("Authentication Failed");
         }
@@ -92,11 +88,10 @@ export default function TransactionHistory() {
   useEffect(() => {
     if(isError !== ""){
       console.log("inside use", isError);
-      if(isError.response.data.status === 401){
-        setMssg("Session Expired");
-        setIsModalOpen(true);
-      } else if(isError.response.status === 404){
+      if(isError.response.status === 404){
         setMssg(isError.response.data);
+      } else if(isError.response.data.status === 401){
+        setMssg("Session Expired");
       } else{
         setMssg("Some error occured");
       }
@@ -148,12 +143,9 @@ export default function TransactionHistory() {
   };
 
   const handleLogin = () => {
-    // const accNoPattern = /.,'^[0-9]{10}$/;
     const transactionPasswordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    // if (!accNo.match(accNoPattern)) {
-    //   setError("Account Number should be 11-digits long.");
     if (!transactionPassword.match(transactionPasswordPattern)) {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."

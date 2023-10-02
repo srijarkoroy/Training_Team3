@@ -50,10 +50,17 @@ public class TestUserService {
         ud.setUserId(123L);
         User user = new User();
         user.setUserId(123L);
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(new Account());
         Mockito.when(userRepository.findByUserId(123L)).thenReturn(Optional.of(user));
+        Mockito.when(accountRepository.findByUserId(123L)).thenReturn(accounts);
 
         Object found = userService.findUser(123L);
         assertEquals(found, ud);
+
+        accounts.clear();
+        found = userService.findUser(123L);
+        assertEquals(found, "User does not have a Bank Account");
 
         Object notFound = userService.findUser(12L);
         assertEquals(notFound, "user not found");
@@ -261,6 +268,20 @@ public class TestUserService {
         accounts.clear();
         accNos.clear();
         assertEquals(userService.findUserAccounts(123L), "No Accounts found for this user");
+    }
+
+    @Test
+    public void testSetTransactionPassword() {
+        Account account = new Account();
+        account.setAccNo(123L);
+        AccountRequest accountRequest = new AccountRequest();
+        accountRequest.setAccNo(123L);
+        when(accountRepository.findByAccNo(123L)).thenReturn(Optional.of(account));
+        when(accountRepository.save(account)).thenReturn(account);
+        assertEquals(userService.setTransactionPassword(accountRequest), "Transaction Password set successfully");
+        accountRequest.setAccNo(12L);
+        assertEquals(userService.setTransactionPassword(accountRequest), "No Accounts found for this account number");
+
     }
 }
 

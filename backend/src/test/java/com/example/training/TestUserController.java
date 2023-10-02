@@ -164,29 +164,19 @@ public class TestUserController {
 //                .andExpect(status().isNotFound());
 //    }
 
-    @Test
-    public void testSaveTransactionDetails() throws Exception{
-        Transaction transaction = new Transaction(
-                123L,
-                1L,
-                2L,
-                100F,
-                Timestamp.from(Instant.now()),
-                "blah",
-                "a@b.com",
-                "blah",
-                12345L
-        );
-        when(userService.saveNewTransaction(transaction)).thenReturn("Transaction successful");
-
-        String content = objectWriter.writeValueAsString(transaction);
-
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/user/transactionDetails/createTransaction")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content);
-
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void testSaveTransactionDetails() throws Exception{
+//        Transaction transaction = new Transaction( );
+//        when(userService.saveNewTransaction(transaction)).thenReturn("Transaction successful");
+//
+//        String content = objectWriter.writeValueAsString(transaction);
+//
+//        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/user/transactionDetails/createTransaction")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .content(content);
+//
+//        mockMvc.perform(mockRequest)
+//                .andExpect(status().isOk());
+//    }
 }

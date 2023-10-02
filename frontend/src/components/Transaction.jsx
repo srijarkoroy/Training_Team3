@@ -1,8 +1,5 @@
 import React from 'react'
-import {Link, useLocation} from 'react-router-dom'
-// import { useLocation } from 'react-router'
 import { Icon, Table, Container } from 'semantic-ui-react'
-// import TransactionHistory from './TransactionHistory'
 import 'semantic-ui-css/semantic.min.css'
 import '../styles/Transaction.css' 
 

@@ -230,6 +230,27 @@ export default function Dashboard() {
       </CardActionArea>
     </Card>
     </Link>
+    <Link to={"/changepassword"} style={{textDecoration:"none"}}>
+    <Card className='custom-card' sx={{marginTop:5}}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMfsJYTg1XAunLg_XaXRNVP1t8wugRh7hUkQ&usqp=CAU"
+          alt="change transaction password"
+          sx={{objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Change Transaction Password
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Select to change transaction password for any of your bank accounts
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </Link>
     </Box>
     </div>
   );

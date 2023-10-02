@@ -63,18 +63,7 @@ const Navbar = () => {
             backgroundColor: "#d71e28",
           }}
         >
-          <IconButton
-            data-testid="menubtn"
-            sx={{
-              color: "white",
-              m: 1,
-              mt: 1.5,
-              mb: 1.5,
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-
+        
           <Box
             id="brand-holder"
             sx={{

@@ -12,6 +12,7 @@ import SignUp from './components/SignUp';
 import TransactionHistory from './components/TransactionHistory';
 import UserSearch from './components/UserSearch';
 import Withdraw from './components/Withdraw';
+import SetPassword from './components/SetPassword';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/withdraw" element={<div><Withdraw /><Navbar /></div>}/>
         <Route path="/admintransaction" element={<div><AdminTransactionHistory /><Navbar /></div>}/>
         <Route path="/usersearch" element={<div><UserSearch /><Navbar /></div>}/>
+        <Route path="/changepassword" element={<div><SetPassword /><Navbar /></div>}/>
       </Routes>
 
     </div>

@@ -21,9 +21,9 @@ import Endpoints from "./Endpoints.js"
 
 const defaultTheme = createTheme();
 
-export default function BalanceCheck() {
+export default function SetPassword() {
   const [mssg, setMssg] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [isError, setIsError] = useState("");
   const navigate = useNavigate();
 
@@ -86,13 +86,13 @@ export default function BalanceCheck() {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (error === "") {
+    if (JSON.stringify(errors) === "{}") {
       const data = new FormData(event.currentTarget);
-      const url = Endpoints.BASE_URL_USER + "/accountDetails/getBalance";
+      const url = Endpoints.BASE_URL_USER + "/userAccounts/transactionPassword";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("AccNo"),
-        transactionPassword: data.get("password")
+        transactionPassword: data.get("tPassword")
       }
 
       const config = {
@@ -112,15 +112,41 @@ export default function BalanceCheck() {
         setIsModalOpen(true);
       } catch (error) {
         console.log("something wrong:::", error);
+        console.log(sendData);
         setIsError(error);
       };
     }
   };
 
   const [accno, setAccNo] = useState("");
-  const [password, setPassword] = useState("");
   const [responseData, setResponseData] = useState("");
+  const [tPassword, setTPassword] = useState("");
+  const [confirmTPassword, setConfirmTPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Regular expressions for validation
+    const passwordPattern =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+    if (!tPassword || !tPassword.match(passwordPattern)) {
+      newErrors.tPassword =
+        "Transaction password must be at least 8 characters, including alphabets, numbers, and special characters.";
+    }
+
+    if (tPassword !== confirmTPassword) {
+      newErrors.confirmTPassword = "Transaction passwords do not match.";
+    }
+
+    if (!accno) {
+      newErrors.accNo = "Account Number is required.";
+    }
+
+    setErrors(newErrors);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     if(mssg === "Session Expired"){
@@ -130,13 +156,21 @@ export default function BalanceCheck() {
     setIsError("");
     setResponseData("");
   };
+  
+  const handleTPasswordChange = (e) => {
+    setTPassword(e.target.value);
+  };
+  const handleConfirmTPasswordChange = (e) => {
+    setConfirmTPassword(e.target.value);
+  };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleUsernameChange = (e) => {
+    setAccNo(e.target.value);
   };
 
   const handleAccNoChange = (event) => {
     setAccNo(event.target.value);
+    console.log(accno);
   };
 
 
@@ -153,7 +187,7 @@ export default function BalanceCheck() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Account Balance Check
+            Set Account Transaction Password 
           </Typography>
           <Box
             component="form"
@@ -169,7 +203,7 @@ export default function BalanceCheck() {
               fullWidth
               className="custom-modal"
             >
-              <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+              <h3>{responseData.data}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
             {mssg &&
@@ -211,14 +245,29 @@ export default function BalanceCheck() {
               margin="normal"
               required
               fullWidth
-              name="password"
+              name="tPassword"
               label="Transaction Password"
               type="password"
-              id="password"
+              id="tPassword"
               autoComplete="current-password"
               color="error"
-              value={password}
-              onChange={handlePasswordChange}
+              value={tPassword}
+              onChange={handleTPasswordChange}
+              error = {!!errors.tPassword}
+              helperText={errors.tPassword}
+            />
+            <TextField
+                required
+                fullWidth
+                name="confirmTPassword"
+                label=" Confirm Transaction Password"
+                type="password"
+                id="confirmTPassword"
+                color="error"
+                value={confirmTPassword}
+                onChange={handleConfirmTPasswordChange}
+                error={!!errors.confirmTPassword}
+                helperText={errors.confirmTPassword}
             />
 
             <Button
@@ -227,19 +276,19 @@ export default function BalanceCheck() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               color="error"
-            // onClick={handleBalanceCheck}
+              onClick={validateForm}
             >
-              Check Balance
+              Submit
             </Button>
 
-            {error && (
+            {/* {error && (
               <Typography
                 variant="body2"
                 sx={{ fontStyle: "italic", margin: "2% 0" }}
               >
                 {error}
               </Typography>
-            )}
+            )} */}
           </Box>
         </Box>
       </Container>

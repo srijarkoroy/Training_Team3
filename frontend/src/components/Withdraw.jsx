@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import React, { useState, useEffect } from "react";
-// import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -13,10 +12,13 @@ import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
 import Endpoints from "./Endpoints";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const salt = bcrypt.genSaltSync(10);
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 Modal.setAppElement('#root');
@@ -41,6 +43,7 @@ export default function Withdraw() {
   }
   useEffect(() => {
     userCheck();
+    handleAccounts();
   }, []);
 
   useEffect(() => {
@@ -58,6 +61,30 @@ export default function Withdraw() {
     }
   }, [isError])
 
+  const [accounts, setAccounts] = useState([]);
+  const handleAccounts = async () => {
+    const url = Endpoints.BASE_URL_USER + "/userAccounts";
+    const header = { "Content-Type": "application/json" };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    };
+    try {
+      const resData = await axios.get(url, config);
+      if (resData.status === 200) {
+        console.log("finish api call - response:::", resData.data);
+      } else {
+        console.log("API Call Failed");
+      }
+      setAccounts(resData.data);
+    } catch (error) {
+      console.log("something wrong:::", error);
+      setIsError(error);
+    };
+  };
+
   const [error, setError] = useState("");
   const [mssg, setMssg] = useState("");
   const [res, setRes] = useState("");
@@ -68,7 +95,7 @@ export default function Withdraw() {
       const url = Endpoints.BASE_URL_USER + "/withdraw";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        accNo: data.get("accNo"),
+        accNo: accNo,
         amount: data.get("amount"),
         transactionPassword: data.get("password")
       };
@@ -80,16 +107,12 @@ export default function Withdraw() {
           setRes(resData.data);
           console.log("res passed:::", res.data);
           setIsModalOpen(true);
-        //   const token = resData.data.token;
-        //   localStorage.setItem('token', token);
         } else {
           console.log("Authentication Failed");
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          // setRes(error.response.data);
           setIsError(error);
-          // setIsModalOpen(true);
           console.log(res);
         };
     }
@@ -100,8 +123,8 @@ export default function Withdraw() {
   const [transactionPassword, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAccNoChange = (e) => {
-    setAccNo(e.target.value);
+  const handleAccNoChange = (event) => {
+    setAccNo(event.target.value);
   };
 
   const handleAmountChange = (e) => {
@@ -113,19 +136,16 @@ export default function Withdraw() {
   };
 
   const handleLogin = () => {
-    // const accNoPattern = /.,'^[0-9]{10}$/;
     const transactionPasswordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    // if (!accNo.match(accNoPattern)) {
-    //   setError("Account Number should be 11-digits long.");
     if (!transactionPassword.match(transactionPasswordPattern)) {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
+    } else if (!amount.match(/^\d/)){
+      setError("Invalid Amount");
     } else {
-      // setUsername("");
-      // setPassword("");
       setError("");
     }
   };
@@ -185,20 +205,29 @@ export default function Withdraw() {
                 <h3>{mssg}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="accNo"
-              label="Account Number"
-              name="accNo"
-              autoComplete="accNo"
-              color="error"
-              autoFocus
-              value={accNo}
-              onChange={handleAccNoChange}
-            />
-
+              <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"
+                color="error">
+                Account Number
+              </InputLabel>
+              <Select
+                margin="normal"
+                required
+                fullWidth
+                id="AccNo"
+                label="Account Number"
+                name="AccNo"
+                autoComplete="Account Number"
+                color="error"
+                value={accNo}
+                autoFocus
+                onChange={handleAccNoChange}
+              >
+                {accounts.map((row, i) => (
+                  <MenuItem key={i} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="normal"
               required
@@ -211,7 +240,6 @@ export default function Withdraw() {
               value={amount}
               onChange={handleAmountChange}
             />
-
             <TextField
               margin="normal"
               required
@@ -225,7 +253,6 @@ export default function Withdraw() {
               value={transactionPassword}
               onChange={handlePasswordChange}
             />
-            {/* <Link to={'/viewtransactionhistory'} state={res}> */}
             <Button
               type="submit"
               fullWidth
@@ -246,33 +273,6 @@ export default function Withdraw() {
                 {error}
               </Typography>
             )}
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="error"
-              onClick={handleToken}
-            >
-              Send Token
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2" color="error">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/openaccount" variant="body2" color="error">
-                  {"Open Bank Account"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2" color="error">
-                  {"Don't have netbanking? Register here"}
-                </Link>
-              </Grid>
-            </Grid> */}
           </Box>
         </Box>
       </Container>

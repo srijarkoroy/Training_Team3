@@ -26,17 +26,23 @@ public class UserService {
         if (user.isEmpty()) {
             return "user not found";
         }
-        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
-        user.ifPresent(userDetails -> {
-            userDetailsDTO.setUserId(userDetails.getUserId());
-            userDetailsDTO.setFirstName(userDetails.getFirstName());
-            userDetailsDTO.setLastName(userDetails.getLastName());
-            userDetailsDTO.setEmail(userDetails.getEmail());
-            userDetailsDTO.setPhone(userDetails.getPhone());
-            userDetailsDTO.setRoles(userDetails.getRoles());
-            userDetailsDTO.setEnable(userDetails.getEnable());
-        });
-        return userDetailsDTO;
+        if (!accountRepository.findByUserId(id).isEmpty()) {
+            Account account = accountRepository.findByUserId(id).get(0);
+            UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
+            user.ifPresent(userDetails -> {
+                userDetailsDTO.setUserId(userDetails.getUserId());
+                userDetailsDTO.setFirstName(account.getFirstName());
+                userDetailsDTO.setLastName(account.getLastName());
+                userDetailsDTO.setEmail(account.getEmail());
+                userDetailsDTO.setPhone(account.getPhone());
+                userDetailsDTO.setRoles(userDetails.getRoles());
+                userDetailsDTO.setEnable(userDetails.getEnable());
+            });
+            return userDetailsDTO;
+        }
+
+        return "User does not have a Bank Account";
+
     }
 
     public Object findAccount(Long acc) {
@@ -49,10 +55,10 @@ public class UserService {
 
     public Object findBalance(AccountRequest accountRequest) {
         Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
-        if(account.isEmpty())
+        if (account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
+        if (!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         Map<String, Float> map = new HashMap<String, Float>();
         map.put("balance", userAccount.getBalance());
@@ -69,10 +75,10 @@ public class UserService {
 
     public Object findAllTransaction(AccountRequest accountRequest) {
         Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
-        if(account.isEmpty())
+        if (account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
+        if (!Objects.equals(userAccount.getTransactionPassword(), accountRequest.getTransactionPassword()))
             return "Incorrect Transaction password";
         List<Transaction> transaction = transactionRepository.findAllBySenderAccNoOrRecipientAccNo(userAccount.getAccNo(), userAccount.getAccNo());
         if (transaction.isEmpty()) {
@@ -81,17 +87,17 @@ public class UserService {
         return transaction;
     }
 
-    public Object doTransaction(PerformTransactionDetails performTransactionDetails){
+    public Object doTransaction(PerformTransactionDetails performTransactionDetails) {
         Optional<Account> senderAccount = accountRepository.findByAccNo(performTransactionDetails.getAccNo());
         Optional<Account> receiverAccount = accountRepository.findByAccNo(performTransactionDetails.getRecipientAccNo());
         if (senderAccount.isEmpty())
             return "User does not have a bank account";
         if (receiverAccount.isEmpty())
-                return "Receiver does not have a bank account";
+            return "Receiver does not have a bank account";
         Account userAccount = senderAccount.get();
-        if(!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+        if (!Objects.equals(performTransactionDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
             return "Incorrect Transaction Password";
-        if(performTransactionDetails.getAmount() > userAccount.getBalance()){
+        if (performTransactionDetails.getAmount() > userAccount.getBalance()) {
             return "Insufficient balance";
         } else {
             userAccount.setBalance(userAccount.getBalance() - performTransactionDetails.getAmount());
@@ -106,30 +112,39 @@ public class UserService {
         transaction.setRecipientAccNo(performTransactionDetails.getRecipientAccNo());
         transaction.setAmount(performTransactionDetails.getAmount());
         transaction.setStatement(performTransactionDetails.getStatement());
-        String ret = saveNewTransaction(transaction);
+        saveNewTransaction(transaction);
         return "transaction executed successfully";
     }
-    public Object withdrawAmount(Withdraw withdrawDetails){
+
+    public Object withdrawAmount(Withdraw withdrawDetails) {
         Optional<Account> account = accountRepository.findByAccNo(withdrawDetails.getAccNo());
-        if(account.isEmpty())
+        if (account.isEmpty())
             return "User does not have a bank account";
         Account userAccount = account.get();
-        if(!Objects.equals(withdrawDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
+        if (!Objects.equals(withdrawDetails.getTransactionPassword(), userAccount.getTransactionPassword()))
             return "Incorrect Transaction Password";
-        if(withdrawDetails.getAmount() > userAccount.getBalance())
+        if (withdrawDetails.getAmount() > userAccount.getBalance())
             return "Insufficient balance";
         userAccount.setBalance(userAccount.getBalance() - withdrawDetails.getAmount());
         accountRepository.save(userAccount);
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccNo(withdrawDetails.getAccNo());
+        transaction.setRecipientAccNo(withdrawDetails.getAccNo());
+        transaction.setAmount(withdrawDetails.getAmount());
+        transaction.setStatement("Cash Withdrawal");
+        saveNewTransaction(transaction);
         return "Amount withdrawn successfully";
     }
+
     public Object saveNewUser(UserDetails userDetails) {
+        Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
+        if (account.isEmpty()) {
+            return "User does not have a bank account";
+        }
+
         userDetails.getUser().setRoles("USER");
         userDetails.getUser().setEnable(true);
         User user = userRepository.save(userDetails.getUser());
-        Optional<Account> account = accountRepository.findByAccNo(userDetails.getAccNo());
-        if (account.isEmpty())
-            return "User does not have a bank account";
-
         account.ifPresent(userAccount -> {
             userAccount.setUserId(user.getUserId());
             userAccount.setTransactionPassword(userDetails.getTransactionPassword());
@@ -137,10 +152,10 @@ public class UserService {
         });
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
         userDetailsDTO.setUserId(user.getUserId());
-        userDetailsDTO.setFirstName(user.getFirstName());
-        userDetailsDTO.setLastName(user.getLastName());
-        userDetailsDTO.setEmail(user.getEmail());
-        userDetailsDTO.setPhone(user.getPhone());
+        userDetailsDTO.setFirstName(account.get().getFirstName());
+        userDetailsDTO.setLastName(account.get().getLastName());
+        userDetailsDTO.setEmail(account.get().getEmail());
+        userDetailsDTO.setPhone(account.get().getPhone());
         userDetailsDTO.setRoles(user.getRoles());
         userDetailsDTO.setEnable(user.getEnable());
 
@@ -161,9 +176,18 @@ public class UserService {
 
     public Object findUserAccounts(Long userId) {
         List<Long> accountNos = accountRepository.findByUserId(userId).stream()
-                                .map(Account::getAccNo).collect(Collectors.toList());
-        if(accountNos.isEmpty())
+                .map(Account::getAccNo).collect(Collectors.toList());
+        if (accountNos.isEmpty())
             return "No Accounts found for this user";
         return accountNos;
+    }
+
+    public String setTransactionPassword(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
+        if (account.isEmpty())
+            return "No Accounts found for this account number";
+        account.get().setTransactionPassword(accountRequest.getTransactionPassword());
+        accountRepository.save(account.get());
+        return "Transaction Password set successfully";
     }
 }

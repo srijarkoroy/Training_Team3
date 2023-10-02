@@ -67,7 +67,7 @@ export default function Login() {
         }
       } catch(error) {
           console.log("something wrong:::", error);
-          setIsError("Invalid Credentials");
+          setIsError(error.response.data.message);
           setIsModalOpen(true);
         };
     }
@@ -101,27 +101,9 @@ export default function Login() {
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
     } else {
-      // setUsername("");
-      // setPassword("");
       setError("");
     }
   };
-  // const handleToken = async() => {
-  //   const tk = {authorization: localStorage.getItem('token')};
-  //   try {
-  //     const tkData = await axios.get("http://localhost:8090/user/userDetails/10017",
-  //      {headers : {'Authorization': 'Bearer ' + String(localStorage.getItem('token'))}});
-  //     if(tkData.status === 200) {
-  //       console.log("finish api call - response:::", tkData);
-  //       // const token = tkData.data.token;
-  //       // localStorage.setItem('token', token);
-  //     } else {
-  //       console.log("Token get Failed");
-  //     }
-  //   } catch(error) {
-  //       console.log("something wrong with token:::", error);
-  //     };
-  // };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -185,10 +167,6 @@ export default function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="error" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -208,19 +186,12 @@ export default function Login() {
                 {error}
               </Typography>
             )}
-            <Grid container>
-              <Grid item fullWidth>
-                <Link href="#" variant="body2" color="error">
-                  {"Forgot password"}
-                </Link>
-              </Grid>
-              <Grid item justifyContent="flex-end">
+            <Grid container justifyContent={'space-between'}>
+              <Grid item>
                 <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
               </Grid>
-            </Grid>
-            <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2" color="error">
                   {"Don't have netbanking? Register here"}

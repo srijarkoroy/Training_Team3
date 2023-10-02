@@ -11,5 +11,4 @@ public class PerformTransactionDetails {
     private Float amount;
     private String transactionPassword;
     private String statement;
-
 }
