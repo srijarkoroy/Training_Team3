@@ -29,11 +29,8 @@ export default function SignUp() {
       const header = { "Content-Type": "application/json" };
       const sendData = {
         user: {
-          firstName: data.get("firstName"),
-          lastName: data.get("lastName"),
-          email: data.get("email"),
+          userId: data.get("userId"),
           password: bcrypt.hashSync(data.get("password"), salt),
-          phone: data.get("phoneNumber"),
         },
         accNo: data.get("accNo"),
         transactionPassword: data.get("tPassword"),
@@ -59,28 +56,17 @@ export default function SignUp() {
     }
   };
   
+  const [userId, setUserid] = useState("");
   const [responseData, setResponseData] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [tPassword, setTPassword] = useState("");
   const [confirmTPassword, setConfirmTPassword] = useState("");
   const [accNo, setAccNo] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
+  const handleUserIdChange = (e) => {
+    setUserid(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -98,28 +84,16 @@ export default function SignUp() {
   const handleAccNoChange = (e) => {
     setAccNo(e.target.value);
   };
-  const handlePhoneChange = (e) => {
-    setPhoneNumber(e.target.value);
-  };
 
   const validateForm = () => {
     const newErrors = {};
-
-    // Regular expressions for validation
+    const userPattern = /^\d{5}$/;
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const passwordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    if (!firstName) {
-      newErrors.firstName = "First name is required.";
-    }
-
-    if (!lastName) {
-      newErrors.lastName = "Last name is required.";
-    }
-
-    if (!email || !email.match(emailPattern)) {
-      newErrors.email = "Valid email is required.";
+    if (userId && !userId.match(userPattern)) {
+      newErrors.userId = "Invalid User Id";
     }
 
     if (!password || !password.match(passwordPattern)) {
@@ -134,9 +108,6 @@ export default function SignUp() {
     if (!tPassword || !tPassword.match(passwordPattern)) {
       newErrors.tPassword =
         "Transaction password must be at least 8 characters, including alphabets, numbers, and special characters.";
-    }
-    if (!phoneNumber || !phoneNumber.match(/^\d{10}$/)) {
-      newErrors.phoneNumber = "Invalid phone number";
     }
 
     if (tPassword !== confirmTPassword) {
@@ -190,62 +161,17 @@ export default function SignUp() {
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  color="error"
-                  value={firstName}
-                  onChange={handleFirstNameChange}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  color="error"
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
+                  id="userId"
+                  label="User Id"
+                  name="userId"
                   color="error"
-                  value={email}
-                  onChange={handleEmailChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Phone Number"
-                  name="phoneNumber"
-                  color="error"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  error={!!errors.phoneNumber}
-                  helperText={errors.phoneNumber}
+                  value={userId}
+                  onChange={handleUserIdChange}
+                  error={!!errors.userId}
+                  helperText={errors.userId}
                 />
               </Grid>
               <Grid item xs={12}>

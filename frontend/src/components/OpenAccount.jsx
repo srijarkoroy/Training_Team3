@@ -27,6 +27,10 @@ export default function OpenAccount() {
     const header = { "Content-Type": "application/json" };
     
     const sendData = {
+      firstName: data.get("firstname"),
+      lastName: data.get("lastname"),
+      email: data.get("email"),
+      phone: data.get("phone"),
       userId: data.get("userid"),
       aadhaarNo: data.get("aadhaar"),
       branch: data.get("branch"),
@@ -61,6 +65,7 @@ export default function OpenAccount() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [aadhaar, setAadhaar] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [branch, setBranch] = useState("");
   const [ifsc, setIfsc] = useState("");
   const [address, setAddress] = useState("");
@@ -109,6 +114,10 @@ export default function OpenAccount() {
     setAadhaar(e.target.value);
   };
 
+  const handlePhoneChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
   const handleBranchChange = (e) => {
     setBranch(e[0].value);
   };
@@ -124,7 +133,7 @@ export default function OpenAccount() {
   const validateForm = () => {
     const newError = {};
 
-    if (!userid.match(userPattern)) {
+    if (userid && !userid.match(userPattern)) {
       newError.userId = "Invalid";
     }
 
@@ -153,6 +162,10 @@ export default function OpenAccount() {
 
     if (!email.match(emailPattern)) {
       newError.email = "Valid email is required.";
+    }
+
+    if (!phoneNumber || !phoneNumber.match(/^\d{10}$/)) {
+      newError.phoneNumber = "Invalid phone number";
     }
 
     if (!accounttype) {
@@ -268,6 +281,21 @@ export default function OpenAccount() {
               onChange={handleEmailChange}
               error={!!error.email}
               helperText={error.email}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="phone"
+              label="Phone"
+              name="phone"
+              type="phone"
+              color="error"
+              value={phoneNumber}
+              onChange={handlePhoneChange}
+              error={!!error.phoneNumber}
+              helperText={error.phoneNumber}
             />
 
             <TextField
