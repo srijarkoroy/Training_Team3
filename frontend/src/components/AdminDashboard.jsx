@@ -59,17 +59,6 @@ export default function AdminDashboard() {
       Authorization: "Bearer "+localStorage.getItem("token")
     }
   };
-  const adminCheck = async () => { 
-    try{
-      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
-      console.log(ad);
-      if(ad.data != true){
-        navigate("/");
-      } 
-    } catch (error){
-      setIsError(error);
-    }
-  }
   useEffect(() => {
     adminCheck();
   }, []);
@@ -86,6 +75,17 @@ export default function AdminDashboard() {
       setIsModalOpen(true);
     }
   },[isError]);
+  const adminCheck = async () => { 
+    try{
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
+      console.log(ad);
+      if(ad.data != true){
+        navigate("/");
+      } 
+    } catch (error){
+      setIsError(error);
+    }
+  }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
