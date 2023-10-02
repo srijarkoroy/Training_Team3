@@ -1,14 +1,11 @@
 package com.example.training.controller;
 
 import com.example.training.model.UserEnable;
-import com.example.training.repository.UserRepository;
 import com.example.training.service.AdminService;
-import com.example.training.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
     private SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ADMIN");
 
     @GetMapping("/adminCheck")
