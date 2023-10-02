@@ -25,23 +25,6 @@ public class AdminController {
     private final UserRepository userRepository;
     private SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ADMIN");
 
-//    @PostMapping("/authenticate")
-//    public ResponseEntity<?> adminAuthenticateAndGetToken(@RequestBody AdminAuthRequest adminAuthRequest) {
-//
-//        Optional<User> adminUser = userRepository.findByUserId(adminAuthRequest.getUserId());
-//        if (adminUser.isPresent() && adminUser.get().getRoles().equals("ADMIN")) {
-//            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminAuthRequest.getUserId(), adminAuthRequest.getPassword()));
-//            if (authentication.isAuthenticated()) {
-//                Map<String, String> response = new HashMap<>();
-//                response.put("token", jwtService.generateToken(String.valueOf(adminAuthRequest.getUserId())));
-//                return new ResponseEntity<>(response, HttpStatus.OK);
-//            } else {
-//                throw new UsernameNotFoundException("invalid user request !");
-//            }
-//        }
-//        return new ResponseEntity<>("User is not a Admin", HttpStatus.NOT_FOUND);
-//    }
-
     @GetMapping("/adminCheck")
     public ResponseEntity<?> checkAdmin() {
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(adminAuthority))

@@ -7,6 +7,8 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -36,9 +38,27 @@ public class Account {
     @Column(name="userId")
     private Long userId;
 
+    @NotNull
+    @Size(min=1, message="First Name should have at least 1 characters")
+    @Column(name="firstName")
+    private String firstName;
+
+    @NotNull
+    @Size(min=1, message="Last Name should have at least 1 characters")
+    @Column(name="lastName")
+    private String lastName;
+
     @Column(name="aadhaarNo")
     @NotNull
     private Long aadhaarNo;
+
+    @Column(name="phone")
+    @Min(value=1000000000, message="Phone number should be 10-digits long")
+    private Long phone;
+
+    @Column(name="email")
+    @Email
+    private String email;
 
     @Column(name="branch")
     private String branch;

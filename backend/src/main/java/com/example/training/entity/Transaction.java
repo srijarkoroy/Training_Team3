@@ -9,10 +9,8 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 @Getter
@@ -57,17 +55,5 @@ public class Transaction {
 
     @Column(name="statement")
     private String statement;
-
-    @Column(name="email")
-    @Email
-    private String email;
-
-    @Column(name="password")
-    @Size(min=8)
-    private String password;
-
-//    @Size(min=10,max=10)
-    @Column(name="phone")
-    private Long phone;
 
 }
