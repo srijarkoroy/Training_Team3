@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             <button onClick={closeModal} color="red">Close</button>
           </Modal>}
     <Link to={"/usersearch"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
     </Card>
     </Link>
     <Link to={"/admintransaction"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
     </Card>
     </Link>
     <Link to={"/openaccount"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
