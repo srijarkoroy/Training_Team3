@@ -143,6 +143,8 @@ export default function Withdraw() {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
+    } else if (!amount.match(/^\d/)){
+      setError("Invalid Amount");
     } else {
       setError("");
     }

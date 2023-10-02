@@ -154,6 +154,8 @@ export default function PerformTransaction() {
       setError(
         "Password must be at least 8 characters long and contain alphabets, numbers, and special symbols."
       );
+    } else if (!amount.match(/^\d/)){
+      setError("Invalid Amount");
     } else {
       setError("");
     }
@@ -223,9 +225,9 @@ export default function PerformTransaction() {
                 margin="normal"
                 required
                 fullWidth
-                id="AccNo"
+                id="accNo"
                 label="Account Number"
-                name="AccNo"
+                name="accNo"
                 autoComplete="Account Number"
                 color="error"
                 value={accno}
