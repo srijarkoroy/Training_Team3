@@ -127,6 +127,12 @@ public class UserService {
             return "Insufficient balance";
         userAccount.setBalance(userAccount.getBalance() - withdrawDetails.getAmount());
         accountRepository.save(userAccount);
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccNo(withdrawDetails.getAccNo());
+        transaction.setRecipientAccNo(withdrawDetails.getAccNo());
+        transaction.setAmount(withdrawDetails.getAmount());
+        transaction.setStatement("Cash Withdrawal");
+        saveNewTransaction(transaction);
         return "Amount withdrawn successfully";
     }
 

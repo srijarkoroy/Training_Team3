@@ -131,17 +131,12 @@ export default function BalanceCheck() {
     setResponseData("");
   };
 
-  const handleUsernameChange = (e) => {
-    setAccNo(e.target.value);
-  };
-
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
   const handleAccNoChange = (event) => {
     setAccNo(event.target.value);
-    console.log(accno);
   };
 
 

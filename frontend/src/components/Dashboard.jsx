@@ -236,8 +236,8 @@ export default function Dashboard() {
         <CardMedia
           component="img"
           height="200"
-          image="https://static.thenounproject.com/png/3104881-200.png"
-          alt="open accounts"
+          image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMfsJYTg1XAunLg_XaXRNVP1t8wugRh7hUkQ&usqp=CAU"
+          alt="change transaction password"
           sx={{objectFit: "contain" }}
         />
         <CardContent>
@@ -245,7 +245,7 @@ export default function Dashboard() {
             Change Transaction Password
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Select to change transaction password
+            Select to change transaction password for any of your bank accounts
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -12,6 +12,10 @@ import Modal from "react-modal";
 import "../styles/ModalStyle.css";
 import { useNavigate } from "react-router-dom";
 import Endpoints from "./Endpoints";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -39,6 +43,7 @@ export default function Withdraw() {
   }
   useEffect(() => {
     userCheck();
+    handleAccounts();
   }, []);
 
   useEffect(() => {
@@ -56,6 +61,30 @@ export default function Withdraw() {
     }
   }, [isError])
 
+  const [accounts, setAccounts] = useState([]);
+  const handleAccounts = async () => {
+    const url = Endpoints.BASE_URL_USER + "/userAccounts";
+    const header = { "Content-Type": "application/json" };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    };
+    try {
+      const resData = await axios.get(url, config);
+      if (resData.status === 200) {
+        console.log("finish api call - response:::", resData.data);
+      } else {
+        console.log("API Call Failed");
+      }
+      setAccounts(resData.data);
+    } catch (error) {
+      console.log("something wrong:::", error);
+      setIsError(error);
+    };
+  };
+
   const [error, setError] = useState("");
   const [mssg, setMssg] = useState("");
   const [res, setRes] = useState("");
@@ -66,7 +95,7 @@ export default function Withdraw() {
       const url = Endpoints.BASE_URL_USER + "/withdraw";
       const header = { "Content-Type": "application/json" };
       const sendData = {
-        accNo: data.get("accNo"),
+        accNo: accNo,
         amount: data.get("amount"),
         transactionPassword: data.get("password")
       };
@@ -94,8 +123,8 @@ export default function Withdraw() {
   const [transactionPassword, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAccNoChange = (e) => {
-    setAccNo(e.target.value);
+  const handleAccNoChange = (event) => {
+    setAccNo(event.target.value);
   };
 
   const handleAmountChange = (e) => {
@@ -174,20 +203,29 @@ export default function Withdraw() {
                 <h3>{mssg}</h3>
                 <button onClick={closeModal} color="red">Close</button>
               </Modal>}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="accNo"
-              label="Account Number"
-              name="accNo"
-              autoComplete="accNo"
-              color="error"
-              autoFocus
-              value={accNo}
-              onChange={handleAccNoChange}
-            />
-
+              <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label"
+                color="error">
+                Account Number
+              </InputLabel>
+              <Select
+                margin="normal"
+                required
+                fullWidth
+                id="AccNo"
+                label="Account Number"
+                name="AccNo"
+                autoComplete="Account Number"
+                color="error"
+                value={accNo}
+                autoFocus
+                onChange={handleAccNoChange}
+              >
+                {accounts.map((row, i) => (
+                  <MenuItem key={i} value={row}>{row}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="normal"
               required
@@ -200,7 +238,6 @@ export default function Withdraw() {
               value={amount}
               onChange={handleAmountChange}
             />
-
             <TextField
               margin="normal"
               required
