@@ -209,18 +209,11 @@ export default function Login() {
               </Typography>
             )}
             <Grid container justifyContent={'space-between'}>
-              <Grid item fullWidth>
-                <Link href="#" variant="body2" color="error">
-                  {"Forgot password"}
-                </Link>
-              </Grid>
               <Grid item>
                 <Link href="/openaccount" variant="body2" color="error">
                   {"Open Bank Account"}
                 </Link>
               </Grid>
-            </Grid>
-            <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2" color="error">
                   {"Don't have netbanking? Register here"}

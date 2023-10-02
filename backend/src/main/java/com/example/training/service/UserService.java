@@ -166,4 +166,13 @@ public class UserService {
             return "No Accounts found for this user";
         return accountNos;
     }
+
+    public String setTransactionPassword(AccountRequest accountRequest) {
+        Optional<Account> account = accountRepository.findByAccNo(accountRequest.getAccNo());
+        if(account.isEmpty())
+            return "No Accounts found for this account number";
+        account.get().setTransactionPassword(accountRequest.getTransactionPassword());
+        accountRepository.save(account.get());
+        return "Transaction Password set successfully";
+    }
 }

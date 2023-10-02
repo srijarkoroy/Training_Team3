@@ -88,7 +88,7 @@ export default function SetPassword() {
     event.preventDefault();
     if (JSON.stringify(errors) === "{}") {
       const data = new FormData(event.currentTarget);
-      const url = Endpoints.BASE_URL_USER + "/accountDetails/getBalance";////to be set
+      const url = Endpoints.BASE_URL_USER + "/userAccounts/transactionPassword";
       const header = { "Content-Type": "application/json" };
       const sendData = {
         accNo: data.get("AccNo"),
@@ -187,7 +187,7 @@ export default function SetPassword() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Account Balance Check
+            Set Account Transaction Password 
           </Typography>
           <Box
             component="form"
@@ -203,7 +203,7 @@ export default function SetPassword() {
               fullWidth
               className="custom-modal"
             >
-              <h3>Your current Account Balance is ₹{responseData.data.balance}</h3>
+              <h3>{responseData.data}</h3>
               <button onClick={closeModal} color="red">Close</button>
             </Modal>}
             {mssg &&

@@ -123,4 +123,12 @@ public class UserController {
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@PostMapping("/userAccounts/transactionPassword")
+	public ResponseEntity<String> setTransactionPassword(@Valid @RequestBody AccountRequest accountRequest){
+		String response= userService.setTransactionPassword(accountRequest);
+		if(response.equals("No Accounts found for this account number"))
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response,HttpStatus.OK);
+	}
 }
