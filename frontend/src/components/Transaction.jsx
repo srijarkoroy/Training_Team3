@@ -27,7 +27,7 @@ function Transaction(props) {
         <Table.Cell>{item.senderAccNo}</Table.Cell>
         <Table.Cell>{item.recipientAccNo}</Table.Cell>
         {item.senderAccNo == props.accNo ? <Table.Cell negative>{item.amount}</Table.Cell> : <Table.Cell positive>{item.amount}</Table.Cell>}
-        <Table.Cell>{item.timestamp}</Table.Cell>
+        <Table.Cell>{new Date(item.timestamp).toLocaleString()}</Table.Cell>
         <Table.Cell>{item.statement}</Table.Cell>
       </Table.Row>
       ))}

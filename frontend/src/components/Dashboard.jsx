@@ -125,7 +125,7 @@ export default function Dashboard() {
           </Modal>}
     <Link to={"/balancecheck"} style={{textDecoration:"none"}}>
     <Card 
-    className='custom-card'>
+    className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -147,7 +147,7 @@ export default function Dashboard() {
     </Card>
     </Link>
     <Link to={"/transactionhistory"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -168,7 +168,7 @@ export default function Dashboard() {
     </Card>
     </Link>
     <Link to={"/performtransaction"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"

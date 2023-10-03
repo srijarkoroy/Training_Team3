@@ -1,7 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import { IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -63,18 +62,7 @@ const Navbar = () => {
             backgroundColor: "#d71e28",
           }}
         >
-          <IconButton
-            data-testid="menubtn"
-            sx={{
-              color: "white",
-              m: 1,
-              mt: 1.5,
-              mb: 1.5,
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-
+        
           <Box
             id="brand-holder"
             sx={{

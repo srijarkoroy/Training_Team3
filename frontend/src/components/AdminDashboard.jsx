@@ -59,17 +59,6 @@ export default function AdminDashboard() {
       Authorization: "Bearer "+localStorage.getItem("token")
     }
   };
-  const adminCheck = async () => { 
-    try{
-      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
-      console.log(ad);
-      if(ad.data != true){
-        navigate("/");
-      } 
-    } catch (error){
-      setIsError(error);
-    }
-  }
   useEffect(() => {
     adminCheck();
   }, []);
@@ -86,6 +75,17 @@ export default function AdminDashboard() {
       setIsModalOpen(true);
     }
   },[isError]);
+  const adminCheck = async () => { 
+    try{
+      const ad = await axios.get(Endpoints.BASE_URL_ADMIN + '/adminCheck', config);
+      console.log(ad);
+      if(ad.data != true){
+        navigate("/");
+      } 
+    } catch (error){
+      setIsError(error);
+    }
+  }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             <button onClick={closeModal} color="red">Close</button>
           </Modal>}
     <Link to={"/usersearch"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
     </Card>
     </Link>
     <Link to={"/admintransaction"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
     </Card>
     </Link>
     <Link to={"/openaccount"} style={{textDecoration:"none"}}>
-    <Card className='custom-card'>
+    <Card className='custom-card' sx={{marginTop:5}}>
       <CardActionArea>
         <CardMedia
           component="img"
